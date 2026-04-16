@@ -1,26 +1,30 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Nav } from "@/components/Nav";
+import { Hero } from "@/components/Hero";
+import { Pillars } from "@/components/Pillars";
+import { CtaSection } from "@/components/CtaSection";
+import { Footer } from "@/components/Footer";
 
 export const Route = createFileRoute("/")({
   component: Index,
+  head: () => ({
+    meta: [
+      { title: "OrganicOS — Turn SEO Into a Revenue Engine" },
+      { name: "description", content: "OrganicOS connects search demand directly to revenue. Quantify opportunity, deconstruct rankings, and connect every SEO action to business outcomes." },
+      { property: "og:title", content: "OrganicOS — Turn SEO Into a Revenue Engine" },
+      { property: "og:description", content: "The operating system for organic growth. Stop guessing, start growing revenue." },
+    ],
+  }),
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
+function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen bg-background text-foreground">
+      <Nav />
+      <Hero />
+      <Pillars />
+      <CtaSection />
+      <Footer />
     </div>
   );
-}
-
-function Index() {
-  return <PlaceholderIndex />;
 }
