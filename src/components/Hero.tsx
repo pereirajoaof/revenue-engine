@@ -24,9 +24,9 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
         >
-          Turn SEO into a
+          OrganicOS: From SEO
           <br />
-          <span className="text-primary">revenue engine</span>
+          <span className="text-primary">to CEO</span>
         </motion.h1>
 
         <motion.p
