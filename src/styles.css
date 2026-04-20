@@ -116,7 +116,7 @@
   --border: oklch(0.96 0.01 260 / 10%);
   --input: oklch(0.96 0.01 260 / 14%);
   --ring: oklch(0.72 0.17 155);
-  --glow: oklch(0.72 0.17 155 / 22%);
+  --glow: oklch(0.72 0.18 155 / 45%);
   --surface: oklch(0.19 0.02 260);
   --surface-foreground: oklch(0.85 0.01 260);
 
