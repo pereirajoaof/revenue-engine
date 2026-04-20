@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, Plus, Calendar } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const RANGES = ["7d", "30d", "90d"] as const;
 const FILTERS = [
@@ -53,6 +54,8 @@ export function DashboardHeader() {
             <Plus className="w-3.5 h-3.5" />
             Create Action
           </button>
+
+          <ThemeToggle />
         </div>
       </div>
     </header>

@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function Nav() {
   return (
@@ -11,6 +12,7 @@ export function Nav() {
           <span className="font-bold text-lg tracking-tight">OrganicOS</span>
         </div>
         <div className="flex items-center gap-3">
+          <ThemeToggle />
           <Link
             to="/dashboard"
             className="hidden sm:inline-flex px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
