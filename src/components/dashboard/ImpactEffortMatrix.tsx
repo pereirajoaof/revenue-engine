@@ -104,11 +104,11 @@ export function ImpactEffortMatrix() {
 
       {/* quadrant labels */}
       <div className="relative mt-4 h-[320px]">
-        <div className="absolute inset-0 pointer-events-none z-10 text-[9px] font-mono uppercase tracking-wider text-muted-foreground/70">
-          <span className="absolute top-2 left-12">Quick wins</span>
-          <span className="absolute top-2 right-3">Big bets</span>
-          <span className="absolute bottom-10 left-12">Fill-ins</span>
-          <span className="absolute bottom-10 right-3">Money pits</span>
+        <div className="absolute pointer-events-none z-10 text-[9px] font-mono uppercase tracking-wider text-muted-foreground/70" style={{ top: 24, right: 28, left: 56, bottom: 48 }}>
+          <span className="absolute top-0 left-0">Quick wins</span>
+          <span className="absolute top-0 right-0">Big bets</span>
+          <span className="absolute bottom-0 left-0">Fill-ins</span>
+          <span className="absolute bottom-0 right-0">Money pits</span>
         </div>
 
         <ResponsiveContainer width="100%" height="100%">
