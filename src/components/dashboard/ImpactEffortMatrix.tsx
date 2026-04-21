@@ -22,10 +22,79 @@ const POINTS: Point[] = [
   { name: "Core Web Vitals fixes", effort: 55, impact: 110, confidence: 81 },
 ];
 
+// Custom 3D-style bubble: drop shadow ellipse + radial gradient sphere + specular highlight
+const Bubble3D = (props: {
+  cx?: number;
+  cy?: number;
+  node?: { z?: number };
+  payload?: Point;
+}) => {
+  const { cx = 0, cy = 0, node, payload } = props;
+  const z = node?.z ?? 200;
+  // recharts maps z into a size area; convert to a visual radius
+  const r = Math.max(8, Math.sqrt(z / Math.PI));
+  const id = `sphere-${payload?.name?.replace(/\W+/g, "")}`;
+
+  return (
+    <g style={{ pointerEvents: "all" }}>
+      <defs>
+        <radialGradient id={id} cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stopColor="oklch(0.95 0.05 160)" stopOpacity={0.95} />
+          <stop offset="35%" stopColor="var(--primary)" stopOpacity={0.95} />
+          <stop offset="100%" stopColor="oklch(0.35 0.12 160)" stopOpacity={1} />
+        </radialGradient>
+      </defs>
+      {/* ground shadow */}
+      <ellipse
+        cx={cx}
+        cy={cy + r * 0.85}
+        rx={r * 0.95}
+        ry={r * 0.22}
+        fill="rgba(0,0,0,0.45)"
+        style={{ filter: "blur(3px)" }}
+      />
+      {/* outer glow */}
+      <circle cx={cx} cy={cy} r={r + 2} fill="var(--primary)" opacity={0.15} style={{ filter: "blur(6px)" }} />
+      {/* sphere body */}
+      <circle cx={cx} cy={cy} r={r} fill={`url(#${id})`} stroke="oklch(0.25 0.08 160)" strokeWidth={0.5} />
+      {/* specular highlight */}
+      <ellipse
+        cx={cx - r * 0.3}
+        cy={cy - r * 0.4}
+        rx={r * 0.35}
+        ry={r * 0.22}
+        fill="white"
+        opacity={0.55}
+        style={{ filter: "blur(1px)" }}
+      />
+    </g>
+  );
+};
+
 export function ImpactEffortMatrix() {
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
-      <div className="flex items-start justify-between">
+    <div className="relative rounded-lg border border-border bg-card p-5 overflow-hidden">
+      {/* layered depth backdrop */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at 75% 15%, color-mix(in oklab, var(--primary) 18%, transparent) 0%, transparent 55%), radial-gradient(ellipse at 15% 90%, color-mix(in oklab, var(--primary) 10%, transparent) 0%, transparent 50%)",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.06]"
+        style={{
+          backgroundImage:
+            "linear-gradient(var(--foreground) 1px, transparent 1px), linear-gradient(90deg, var(--foreground) 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+          maskImage: "linear-gradient(180deg, transparent 0%, black 30%, black 70%, transparent 100%)",
+        }}
+      />
+
+      <div className="relative flex items-start justify-between">
         <div>
           <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Decision tool</p>
           <h2 className="text-base font-semibold mt-0.5">Impact vs Effort</h2>
@@ -33,10 +102,24 @@ export function ImpactEffortMatrix() {
         <span className="text-[10px] font-mono text-muted-foreground">Bubble size = confidence</span>
       </div>
 
-      <div className="mt-4 h-[320px]">
+      {/* quadrant labels */}
+      <div className="relative mt-4 h-[320px]">
+        <div className="absolute inset-0 pointer-events-none z-10 text-[9px] font-mono uppercase tracking-wider text-muted-foreground/70">
+          <span className="absolute top-2 left-12">Quick wins</span>
+          <span className="absolute top-2 right-3">Big bets</span>
+          <span className="absolute bottom-10 left-12">Fill-ins</span>
+          <span className="absolute bottom-10 right-3">Money pits</span>
+        </div>
+
         <ResponsiveContainer width="100%" height="100%">
           <ScatterChart margin={{ top: 20, right: 20, bottom: 30, left: 10 }}>
-            <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
+            <defs>
+              <linearGradient id="plotFloor" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.06} />
+                <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid stroke="var(--border)" strokeDasharray="2 4" strokeOpacity={0.5} />
             <XAxis
               type="number"
               dataKey="effort"
@@ -70,20 +153,14 @@ export function ImpactEffortMatrix() {
                 style: { fontSize: 10, fontFamily: "var(--font-mono)", fill: "var(--muted-foreground)" },
               }}
             />
-            <ZAxis type="number" dataKey="confidence" range={[60, 400]} />
+            <ZAxis type="number" dataKey="confidence" range={[200, 1400]} />
             <Tooltip
               cursor={{ strokeDasharray: "3 3", stroke: "var(--border)" }}
-              contentStyle={{
-                background: "var(--popover)",
-                border: "1px solid var(--border)",
-                borderRadius: 8,
-                fontSize: 12,
-              }}
               content={({ active, payload }) => {
                 if (!active || !payload?.length) return null;
                 const p = payload[0].payload as Point;
                 return (
-                  <div className="rounded-md border border-border bg-popover p-3 shadow-lg">
+                  <div className="rounded-md border border-border bg-popover p-3 shadow-xl">
                     <p className="text-xs font-semibold">{p.name}</p>
                     <div className="mt-2 space-y-1 text-[11px] font-mono text-muted-foreground">
                       <div className="flex justify-between gap-6">
@@ -103,7 +180,7 @@ export function ImpactEffortMatrix() {
                 );
               }}
             />
-            <Scatter data={POINTS} fill="var(--primary)" fillOpacity={0.7} stroke="var(--primary)" />
+            <Scatter data={POINTS} shape={<Bubble3D />} />
           </ScatterChart>
         </ResponsiveContainer>
       </div>
