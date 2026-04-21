@@ -184,6 +184,13 @@ export function ImpactEffortMatrix() {
             <Scatter data={POINTS} shape={<Bubble3D />} />
           </ScatterChart>
         </ResponsiveContainer>
+        </div>
+
+        {/* bottom labels (below plot, under x-axis) */}
+        <div className="flex justify-between text-[9px] font-mono uppercase tracking-wider text-muted-foreground/70 pl-14 pr-6 mt-1">
+          <span>↙ Fill-ins</span>
+          <span>Money pits ↘</span>
+        </div>
       </div>
     </div>
   );
