@@ -102,14 +102,15 @@ export function ImpactEffortMatrix() {
         <span className="text-[10px] font-mono text-muted-foreground">Bubble size = confidence</span>
       </div>
 
-      {/* quadrant labels */}
-      <div className="relative mt-4 h-[320px]">
-        <div className="absolute pointer-events-none z-10 text-[9px] font-mono uppercase tracking-wider text-muted-foreground/70" style={{ top: 24, right: 28, left: 56, bottom: 48 }}>
-          <span className="absolute top-0 left-0">Quick wins</span>
-          <span className="absolute top-0 right-0">Big bets</span>
-          <span className="absolute bottom-0 left-0">Fill-ins</span>
-          <span className="absolute bottom-0 right-0">Money pits</span>
+      {/* quadrant labels — outside the plot area */}
+      <div className="relative mt-4">
+        {/* top labels (above plot) */}
+        <div className="flex justify-between text-[9px] font-mono uppercase tracking-wider text-muted-foreground/70 pl-14 pr-6 mb-1">
+          <span>↖ Quick wins</span>
+          <span>Big bets ↗</span>
         </div>
+
+        <div className="relative h-[300px]">
 
         <ResponsiveContainer width="100%" height="100%">
           <ScatterChart margin={{ top: 20, right: 20, bottom: 30, left: 10 }}>
@@ -183,6 +184,13 @@ export function ImpactEffortMatrix() {
             <Scatter data={POINTS} shape={<Bubble3D />} />
           </ScatterChart>
         </ResponsiveContainer>
+        </div>
+
+        {/* bottom labels (below plot, under x-axis) */}
+        <div className="flex justify-between text-[9px] font-mono uppercase tracking-wider text-muted-foreground/70 pl-14 pr-6 mt-1">
+          <span>↙ Fill-ins</span>
+          <span>Money pits ↘</span>
+        </div>
       </div>
     </div>
   );
