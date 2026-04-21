@@ -34,7 +34,7 @@ export function RevenueChart() {
   const fmt = FORMATTERS[tab];
 
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
+    <div className="rounded-lg border border-border bg-card p-5 flex flex-col xl:h-[460px]">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
           <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Performance vs Potential</p>
@@ -60,7 +60,7 @@ export function RevenueChart() {
         </div>
       </div>
 
-      <div className="mt-5 h-[320px]">
+      <div className="mt-5 flex-1 min-h-[280px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={DATA} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <defs>
