@@ -41,7 +41,7 @@ const ACTIONS: Action[] = [
 
 export function TopOpportunities() {
   return (
-    <div className="rounded-lg border border-border bg-card p-5 h-full flex flex-col">
+    <div className="rounded-lg border border-border bg-card p-5 flex flex-col xl:h-[460px]">
       <div className="flex items-center justify-between mb-4">
         <div>
           <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Top actions</p>
