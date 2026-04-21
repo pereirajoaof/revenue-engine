@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-const TABS = ["Revenue", "Traffic", "Conversions"] as const;
+const TABS = ["Demand", "Traffic", "Conversions", "Revenue"] as const;
 type Tab = (typeof TABS)[number];
 
 const DATA = Array.from({ length: 30 }, (_, i) => {
@@ -24,13 +24,14 @@ const DATA = Array.from({ length: 30 }, (_, i) => {
 });
 
 const FORMATTERS: Record<Tab, (n: number) => string> = {
-  Revenue: (n) => `£${(n / 1000).toFixed(0)}k`,
+  Demand: (n) => `${(n / 1000).toFixed(0)}k`,
   Traffic: (n) => `${(n / 100).toFixed(0)}k`,
   Conversions: (n) => `${(n / 1000).toFixed(1)}k`,
+  Revenue: (n) => `£${(n / 1000).toFixed(0)}k`,
 };
 
 export function RevenueChart() {
-  const [tab, setTab] = useState<Tab>("Revenue");
+  const [tab, setTab] = useState<Tab>("Demand");
   const fmt = FORMATTERS[tab];
 
   return (
