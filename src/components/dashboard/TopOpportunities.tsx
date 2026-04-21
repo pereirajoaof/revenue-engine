@@ -41,7 +41,7 @@ const ACTIONS: Action[] = [
 
 export function TopOpportunities() {
   return (
-    <div className="rounded-lg border border-border bg-card p-5">
+    <div className="rounded-lg border border-border bg-card p-5 h-full flex flex-col">
       <div className="flex items-center justify-between mb-4">
         <div>
           <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Top actions</p>
@@ -50,7 +50,7 @@ export function TopOpportunities() {
         <Target className="w-4 h-4 text-primary" />
       </div>
 
-      <div className="space-y-2.5">
+      <div className="space-y-2.5 flex-1 overflow-y-auto pr-1 min-h-0">
         {ACTIONS.map((action) => (
           <div
             key={action.title}
