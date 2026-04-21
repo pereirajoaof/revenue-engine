@@ -19,9 +19,12 @@ export function Nav() {
           >
             View dashboard
           </Link>
-          <button className="px-5 py-2 rounded-lg bg-surface border border-border text-sm font-medium text-foreground hover:bg-primary hover:text-primary-foreground transition-colors">
+          <Link
+            to="/onboarding"
+            className="px-5 py-2 rounded-lg bg-surface border border-border text-sm font-medium text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+          >
             Get early access
-          </button>
+          </Link>
         </div>
       </div>
     </nav>
