@@ -38,7 +38,7 @@ function DashboardPage() {
         <main className="px-6 lg:px-8 py-6 space-y-6">
           <KpiRow />
 
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-stretch">
             <div className="xl:col-span-2">
               <RevenueChart />
             </div>

@@ -5,8 +5,6 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 const RANGES = ["7d", "30d", "90d"] as const;
 const FILTERS = [
   { label: "Page Type", value: "All page types" },
-  { label: "Country", value: "All countries" },
-  { label: "Device", value: "All devices" },
 ];
 
 export function DashboardHeader() {
