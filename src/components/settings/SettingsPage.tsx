@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { toast } from "sonner";
 import {
   Building2,
   Coins,
@@ -8,8 +6,8 @@ import {
   Globe2,
   RefreshCw,
   AlertTriangle,
-  Save,
 } from "lucide-react";
+import { useState } from "react";
 import { SectionCard } from "./SectionCard";
 import { PropertyIdentitySection } from "./sections/PropertyIdentitySection";
 import { EconomicsSection } from "./sections/EconomicsSection";
@@ -29,25 +27,13 @@ const NAV = [
   { id: "danger", label: "Danger Zone", icon: AlertTriangle },
 ] as const;
 
-export function SettingsPage() {
-  const [dirty, setDirty] = useState<Set<string>>(new Set());
+interface Props {
+  dirty: Set<string>;
+  markDirty: (section: string) => void;
+}
+
+export function SettingsPage({ dirty, markDirty }: Props) {
   const [active, setActive] = useState<string>("identity");
-
-  const markDirty = (section: string) => {
-    setDirty((prev) => {
-      if (prev.has(section)) return prev;
-      const next = new Set(prev);
-      next.add(section);
-      return next;
-    });
-  };
-
-  const handleSaveAll = () => {
-    setDirty(new Set());
-    toast.success("Settings saved", {
-      description: "Run analysis to apply changes to historical data.",
-    });
-  };
 
   const handleScrollTo = (id: string) => {
     setActive(id);
@@ -57,39 +43,19 @@ export function SettingsPage() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4 mb-8 flex-wrap">
-        <div>
-          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground mb-2">
-            Workspace settings
-          </p>
-          <h1 className="text-3xl font-bold tracking-tight">Project settings</h1>
-          <p className="text-sm text-muted-foreground mt-2 max-w-2xl">
-            Configure how OrganicOS reads your data, calculates revenue, and prioritises opportunities.
-            Most changes require a re-run to update historical numbers.
-          </p>
-        </div>
-        {dirty.size > 0 && (
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-muted-foreground font-mono">
-              {dirty.size} unsaved {dirty.size === 1 ? "change" : "changes"}
-            </span>
-            <button
-              onClick={handleSaveAll}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
-            >
-              <Save className="w-4 h-4" />
-              Save all
-            </button>
-          </div>
-        )}
+      {/* Intro */}
+      <div className="mb-8 max-w-2xl">
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Configure how OrganicOS reads your data, calculates revenue, and prioritises opportunities.
+          Most changes require a re-run to update historical numbers.
+        </p>
       </div>
 
       {/* Layout: sticky sub-nav + sections */}
       <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8">
         {/* Sub-nav */}
         <aside className="hidden lg:block">
-          <nav className="sticky top-6 space-y-1">
+          <nav className="sticky top-20 space-y-1">
             <p className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-muted-foreground mb-1">
               On this page
             </p>
