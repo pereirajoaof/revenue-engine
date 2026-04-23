@@ -39,14 +39,51 @@ export function DashboardNav() {
         <NavItem icon={<Settings className="w-4 h-4" />} label="Settings" />
       </nav>
 
-      <div className="px-3 py-4 border-t border-border">
-        <div className="flex items-center gap-3 px-2">
-          <div className="w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center text-xs font-mono">JS</div>
-          <div className="min-w-0">
-            <p className="text-xs font-medium truncate">Jane Smith</p>
-            <p className="text-[10px] text-muted-foreground font-mono truncate">acme.com</p>
-          </div>
-        </div>
+      <div className="px-3 py-3 border-t border-border">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="w-full flex items-center gap-3 px-2 py-2 rounded-md hover:bg-surface/60 transition-colors group focus:outline-none focus:ring-2 focus:ring-ring">
+            <div className="w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center text-xs font-mono shrink-0">
+              {active.initials}
+            </div>
+            <div className="min-w-0 flex-1 text-left">
+              <p className="text-xs font-medium truncate">{active.name}</p>
+              <p className="text-[10px] text-muted-foreground font-mono truncate">{active.domain}</p>
+            </div>
+            <ChevronUp className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="top" align="start" className="w-52">
+            <DropdownMenuLabel className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+              Switch profile
+            </DropdownMenuLabel>
+            <DropdownMenuGroup>
+              {PROFILES.map((p) => (
+                <DropdownMenuItem key={p.initials} className="gap-2">
+                  <div className="w-6 h-6 rounded-full bg-surface border border-border flex items-center justify-center text-[10px] font-mono shrink-0">
+                    {p.initials}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-medium truncate">{p.name}</p>
+                    <p className="text-[10px] text-muted-foreground font-mono truncate">{p.domain}</p>
+                  </div>
+                  {p.initials === active.initials && <Check className="w-3.5 h-3.5 text-primary shrink-0" />}
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuItem className="gap-2 text-muted-foreground">
+                <UserPlus className="w-4 h-4" />
+                <span className="text-xs">Add account</span>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="gap-2">
+              <UserCog className="w-4 h-4" />
+              <span className="text-xs">Account settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout} className="gap-2 text-destructive focus:text-destructive">
+              <LogOut className="w-4 h-4" />
+              <span className="text-xs">Log out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <Link to="/" className="px-5 py-3 text-[10px] font-mono uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors border-t border-border">
