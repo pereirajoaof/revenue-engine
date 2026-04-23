@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
-import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { SettingsPage } from "@/components/settings/SettingsPage";
 
 export const Route = createFileRoute("/settings")({
@@ -27,7 +27,11 @@ function SettingsRoute() {
     <div className="min-h-screen bg-background text-foreground">
       <DashboardNav />
       <div className="lg:pl-56">
-        <DashboardHeader />
+        <header className="border-b border-border bg-background/80 backdrop-blur sticky top-0 z-20">
+          <div className="px-6 lg:px-8 py-4 flex items-center justify-end">
+            <ThemeToggle />
+          </div>
+        </header>
         <main className="px-6 lg:px-8 py-6">
           <SettingsPage />
         </main>
