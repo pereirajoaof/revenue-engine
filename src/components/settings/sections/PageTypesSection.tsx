@@ -81,7 +81,10 @@ export function PageTypesSection({ onDirty }: Props) {
                 )}
                 <div className="min-w-0">
                   <div className="text-sm font-medium truncate">{row.label}</div>
-                  <div className="text-[11px] font-mono text-muted-foreground truncate">{row.pattern}</div>
+                  <div className="text-[11px] font-mono text-muted-foreground truncate">
+                    <span className="text-muted-foreground/70">{MATCH_OPTIONS.find((o) => o.value === row.matchType)?.label}</span>{" "}
+                    {row.pattern}
+                  </div>
                 </div>
               </div>
               <span className="text-xs font-mono text-muted-foreground w-20 text-right">
