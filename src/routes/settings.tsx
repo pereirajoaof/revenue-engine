@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { toast } from "sonner";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { SettingsHeaderBar } from "@/components/settings/SettingsHeaderBar";
 import { SettingsPage } from "@/components/settings/SettingsPage";
 
 export const Route = createFileRoute("/settings")({
@@ -23,17 +25,31 @@ export const Route = createFileRoute("/settings")({
 });
 
 function SettingsRoute() {
+  const [dirty, setDirty] = useState<Set<string>>(new Set());
+
+  const markDirty = (section: string) => {
+    setDirty((prev) => {
+      if (prev.has(section)) return prev;
+      const next = new Set(prev);
+      next.add(section);
+      return next;
+    });
+  };
+
+  const handleSaveAll = () => {
+    setDirty(new Set());
+    toast.success("Settings saved", {
+      description: "Run analysis to apply changes to historical data.",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <DashboardNav />
       <div className="lg:pl-56">
-        <header className="border-b border-border bg-background/80 backdrop-blur sticky top-0 z-20">
-          <div className="px-6 lg:px-8 py-4 flex items-center justify-end">
-            <ThemeToggle />
-          </div>
-        </header>
+        <SettingsHeaderBar dirtyCount={dirty.size} onSaveAll={handleSaveAll} />
         <main className="px-6 lg:px-8 py-6">
-          <SettingsPage />
+          <SettingsPage dirty={dirty} markDirty={markDirty} />
         </main>
       </div>
     </div>
