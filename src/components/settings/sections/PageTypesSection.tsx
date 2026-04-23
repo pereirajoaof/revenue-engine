@@ -53,7 +53,7 @@ export function PageTypesSection({ onDirty }: Props) {
     const id = `pt-${Date.now()}`;
     setRows((r) => [
       ...r,
-      { id, label: "New page type", pattern: "/path/*", pageCount: 0, cvr: "", aov: "", useGlobal: true, ga4Synced: false },
+      { id, label: "New page type", matchType: "contains", pattern: "/path/", pageCount: 0, cvr: "", aov: "", useGlobal: true, ga4Synced: false },
     ]);
     setExpanded(id);
     onDirty();
