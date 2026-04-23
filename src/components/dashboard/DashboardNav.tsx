@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { LayoutDashboard, Search, Bell, Settings, ChevronUp, LogOut, UserCog, UserPlus, Check } from "lucide-react";
 import {
   DropdownMenu,
@@ -17,7 +17,9 @@ const PROFILES = [
 
 export function DashboardNav() {
   const navigate = useNavigate();
+  const location = useLocation();
   const active = PROFILES[0];
+  const path = location.pathname;
 
   const handleLogout = () => {
     navigate({ to: "/" });
@@ -33,10 +35,20 @@ export function DashboardNav() {
 
       <nav className="flex-1 px-3 py-4 space-y-1">
         <p className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Workspace</p>
-        <NavItem icon={<LayoutDashboard className="w-4 h-4" />} label="Revenue & Opportunities" active />
+        <NavItem
+          to="/dashboard"
+          icon={<LayoutDashboard className="w-4 h-4" />}
+          label="Revenue & Opportunities"
+          active={path === "/dashboard"}
+        />
         <NavItem icon={<Search className="w-4 h-4" />} label="Keyword Demand" />
         <NavItem icon={<Bell className="w-4 h-4" />} label="Alerts" />
-        <NavItem icon={<Settings className="w-4 h-4" />} label="Settings" />
+        <NavItem
+          to="/settings"
+          icon={<Settings className="w-4 h-4" />}
+          label="Settings"
+          active={path === "/settings"}
+        />
       </nav>
 
       <div className="px-3 py-3 border-t border-border">
@@ -93,15 +105,34 @@ export function DashboardNav() {
   );
 }
 
-function NavItem({ icon, label, active }: { icon: React.ReactNode; label: string; active?: boolean }) {
+function NavItem({
+  icon,
+  label,
+  active,
+  to,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  active?: boolean;
+  to?: "/dashboard" | "/settings";
+}) {
+  const className = `w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-sm transition-colors ${
+    active
+      ? "bg-surface text-foreground border border-border"
+      : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
+  }`;
+
+  if (to) {
+    return (
+      <Link to={to} className={className}>
+        {icon}
+        <span className="truncate">{label}</span>
+      </Link>
+    );
+  }
+
   return (
-    <button
-      className={`w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-sm transition-colors ${
-        active
-          ? "bg-surface text-foreground border border-border"
-          : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
-      }`}
-    >
+    <button className={className}>
       {icon}
       <span className="truncate">{label}</span>
     </button>
