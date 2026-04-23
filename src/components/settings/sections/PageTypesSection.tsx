@@ -1,9 +1,20 @@
 import { useState } from "react";
 import { Plus, Trash2, RefreshCw, ChevronDown, ChevronRight } from "lucide-react";
 
+type MatchType = "contains" | "not_contains" | "is" | "is_not" | "regex";
+
+const MATCH_OPTIONS: { value: MatchType; label: string }[] = [
+  { value: "contains", label: "Contains" },
+  { value: "not_contains", label: "Doesn't contain" },
+  { value: "is", label: "Is" },
+  { value: "is_not", label: "Is not" },
+  { value: "regex", label: "Regex" },
+];
+
 interface PageTypeRow {
   id: string;
   label: string;
+  matchType: MatchType;
   pattern: string;
   pageCount: number;
   cvr: string;
@@ -13,11 +24,11 @@ interface PageTypeRow {
 }
 
 const INITIAL: PageTypeRow[] = [
-  { id: "pdp", label: "Product pages", pattern: "/product/*", pageCount: 1247, cvr: "3.1", aov: "92", useGlobal: false, ga4Synced: true },
-  { id: "plp", label: "Category pages", pattern: "/category/*", pageCount: 84, cvr: "1.8", aov: "78", useGlobal: false, ga4Synced: true },
-  { id: "blog", label: "Blog posts", pattern: "/blog/*", pageCount: 312, cvr: "0.4", aov: "65", useGlobal: false, ga4Synced: true },
-  { id: "guides", label: "Guides & resources", pattern: "/guides/*", pageCount: 47, cvr: "", aov: "", useGlobal: true, ga4Synced: false },
-  { id: "home", label: "Homepage", pattern: "/", pageCount: 1, cvr: "2.4", aov: "84", useGlobal: false, ga4Synced: true },
+  { id: "pdp", label: "Product pages", matchType: "contains", pattern: "/product/", pageCount: 1247, cvr: "3.1", aov: "92", useGlobal: false, ga4Synced: true },
+  { id: "plp", label: "Category pages", matchType: "contains", pattern: "/category/", pageCount: 84, cvr: "1.8", aov: "78", useGlobal: false, ga4Synced: true },
+  { id: "blog", label: "Blog posts", matchType: "contains", pattern: "/blog/", pageCount: 312, cvr: "0.4", aov: "65", useGlobal: false, ga4Synced: true },
+  { id: "guides", label: "Guides & resources", matchType: "contains", pattern: "/guides/", pageCount: 47, cvr: "", aov: "", useGlobal: true, ga4Synced: false },
+  { id: "home", label: "Homepage", matchType: "is", pattern: "/", pageCount: 1, cvr: "2.4", aov: "84", useGlobal: false, ga4Synced: true },
 ];
 
 interface Props {
