@@ -1,7 +1,27 @@
-import { Link } from "@tanstack/react-router";
-import { LayoutDashboard, Search, Bell, Settings } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { LayoutDashboard, Search, Bell, Settings, ChevronUp, LogOut, UserCog, UserPlus, Check } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuGroup,
+} from "@/components/ui/dropdown-menu";
+
+const PROFILES = [
+  { initials: "JS", name: "Jane Smith", domain: "acme.com" },
+  { initials: "MR", name: "Marco Rossi", domain: "northwind.io" },
+];
 
 export function DashboardNav() {
+  const navigate = useNavigate();
+  const active = PROFILES[0];
+
+  const handleLogout = () => {
+    navigate({ to: "/" });
+  };
   return (
     <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-56 border-r border-border bg-card/40 flex-col">
       <div className="px-5 py-5 flex items-center gap-2 border-b border-border">
