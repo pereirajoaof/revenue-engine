@@ -16,10 +16,12 @@ type Tab = (typeof TABS)[number];
 const DATA = Array.from({ length: 30 }, (_, i) => {
   const day = i + 1;
   const base = 50000 + Math.sin(i / 3) * 8000 + i * 600;
+  const lastYearBase = 38000 + Math.sin((i + 2) / 3) * 6000 + i * 420;
   return {
     day: `D${day}`,
     actual: Math.round(base + Math.random() * 4000),
     potential: Math.round(base * 1.85 + Math.random() * 3000),
+    lastYear: Math.round(lastYearBase + Math.random() * 3500),
   };
 });
 
@@ -40,9 +42,10 @@ export function RevenueChart() {
         <div>
           <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Performance vs Potential</p>
           <h2 className="text-base font-semibold mt-0.5">Organic {tab} — last 30 days</h2>
-          <div className="mt-3 flex items-center gap-4 text-xs">
+          <div className="mt-3 flex items-center flex-wrap gap-x-4 gap-y-1 text-xs">
             <Legend color="var(--primary)" label={`${tab} (actual)`} solid />
             <Legend color="var(--muted-foreground)" label="Potential (forecast)" dashed />
+            <Legend color="var(--chart-3, #f59e0b)" label="Last year" dotted />
           </div>
         </div>
 
@@ -96,7 +99,11 @@ export function RevenueChart() {
                 fontFamily: "var(--font-mono)",
               }}
               labelStyle={{ color: "var(--muted-foreground)", fontSize: 10 }}
-              formatter={(value: number, name) => [fmt(value), name === "actual" ? "Actual" : "Potential"]}
+              formatter={(value: number, name) => {
+                const label =
+                  name === "actual" ? "Actual" : name === "potential" ? "Potential" : "Last year";
+                return [fmt(value), label];
+              }}
             />
             <Area
               type="monotone"
@@ -113,6 +120,14 @@ export function RevenueChart() {
               strokeDasharray="4 4"
               dot={false}
             />
+            <Line
+              type="monotone"
+              dataKey="lastYear"
+              stroke="var(--chart-3, #f59e0b)"
+              strokeWidth={1.5}
+              strokeDasharray="2 3"
+              dot={false}
+            />
           </AreaChart>
         </ResponsiveContainer>
       </div>
@@ -120,14 +135,30 @@ export function RevenueChart() {
   );
 }
 
-function Legend({ color, label, solid, dashed }: { color: string; label: string; solid?: boolean; dashed?: boolean }) {
+function Legend({
+  color,
+  label,
+  solid,
+  dashed,
+  dotted,
+}: {
+  color: string;
+  label: string;
+  solid?: boolean;
+  dashed?: boolean;
+  dotted?: boolean;
+}) {
   return (
     <span className="inline-flex items-center gap-2 text-muted-foreground">
       <span
         className="inline-block w-6 h-[2px]"
         style={{
           background: solid ? color : "transparent",
-          borderTop: dashed ? `2px dashed ${color}` : undefined,
+          borderTop: dashed
+            ? `2px dashed ${color}`
+            : dotted
+              ? `2px dotted ${color}`
+              : undefined,
         }}
       />
       <span className="font-mono text-[11px]">{label}</span>
