@@ -80,7 +80,7 @@ export function RecalculationSection({ hasUnsaved }: Props) {
         className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
       >
         <RefreshCw className={`w-4 h-4 ${running ? "animate-spin" : ""}`} />
-        {running ? "Running analysis…" : "Re-run analysis"}
+        {running ? "Running analysis…" : "Save & Re-run analysis"}
       </button>
     </div>
   );
