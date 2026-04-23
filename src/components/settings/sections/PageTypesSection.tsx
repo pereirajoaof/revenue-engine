@@ -112,12 +112,25 @@ export function PageTypesSection({ onDirty }: Props) {
                   </div>
                   <div>
                     <label className="block text-[11px] font-medium text-muted-foreground mb-1">URL pattern</label>
-                    <input
-                      type="text"
-                      value={row.pattern}
-                      onChange={(e) => update(row.id, { pattern: e.target.value })}
-                      className="w-full px-3 py-1.5 rounded-md border border-border bg-background text-sm font-mono focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
+                    <div className="flex gap-2">
+                      <select
+                        value={row.matchType}
+                        onChange={(e) => update(row.id, { matchType: e.target.value as MatchType })}
+                        className="px-2 py-1.5 rounded-md border border-border bg-background text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary shrink-0"
+                      >
+                        {MATCH_OPTIONS.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        type="text"
+                        value={row.pattern}
+                        onChange={(e) => update(row.id, { pattern: e.target.value })}
+                        className="w-full px-3 py-1.5 rounded-md border border-border bg-background text-sm font-mono focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                      />
+                    </div>
                   </div>
                 </div>
 
