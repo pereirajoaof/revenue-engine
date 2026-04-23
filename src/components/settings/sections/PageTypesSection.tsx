@@ -1,9 +1,20 @@
 import { useState } from "react";
 import { Plus, Trash2, RefreshCw, ChevronDown, ChevronRight } from "lucide-react";
 
+type MatchType = "contains" | "not_contains" | "is" | "is_not" | "regex";
+
+const MATCH_OPTIONS: { value: MatchType; label: string }[] = [
+  { value: "contains", label: "Contains" },
+  { value: "not_contains", label: "Doesn't contain" },
+  { value: "is", label: "Is" },
+  { value: "is_not", label: "Is not" },
+  { value: "regex", label: "Regex" },
+];
+
 interface PageTypeRow {
   id: string;
   label: string;
+  matchType: MatchType;
   pattern: string;
   pageCount: number;
   cvr: string;
@@ -13,11 +24,11 @@ interface PageTypeRow {
 }
 
 const INITIAL: PageTypeRow[] = [
-  { id: "pdp", label: "Product pages", pattern: "/product/*", pageCount: 1247, cvr: "3.1", aov: "92", useGlobal: false, ga4Synced: true },
-  { id: "plp", label: "Category pages", pattern: "/category/*", pageCount: 84, cvr: "1.8", aov: "78", useGlobal: false, ga4Synced: true },
-  { id: "blog", label: "Blog posts", pattern: "/blog/*", pageCount: 312, cvr: "0.4", aov: "65", useGlobal: false, ga4Synced: true },
-  { id: "guides", label: "Guides & resources", pattern: "/guides/*", pageCount: 47, cvr: "", aov: "", useGlobal: true, ga4Synced: false },
-  { id: "home", label: "Homepage", pattern: "/", pageCount: 1, cvr: "2.4", aov: "84", useGlobal: false, ga4Synced: true },
+  { id: "pdp", label: "Product pages", matchType: "contains", pattern: "/product/", pageCount: 1247, cvr: "3.1", aov: "92", useGlobal: false, ga4Synced: true },
+  { id: "plp", label: "Category pages", matchType: "contains", pattern: "/category/", pageCount: 84, cvr: "1.8", aov: "78", useGlobal: false, ga4Synced: true },
+  { id: "blog", label: "Blog posts", matchType: "contains", pattern: "/blog/", pageCount: 312, cvr: "0.4", aov: "65", useGlobal: false, ga4Synced: true },
+  { id: "guides", label: "Guides & resources", matchType: "contains", pattern: "/guides/", pageCount: 47, cvr: "", aov: "", useGlobal: true, ga4Synced: false },
+  { id: "home", label: "Homepage", matchType: "is", pattern: "/", pageCount: 1, cvr: "2.4", aov: "84", useGlobal: false, ga4Synced: true },
 ];
 
 interface Props {
@@ -42,7 +53,7 @@ export function PageTypesSection({ onDirty }: Props) {
     const id = `pt-${Date.now()}`;
     setRows((r) => [
       ...r,
-      { id, label: "New page type", pattern: "/path/*", pageCount: 0, cvr: "", aov: "", useGlobal: true, ga4Synced: false },
+      { id, label: "New page type", matchType: "contains", pattern: "/path/", pageCount: 0, cvr: "", aov: "", useGlobal: true, ga4Synced: false },
     ]);
     setExpanded(id);
     onDirty();
@@ -70,7 +81,10 @@ export function PageTypesSection({ onDirty }: Props) {
                 )}
                 <div className="min-w-0">
                   <div className="text-sm font-medium truncate">{row.label}</div>
-                  <div className="text-[11px] font-mono text-muted-foreground truncate">{row.pattern}</div>
+                  <div className="text-[11px] font-mono text-muted-foreground truncate">
+                    <span className="text-muted-foreground/70">{MATCH_OPTIONS.find((o) => o.value === row.matchType)?.label}</span>{" "}
+                    {row.pattern}
+                  </div>
                 </div>
               </div>
               <span className="text-xs font-mono text-muted-foreground w-20 text-right">
@@ -101,12 +115,25 @@ export function PageTypesSection({ onDirty }: Props) {
                   </div>
                   <div>
                     <label className="block text-[11px] font-medium text-muted-foreground mb-1">URL pattern</label>
-                    <input
-                      type="text"
-                      value={row.pattern}
-                      onChange={(e) => update(row.id, { pattern: e.target.value })}
-                      className="w-full px-3 py-1.5 rounded-md border border-border bg-background text-sm font-mono focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
+                    <div className="flex gap-2">
+                      <select
+                        value={row.matchType}
+                        onChange={(e) => update(row.id, { matchType: e.target.value as MatchType })}
+                        className="px-2 py-1.5 rounded-md border border-border bg-background text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary shrink-0"
+                      >
+                        {MATCH_OPTIONS.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        type="text"
+                        value={row.pattern}
+                        onChange={(e) => update(row.id, { pattern: e.target.value })}
+                        className="w-full px-3 py-1.5 rounded-md border border-border bg-background text-sm font-mono focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                      />
+                    </div>
                   </div>
                 </div>
 
