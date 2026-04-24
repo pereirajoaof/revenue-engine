@@ -50,7 +50,7 @@ export function DashboardNav() {
   const active = PROFILES[0];
   const path = location.pathname;
   const search = location.search as Record<string, string> | undefined;
-  const isTechRoute = path === "/technical-health";
+  const isTechRoute = path.startsWith("/technical-health");
   const activeDriver = isTechRoute
     ? "technical-health"
     : path === "/dashboard"
@@ -117,10 +117,25 @@ export function DashboardNav() {
                 }`;
                 if (d.key === "technical-health") {
                   return (
-                    <Link key={d.key} to="/technical-health" className={className}>
-                      <Icon className="w-3.5 h-3.5 shrink-0" />
-                      <span className="truncate">{d.label}</span>
-                    </Link>
+                    <div key={d.key}>
+                      <Link to="/technical-health" className={className}>
+                        <Icon className="w-3.5 h-3.5 shrink-0" />
+                        <span className="truncate">{d.label}</span>
+                      </Link>
+                      {isActive && (
+                        <Link
+                          to="/technical-health/cwv"
+                          className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                            path === "/technical-health/cwv"
+                              ? "bg-primary/10 text-primary border border-primary/20"
+                              : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
+                          }`}
+                        >
+                          <Gauge className="w-3 h-3 shrink-0" />
+                          <span className="truncate">Core Web Vitals</span>
+                        </Link>
+                      )}
+                    </div>
                   );
                 }
                 return (
