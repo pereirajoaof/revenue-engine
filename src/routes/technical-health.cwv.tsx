@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Activity, ArrowDownRight, ArrowUpRight, Gauge, Layers3, Target, TrendingUp } from "lucide-react";
+import { Activity, ArrowDownRight, ArrowUpRight, Download, Gauge, Layers3, Target, TrendingUp } from "lucide-react";
 import {
   Area,
   AreaChart,
