@@ -438,7 +438,7 @@ function UrlExamplesTable() {
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[1020px] text-sm">
+      <table className="w-full min-w-[920px] text-sm">
         <thead className="bg-surface/40 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
           <tr>
             {URL_SORT_COLUMNS.map((column) => (
@@ -449,7 +449,6 @@ function UrlExamplesTable() {
                 </button>
               </th>
             ))}
-            <th className="px-1 py-3 text-right font-medium">Action</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -459,17 +458,29 @@ function UrlExamplesTable() {
               onClick={() => setSelectedUrl(row)}
               className="cursor-pointer hover:bg-surface/40 transition-colors"
             >
-              <td className="max-w-[320px] px-1 py-3">
-                <button
-                  type="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setSelectedUrl(row);
-                  }}
-                  className="block max-w-[320px] truncate text-left font-mono text-xs text-primary underline-offset-4 hover:underline"
-                >
-                  {row.url}
-                </button>
+              <td className="max-w-[360px] px-1 py-3">
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setSelectedUrl(row);
+                    }}
+                    className="min-w-0 flex-1 truncate text-left font-mono text-xs text-primary underline-offset-4 hover:underline"
+                  >
+                    {row.url}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setSelectedUrl(row);
+                    }}
+                    className="shrink-0 rounded-md border border-border bg-surface px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+                  >
+                    Diagnose
+                  </button>
+                </div>
               </td>
               <td className="px-3 py-3 text-center"><StatusPill status={row.status} /></td>
               <td className="px-3 py-3 text-right font-mono">{row.clicks}</td>
@@ -479,18 +490,6 @@ function UrlExamplesTable() {
               <td className="px-3 py-3 text-right font-mono text-primary">{row.lcp}</td>
               <td className="px-3 py-3 text-right font-mono text-chart-4">{row.inp}</td>
               <td className="px-1 py-3 text-right font-mono text-primary">{row.cls}</td>
-              <td className="px-1 py-3 text-right">
-                <button
-                  type="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setSelectedUrl(row);
-                  }}
-                  className="rounded-md border border-border bg-surface px-2.5 py-1.5 text-[11px] font-mono uppercase tracking-wider text-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
-                >
-                  Diagnose
-                </button>
-              </td>
             </tr>
           ))}
         </tbody>
