@@ -51,26 +51,83 @@ export function KpiRow() {
   );
 }
 
+function riskStyles(tone: RiskTone) {
+  switch (tone) {
+    case "high":
+      return {
+        border: "border-destructive/40",
+        value: "text-destructive",
+        glow: "bg-destructive/20",
+        dot: "bg-destructive",
+        chip: "text-destructive bg-destructive/10 border-destructive/20",
+        label: "High risk",
+      };
+    case "medium":
+      return {
+        border: "border-chart-4/40",
+        value: "text-chart-4",
+        glow: "bg-chart-4/20",
+        dot: "bg-chart-4",
+        chip: "text-chart-4 bg-chart-4/10 border-chart-4/20",
+        label: "Elevated risk",
+      };
+    default:
+      return {
+        border: "border-primary/30",
+        value: "text-primary",
+        glow: "bg-primary/15",
+        dot: "bg-primary",
+        chip: "text-primary bg-primary/10 border-primary/20",
+        label: "Low risk",
+      };
+  }
+}
+
 function KpiCard({ kpi }: { kpi: Kpi }) {
   const positive = kpi.change >= 0;
+  const risk = kpi.risk ? riskStyles(kpi.risk.tone) : null;
+
+  // For "Revenue at Risk", an INCREASE is bad (red), a DECREASE is good (green).
+  const changeIsGood = risk ? !positive : positive;
+
   return (
     <div
       className={`relative rounded-lg border bg-card p-4 transition-colors hover:border-primary/40 ${
-        kpi.highlight ? "border-primary/30" : "border-border"
+        risk ? risk.border : kpi.highlight ? "border-primary/30" : "border-border"
       }`}
     >
-      {kpi.highlight && (
-        <div className="absolute inset-0 rounded-lg bg-glow opacity-20 blur-2xl pointer-events-none" />
+      {(kpi.highlight || risk) && (
+        <div
+          className={`absolute inset-0 rounded-lg opacity-20 blur-2xl pointer-events-none ${
+            risk ? risk.glow : "bg-glow"
+          }`}
+        />
       )}
       <div className="relative">
-        <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{kpi.label}</p>
-        <p className={`mt-2 text-2xl font-bold font-mono ${kpi.highlight ? "text-primary" : "text-foreground"}`}>
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+            {kpi.label}
+          </p>
+          {risk && (
+            <span
+              className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md border text-[9px] font-mono uppercase tracking-wider ${risk.chip}`}
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${risk.dot}`} />
+              {risk.label}
+            </span>
+          )}
+        </div>
+        <p
+          className={`mt-2 text-2xl font-bold font-mono ${
+            risk ? risk.value : kpi.highlight ? "text-primary" : "text-foreground"
+          }`}
+        >
           {kpi.value}
         </p>
         <div className="mt-2 flex items-center justify-between">
           <span
             className={`inline-flex items-center gap-0.5 text-[11px] font-mono font-medium ${
-              positive ? "text-primary" : "text-chart-5"
+              changeIsGood ? "text-primary" : "text-chart-5"
             }`}
           >
             {positive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
