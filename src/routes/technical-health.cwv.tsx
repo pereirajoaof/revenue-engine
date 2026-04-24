@@ -486,6 +486,27 @@ function UrlExamplesTable() {
 
   return (
     <div className="overflow-x-auto">
+      <div className="flex flex-col gap-2 border-t border-border bg-surface/35 px-1 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">URL diagnostics</p>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setSelectedUrl(sortedRows[0])}
+            className="inline-flex items-center gap-1.5 rounded-md border border-primary/30 bg-primary/10 px-2.5 py-1.5 text-[11px] font-mono font-semibold text-primary transition-colors hover:bg-primary/15"
+          >
+            <Activity className="h-3.5 w-3.5" />
+            Preview diagnosis
+          </button>
+          <button
+            type="button"
+            onClick={exportUrlTableCsv}
+            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-2.5 py-1.5 text-[11px] font-mono font-semibold text-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+          >
+            <Download className="h-3.5 w-3.5" />
+            Export CSV
+          </button>
+        </div>
+      </div>
       <table className="w-full min-w-[920px] text-sm">
         <thead className="bg-surface/40 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
           <tr>
