@@ -212,34 +212,42 @@ function PerformancePotentialChart() {
 
 function DeepDive() {
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-      <section className="xl:col-span-2 rounded-xl border border-border bg-card p-5 shadow-sm">
-        <SectionHeading icon={<Activity className="w-4 h-4" />} title="Bus Route page type" subtitle="CWV diagnosis and financial justification for the highest-value opportunity." />
-        <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <div>
-            <h3 className="text-sm font-semibold">CWV breakdown</h3>
-            <div className="mt-3 h-[220px]">
+    <div className="space-y-6">
+      <section className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+        <div className="flex flex-col gap-3 border-b border-border p-5 md:flex-row md:items-center md:justify-between">
+          <SectionHeading icon={<Activity className="w-4 h-4" />} title="Bus Route page type" subtitle="CTR and revenue opportunity by CWV status, using controlled URL samples." />
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-md border border-primary/30 bg-primary/10 px-2.5 py-1 text-[11px] font-mono font-semibold text-primary">+£17,787/wk</span>
+            <span className="rounded-md border border-border bg-surface px-2.5 py-1 text-[11px] font-mono text-muted-foreground">≈ £924,924/yr est.</span>
+          </div>
+        </div>
+        <div className="p-5">
+          <div className="rounded-lg bg-surface/45 p-4">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h3 className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">CTR by CWV status — weekly</h3>
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <LegendDot label="Good" className="bg-primary" />
+                <LegendDot label="NI" className="bg-chart-4" />
+                <LegendDot label="Poor" className="bg-destructive" />
+              </div>
+            </div>
+            <div className="h-[210px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={BREAKDOWN} layout="vertical" margin={{ top: 4, right: 8, bottom: 4, left: 0 }}>
-                  <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" horizontal={false} />
-                  <XAxis type="number" hide />
-                  <YAxis type="category" dataKey="metric" tick={{ fill: "var(--foreground)", fontSize: 11, fontFamily: "var(--font-mono)" }} axisLine={false} tickLine={false} width={34} />
-                  <Tooltip content={<VitalsTooltip />} />
-                  <Bar dataKey="good" stackId="a" fill="var(--primary)" radius={[4, 0, 0, 4]} />
-                  <Bar dataKey="ni" stackId="a" fill="var(--chart-4)" />
-                  <Bar dataKey="poor" stackId="a" fill="var(--destructive)" radius={[0, 4, 4, 0]} />
-                </BarChart>
+                <LineChart data={STATUS_WEEKLY} margin={{ top: 8, right: 18, bottom: 0, left: 0 }}>
+                  <CartesianGrid stroke="var(--border)" vertical={false} />
+                  <XAxis dataKey="week" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 11, fontFamily: "var(--font-mono)" }} tickFormatter={(v) => `${v}%`} axisLine={false} tickLine={false} />
+                  <Tooltip content={<StatusTrendTooltip />} />
+                  <Line type="monotone" dataKey="good" stroke="var(--primary)" strokeWidth={2} dot={{ r: 3, fill: "var(--primary)" }} connectNulls />
+                  <Line type="monotone" dataKey="ni" stroke="var(--chart-4)" strokeWidth={2} dot={{ r: 3, fill: "var(--chart-4)" }} connectNulls />
+                  <Line type="monotone" dataKey="poor" stroke="var(--destructive)" strokeWidth={2} dot={{ r: 3, fill: "var(--destructive)" }} connectNulls />
+                </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
-          <RevenueModel />
+          <StatusSummary />
+          <UrlExamplesTable />
         </div>
-      </section>
-
-      <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
-        <SectionHeading icon={<Layers3 className="w-4 h-4" />} title="URL examples" subtitle="Controlled samples for context, not raw exploration." />
-        <UrlList title="Worst 5" urls={URLS.worst} status="poor" />
-        <UrlList title="Best 5" urls={URLS.best} status="good" />
       </section>
 
       <section className="xl:col-span-3 rounded-xl border border-border bg-card p-5 shadow-sm">
