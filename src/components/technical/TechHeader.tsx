@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, Calendar } from "lucide-react";
+import { ChevronDown, Calendar, Plus } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const RANGES = ["7d", "30d", "90d"] as const;
@@ -39,6 +39,12 @@ export function TechHeader() {
 
           {/* Page Type filter */}
           <PageTypeFilter value={pageType} options={PAGE_TYPES} onChange={setPageType} />
+
+          {/* Primary CTA */}
+          <button className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-primary text-primary-foreground text-xs font-semibold hover:brightness-110 transition-all shadow-[0_0_20px_var(--glow)]">
+            <Plus className="w-3.5 h-3.5" />
+            Create Action
+          </button>
 
           <ThemeToggle />
         </div>
