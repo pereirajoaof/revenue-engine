@@ -249,23 +249,6 @@ function DeepDive() {
           <UrlExamplesTable />
         </div>
       </section>
-
-      <section className="xl:col-span-3 rounded-xl border border-border bg-card p-5 shadow-sm">
-        <SectionHeading icon={<TrendingUp className="w-4 h-4" />} title="Weekly CWV evolution" subtitle="Health score against revenue at risk, with release and experiment markers." />
-        <div className="mt-4 h-[280px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={TREND} margin={{ top: 10, right: 18, bottom: 0, left: 0 }}>
-              <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="week" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis yAxisId="score" tick={{ fill: "var(--muted-foreground)", fontSize: 11, fontFamily: "var(--font-mono)" }} axisLine={false} tickLine={false} />
-              <YAxis yAxisId="risk" orientation="right" tick={{ fill: "var(--muted-foreground)", fontSize: 11, fontFamily: "var(--font-mono)" }} tickFormatter={(v) => `£${v}k`} axisLine={false} tickLine={false} />
-              <Tooltip content={<TrendTooltip />} />
-              <Area yAxisId="risk" type="monotone" dataKey="risk" stroke="var(--destructive)" fill="var(--destructive)" fillOpacity={0.14} name="Risk" />
-              <Line yAxisId="score" type="monotone" dataKey="score" stroke="var(--primary)" strokeWidth={2} name="Score" />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </section>
     </div>
   );
 }
