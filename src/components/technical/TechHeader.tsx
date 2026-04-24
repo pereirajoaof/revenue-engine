@@ -5,7 +5,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 const RANGES = ["7d", "30d", "90d"] as const;
 const PAGE_TYPES = ["All page types", "Routes", "Stops", "City", "Operator", "Blog"];
 
-export function TechHeader({ title = "Technical Health" }: { title?: string }) {
+export function TechHeader({ title = "Technical Health", eyebrow = "Growth driver · Technical" }: { title?: string; eyebrow?: string }) {
   const [range, setRange] = useState<(typeof RANGES)[number]>("30d");
   const [pageType, setPageType] = useState(PAGE_TYPES[0]);
 
@@ -13,9 +13,7 @@ export function TechHeader({ title = "Technical Health" }: { title?: string }) {
     <header className="border-b border-border bg-background/80 backdrop-blur sticky top-0 z-30">
       <div className="px-6 lg:px-8 py-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-            Growth driver · Technical
-          </p>
+          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{eyebrow}</p>
           <h1 className="text-2xl font-bold tracking-tight mt-0.5">{title}</h1>
         </div>
 
