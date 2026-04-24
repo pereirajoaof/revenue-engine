@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { Activity, ArrowDownRight, ArrowUpDown, ArrowUpRight, Download, Gauge, Layers3, Target, TrendingUp } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Activity, ArrowDownRight, ArrowUpDown, ArrowUpRight, Check, Download, Gauge, Loader2, RefreshCw, Smartphone, Target, TrendingUp, Wifi } from "lucide-react";
 import {
   Area,
   AreaChart,
@@ -15,6 +15,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const Route = createFileRoute("/technical-health/cwv")({
@@ -92,17 +93,40 @@ const TREND = [
   { week: "W6", score: 70, risk: 386, release: "Experiment" },
 ];
 
-const URL_EXAMPLES = [
+const URL_EXAMPLES: readonly {
+  url: string;
+  status: VitalsStatus;
+  clicks: string;
+  impressions: string;
+  ctr: string;
+  position: string;
+  lcp: string;
+  inp: string;
+  cls: string;
+}[] = [
   { url: "/routes/london-to-bristol", status: "ni", clicks: "1,110", impressions: "40,412", ctr: "2.7%", position: "5.0", lcp: "1.41s", inp: "204ms", cls: "0.010" },
   { url: "/routes/manchester-to-leeds", status: "ni", clicks: "489", impressions: "30,724", ctr: "1.6%", position: "6.3", lcp: "1.12s", inp: "180ms", cls: "0.220" },
   { url: "/stops/victoria-coach-station", status: "ni", clicks: "679", impressions: "16,397", ctr: "4.1%", position: "10.7", lcp: "1.52s", inp: "215ms", cls: "0.010" },
   { url: "/routes/edinburgh-to-glasgow", status: "good", clicks: "1,340", impressions: "13,529", ctr: "9.9%", position: "2.0", lcp: "1.31s", inp: "180ms", cls: "0.000" },
   { url: "/city/birmingham", status: "ni", clicks: "2,631", impressions: "10,625", ctr: "24.8%", position: "1.8", lcp: "1.51s", inp: "221ms", cls: "0.120" },
-] as const;
+];
 
 type UrlExample = (typeof URL_EXAMPLES)[number];
 type SortKey = keyof UrlExample;
 type SortDirection = "asc" | "desc";
+
+const ANALYSIS_STEPS = [
+  "Launching browser session…",
+  "Configuring mobile device + Slow 4G profile…",
+  "Collecting field and lab CWV signals…",
+  "Finding LCP and CLS contributing elements…",
+] as const;
+
+const DIAGNOSIS_COPY: Record<VitalsStatus, { lcp: string; inp: string; cls: string; summary: string }> = {
+  good: { lcp: "1.31s", inp: "180ms", cls: "0.000", summary: "No blocking CWV issue detected for this sample URL." },
+  ni: { lcp: "3.18s", inp: "221ms", cls: "0.120", summary: "Hero media and late fare module movement are reducing eligibility for Good CWV." },
+  poor: { lcp: "4.82s", inp: "310ms", cls: "0.260", summary: "The first visible content is delayed and route cards shift after initial render." },
+};
 
 const URL_SORT_COLUMNS: { key: SortKey; label: string; align: "left" | "center" | "right"; className: string }[] = [
   { key: "url", label: "URL", align: "left", className: "px-1" },
@@ -398,6 +422,7 @@ function sortValue(row: UrlExample, key: SortKey): string | number {
 
 function UrlExamplesTable() {
   const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection }>({ key: "clicks", direction: "desc" });
+  const [selectedUrl, setSelectedUrl] = useState<UrlExample | null>(null);
   const sortedRows = useMemo(() => {
     return [...URL_EXAMPLES].sort((a, b) => {
       const aValue = sortValue(a, sort.key);
@@ -429,7 +454,11 @@ function UrlExamplesTable() {
         <tbody className="divide-y divide-border">
           {sortedRows.map((row) => (
             <tr key={row.url} className="hover:bg-surface/40 transition-colors">
-              <td className="max-w-[320px] truncate px-1 py-3 font-mono text-xs text-primary">{row.url}</td>
+              <td className="max-w-[320px] px-1 py-3">
+                <button onClick={() => setSelectedUrl(row)} className="block max-w-[320px] truncate font-mono text-xs text-primary underline-offset-4 hover:underline">
+                  {row.url}
+                </button>
+              </td>
               <td className="px-3 py-3 text-center"><StatusPill status={row.status} /></td>
               <td className="px-3 py-3 text-right font-mono">{row.clicks}</td>
               <td className="px-3 py-3 text-right font-mono">{row.impressions}</td>
@@ -443,6 +472,105 @@ function UrlExamplesTable() {
         </tbody>
       </table>
       <button className="w-full border-t border-border py-3 text-xs text-muted-foreground hover:text-foreground transition-colors">Show all 29 URLs</button>
+      <UrlDiagnosisSheet row={selectedUrl} open={Boolean(selectedUrl)} onOpenChange={(open) => !open && setSelectedUrl(null)} />
+    </div>
+  );
+}
+
+function UrlDiagnosisSheet({ row, open, onOpenChange }: { row: UrlExample | null; open: boolean; onOpenChange: (open: boolean) => void }) {
+  const [complete, setComplete] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    setComplete(false);
+    const timer = window.setTimeout(() => setComplete(true), 1400);
+    return () => window.clearTimeout(timer);
+  }, [open, row?.url]);
+
+  if (!row) return null;
+  const diagnosis = DIAGNOSIS_COPY[row.status];
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent className="w-full overflow-y-auto border-l border-border bg-card p-0 sm:max-w-2xl lg:max-w-3xl">
+        <SheetHeader className="border-b border-border px-6 py-5 text-left">
+          <SheetTitle className="font-mono text-xs uppercase tracking-wider text-muted-foreground">URL diagnosis</SheetTitle>
+          <SheetDescription className="truncate font-mono text-sm text-foreground">{row.url}</SheetDescription>
+          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5"><Smartphone className="h-3.5 w-3.5 text-primary" />Mobile</span>
+            <span className="inline-flex items-center gap-1.5"><Wifi className="h-3.5 w-3.5 text-primary" />Slow 4G</span>
+            <span>Last run just now</span>
+            <button className="inline-flex items-center gap-1 text-primary hover:underline"><RefreshCw className="h-3 w-3" />Re-run</button>
+          </div>
+        </SheetHeader>
+
+        <div className="space-y-6 px-6 py-5">
+          {!complete ? (
+            <div className="rounded-lg border border-border bg-surface/45 p-5">
+              <div className="flex items-center gap-2 text-sm font-medium"><Loader2 className="h-4 w-4 animate-spin text-primary" />Running analysis…</div>
+              <div className="mt-4 space-y-2 font-mono text-xs text-muted-foreground">
+                {ANALYSIS_STEPS.map((step, index) => <p key={step}>{index < 3 ? "✓" : "→"} {step}</p>)}
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <VitalTile label="LCP" value={diagnosis.lcp} status={row.status === "good" ? "good" : "poor"} />
+                <VitalTile label="INP" value={diagnosis.inp} status={row.status === "poor" ? "ni" : "good"} />
+                <VitalTile label="CLS" value={diagnosis.cls} status={Number(diagnosis.cls) > 0.1 ? "poor" : "good"} />
+                <VitalTile label="Revenue risk" value={row.status === "good" ? "Low" : "High"} status={row.status} />
+              </div>
+
+              <div className="rounded-lg border border-border bg-surface/35 p-5">
+                <h4 className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Findings</h4>
+                <p className="mt-2 text-sm text-foreground">{diagnosis.summary}</p>
+              </div>
+
+              <AnnotatedPagePreview />
+            </>
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+function VitalTile({ label, value, status }: { label: string; value: string; status: VitalsStatus }) {
+  return (
+    <div className="rounded-lg border border-border bg-surface/35 p-4 text-center">
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="mt-2 font-mono text-xl font-bold text-foreground">{value}</p>
+      <div className={`mt-2 inline-flex items-center gap-1 text-xs ${status === "good" ? "text-primary" : status === "ni" ? "text-chart-4" : "text-destructive"}`}>
+        <span className="h-2 w-2 rounded-full bg-current" />{status === "ni" ? "Needs work" : status}
+      </div>
+    </div>
+  );
+}
+
+function AnnotatedPagePreview() {
+  return (
+    <div className="overflow-hidden rounded-lg border border-border bg-background">
+      <div className="border-b border-border px-5 py-4">
+        <h4 className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Screenshot — issues highlighted</h4>
+      </div>
+      <div className="relative p-4">
+        <div className="relative overflow-hidden rounded-md border border-border bg-surface">
+          <div className="flex items-center justify-between border-b border-border bg-card px-5 py-4">
+            <div className="h-8 w-8 rounded-md bg-destructive/15" />
+            <div className="flex gap-4 text-muted-foreground"><Gauge className="h-5 w-5" /><Target className="h-5 w-5" /><span className="font-mono text-xl">≡</span></div>
+          </div>
+          <div className="relative grid grid-cols-3 gap-2 p-3">
+            <div className="col-span-2 h-36 rounded-md bg-primary/15" />
+            <div className="h-36 rounded-md bg-chart-4/20" />
+            <div className="h-24 rounded-md bg-muted" />
+            <div className="h-24 rounded-md bg-muted" />
+            <div className="h-24 rounded-md bg-muted" />
+            <div className="absolute left-2 top-2 right-2 h-[176px] rounded-md border-4 border-destructive" />
+            <div className="absolute left-4 top-4 rounded-md bg-destructive px-3 py-1.5 font-mono text-xs font-bold text-destructive-foreground">LCP element</div>
+            <div className="absolute bottom-8 right-8 rounded-md border border-chart-4/40 bg-chart-4/15 px-3 py-2 text-xs text-chart-4">CLS shift: fare module moved after render</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
