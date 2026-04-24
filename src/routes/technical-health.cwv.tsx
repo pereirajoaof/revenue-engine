@@ -451,6 +451,23 @@ function sortValue(row: UrlExample, key: SortKey): string | number {
   return Number(String(row[key]).replace(/[^0-9.-]/g, ""));
 }
 
+function DemoDiagnosisButton() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="inline-flex items-center gap-1.5 rounded-md border border-primary/30 bg-primary/10 px-2.5 py-1 text-[11px] font-mono font-semibold text-primary transition-colors hover:bg-primary/15"
+      >
+        <Activity className="h-3.5 w-3.5" />
+        Preview diagnosis
+      </button>
+      <UrlDiagnosisSheet row={URL_EXAMPLES[0]} open={open} onOpenChange={setOpen} />
+    </>
+  );
+}
+
 function UrlExamplesTable() {
   const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection }>({ key: "clicks", direction: "desc" });
   const [selectedUrl, setSelectedUrl] = useState<UrlExample | null>(null);
