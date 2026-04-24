@@ -93,13 +93,23 @@ const TREND = [
   { week: "W6", score: 70, risk: 386, release: "Experiment" },
 ];
 
-const URL_EXAMPLES = [
+const URL_EXAMPLES: readonly {
+  url: string;
+  status: VitalsStatus;
+  clicks: string;
+  impressions: string;
+  ctr: string;
+  position: string;
+  lcp: string;
+  inp: string;
+  cls: string;
+}[] = [
   { url: "/routes/london-to-bristol", status: "ni", clicks: "1,110", impressions: "40,412", ctr: "2.7%", position: "5.0", lcp: "1.41s", inp: "204ms", cls: "0.010" },
   { url: "/routes/manchester-to-leeds", status: "ni", clicks: "489", impressions: "30,724", ctr: "1.6%", position: "6.3", lcp: "1.12s", inp: "180ms", cls: "0.220" },
   { url: "/stops/victoria-coach-station", status: "ni", clicks: "679", impressions: "16,397", ctr: "4.1%", position: "10.7", lcp: "1.52s", inp: "215ms", cls: "0.010" },
   { url: "/routes/edinburgh-to-glasgow", status: "good", clicks: "1,340", impressions: "13,529", ctr: "9.9%", position: "2.0", lcp: "1.31s", inp: "180ms", cls: "0.000" },
   { url: "/city/birmingham", status: "ni", clicks: "2,631", impressions: "10,625", ctr: "24.8%", position: "1.8", lcp: "1.51s", inp: "221ms", cls: "0.120" },
-] as const;
+];
 
 type UrlExample = (typeof URL_EXAMPLES)[number];
 type SortKey = keyof UrlExample;
