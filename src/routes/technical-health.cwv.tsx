@@ -390,6 +390,12 @@ function StatusSummary() {
   );
 }
 
+function sortValue(row: UrlExample, key: SortKey): string | number {
+  if (key === "status") return { good: 0, ni: 1, poor: 2 }[row.status];
+  if (key === "url") return row.url;
+  return Number(String(row[key]).replace(/[^0-9.-]/g, ""));
+}
+
 function UrlExamplesTable() {
   const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection }>({ key: "clicks", direction: "desc" });
   const sortedRows = useMemo(() => {
