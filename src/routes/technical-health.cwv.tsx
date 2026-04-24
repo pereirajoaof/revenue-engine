@@ -453,9 +453,20 @@ function UrlExamplesTable() {
         </thead>
         <tbody className="divide-y divide-border">
           {sortedRows.map((row) => (
-            <tr key={row.url} className="hover:bg-surface/40 transition-colors">
+            <tr
+              key={row.url}
+              onClick={() => setSelectedUrl(row)}
+              className="cursor-pointer hover:bg-surface/40 transition-colors"
+            >
               <td className="max-w-[320px] px-1 py-3">
-                <button onClick={() => setSelectedUrl(row)} className="block max-w-[320px] truncate font-mono text-xs text-primary underline-offset-4 hover:underline">
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setSelectedUrl(row);
+                  }}
+                  className="block max-w-[320px] truncate text-left font-mono text-xs text-primary underline-offset-4 hover:underline"
+                >
                   {row.url}
                 </button>
               </td>
