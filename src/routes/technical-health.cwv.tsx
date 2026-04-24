@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
 import { CwvPageShell } from "@/components/technical/CwvPages";
 
 export const Route = createFileRoute("/technical-health/cwv")({
@@ -20,8 +20,15 @@ export const Route = createFileRoute("/technical-health/cwv")({
 });
 
 function CwvLayoutRoute() {
+  const location = useLocation();
+  const active = location.pathname.endsWith("/page-type-deep-dive")
+    ? "deep-dive"
+    : location.pathname.endsWith("/opportunities")
+      ? "opportunities"
+      : "overview";
+
   return (
-    <CwvPageShell active="overview">
+    <CwvPageShell active={active}>
       <Outlet />
     </CwvPageShell>
   );
