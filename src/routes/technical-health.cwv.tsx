@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ImpactOverviewPage } from "@/components/technical/CwvPages";
+import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
+import { CwvPageShell } from "@/components/technical/CwvPages";
 
 export const Route = createFileRoute("/technical-health/cwv")({
-  component: ImpactOverviewPage,
+  component: CwvLayoutRoute,
   head: () => ({
     meta: [
       { title: "CWV Impact Overview — OrganicOS" },
@@ -18,3 +18,18 @@ export const Route = createFileRoute("/technical-health/cwv")({
     ],
   }),
 });
+
+function CwvLayoutRoute() {
+  const location = useLocation();
+  const active = location.pathname.endsWith("/page-type-deep-dive")
+    ? "deep-dive"
+    : location.pathname.endsWith("/opportunities")
+      ? "opportunities"
+      : "overview";
+
+  return (
+    <CwvPageShell active={active}>
+      <Outlet />
+    </CwvPageShell>
+  );
+}
