@@ -258,7 +258,7 @@ function PerformancePotentialChart() {
   );
 }
 
-function DeepDive() {
+export function DeepDive() {
   return (
     <div className="space-y-6">
       <section className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
@@ -325,7 +325,7 @@ function RevenueModel() {
   );
 }
 
-function OpportunitiesTable() {
+export function OpportunitiesTable() {
   return (
     <section className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
       <div className="flex flex-col gap-3 border-b border-border p-5 md:flex-row md:items-center md:justify-between">
