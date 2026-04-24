@@ -12,16 +12,13 @@ export function TechHeader() {
   const [market, setMarket] = useState(MARKETS[0]);
 
   return (
-    <header className="sticky top-0 z-30 backdrop-blur bg-background/80 border-b border-border">
-      <div className="px-6 lg:px-8 py-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-        <div className="space-y-1">
+    <header className="border-b border-border bg-background/80 backdrop-blur sticky top-0 z-30">
+      <div className="px-6 lg:px-8 py-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div>
           <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
             Growth driver · Technical
           </p>
-          <h1 className="text-2xl font-bold tracking-tight font-display">Technical Health</h1>
-          <p className="text-sm text-muted-foreground">
-            Revenue impact of crawlability, indexation, and performance.
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight mt-0.5">Technical Health</h1>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
