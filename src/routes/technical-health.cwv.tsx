@@ -4,11 +4,11 @@ import {
   Area,
   AreaChart,
   Bar,
-  BarChart,
   CartesianGrid,
   Cell,
   ComposedChart,
   Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -70,11 +70,17 @@ const PERFORMANCE = [
   { pageType: "Blog", current: 155, potential: 171 },
 ];
 
-const BREAKDOWN = [
-  { metric: "LCP", good: 48, ni: 22, poor: 30 },
-  { metric: "INP", good: 67, ni: 18, poor: 15 },
-  { metric: "CLS", good: 89, ni: 7, poor: 4 },
+const STATUS_WEEKLY = [
+  { week: "Mar 23", good: 18.9, ni: 10.8, poor: null },
+  { week: "Mar 30", good: 46.6, ni: 9.4, poor: 61.7 },
+  { week: "Apr 6", good: 20.8, ni: 8.3, poor: 62.0 },
 ];
+
+const STATUS_SUMMARY = [
+  { status: "good", label: "Good", sample: 8, clicks: "5,053", impressions: "24,239", ctr: "20.8%", growth: "baseline" },
+  { status: "ni", label: "Needs improvement", sample: 19, clicks: "11,711", impressions: "141,501", ctr: "8.3%", growth: "+£17,787/wk" },
+  { status: "poor", label: "Poor", sample: 2, clicks: "3,798", impressions: "6,126", ctr: "62.0%", growth: "—" },
+] as const;
 
 const TREND = [
   { week: "W1", score: 74, risk: 340 },
@@ -85,10 +91,13 @@ const TREND = [
   { week: "W6", score: 70, risk: 386, release: "Experiment" },
 ];
 
-const URLS = {
-  worst: ["/routes/london-to-bristol", "/routes/manchester-to-leeds", "/stops/victoria-coach-station", "/city/birmingham", "/operator/national-express"],
-  best: ["/routes/edinburgh-to-glasgow", "/routes/oxford-to-london", "/stops/golders-green", "/city/york", "/operator/megabus"],
-};
+const URL_EXAMPLES = [
+  { url: "/routes/london-to-bristol", status: "ni", clicks: "1,110", impressions: "40,412", ctr: "2.7%", position: "5.0", lcp: "1.41s", inp: "204ms", cls: "0.010" },
+  { url: "/routes/manchester-to-leeds", status: "ni", clicks: "489", impressions: "30,724", ctr: "1.6%", position: "6.3", lcp: "1.12s", inp: "180ms", cls: "0.220" },
+  { url: "/stops/victoria-coach-station", status: "ni", clicks: "679", impressions: "16,397", ctr: "4.1%", position: "10.7", lcp: "1.52s", inp: "215ms", cls: "0.010" },
+  { url: "/routes/edinburgh-to-glasgow", status: "good", clicks: "1,340", impressions: "13,529", ctr: "9.9%", position: "2.0", lcp: "1.31s", inp: "180ms", cls: "0.000" },
+  { url: "/city/birmingham", status: "ni", clicks: "2,631", impressions: "10,625", ctr: "24.8%", position: "1.8", lcp: "1.51s", inp: "221ms", cls: "0.120" },
+] as const;
 
 function CwvDashboardPage() {
   return (
