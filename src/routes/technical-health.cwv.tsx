@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Activity, ArrowDownRight, ArrowUpRight, Download, ExternalLink, Gauge, Layers3, Target, TrendingUp } from "lucide-react";
+import { Activity, ArrowDownRight, ArrowUpRight, Gauge, Layers3, Target, TrendingUp } from "lucide-react";
 import {
   Area,
   AreaChart,
@@ -93,24 +93,6 @@ const URLS = {
 function CwvDashboardPage() {
   return (
     <main className="px-6 lg:px-8 py-6 space-y-6">
-      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Technical Health · Core Web Vitals</p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight">CWV Impact Overview</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Capital allocation for performance improvements, ranked by revenue upside.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-3 py-2 text-xs font-mono uppercase tracking-wider hover:bg-surface/70 transition-colors">
-            <Download className="w-3.5 h-3.5" />
-            Export
-          </button>
-          <button className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground hover:brightness-110 transition-all shadow-[0_0_20px_var(--glow)]">
-            Create Action
-            <ExternalLink className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </div>
-
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList className="bg-surface border border-border">
           <TabsTrigger value="overview">Impact overview</TabsTrigger>
