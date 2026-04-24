@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { Activity, ArrowDownRight, ArrowUpDown, ArrowUpRight, Download, Gauge, Loader2, RefreshCw, Smartphone, Target, TrendingUp, Wifi } from "lucide-react";
 import {
@@ -140,6 +140,12 @@ const URL_SORT_COLUMNS: { key: SortKey; label: string; align: "left" | "center" 
 ];
 
 function CwvDashboardPage() {
+  const { pathname } = useLocation();
+
+  if (pathname !== "/technical-health/cwv") {
+    return <Outlet />;
+  }
+
   return (
     <main className="px-6 lg:px-8 py-6 space-y-6">
       <CwvSectionNav />
