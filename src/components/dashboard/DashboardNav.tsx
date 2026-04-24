@@ -50,13 +50,13 @@ export function DashboardNav() {
   const active = PROFILES[0];
   const path = location.pathname;
   const search = location.search as Record<string, string> | undefined;
-  const isTechRoute = path === "/dashboard/technical-health";
+  const isTechRoute = path === "/technical-health";
   const activeDriver = isTechRoute
     ? "technical-health"
     : path === "/dashboard"
       ? search?.driver
       : undefined;
-  const isRevenueParentActive = path === "/dashboard" || path.startsWith("/dashboard/");
+  const isRevenueParentActive = path === "/dashboard" || isTechRoute;
   const [driversOpen, setDriversOpen] = useState(true);
 
   const handleLogout = () => {
@@ -117,7 +117,7 @@ export function DashboardNav() {
                 }`;
                 if (d.key === "technical-health") {
                   return (
-                    <Link key={d.key} to="/dashboard/technical-health" className={className}>
+                    <Link key={d.key} to="/technical-health" className={className}>
                       <Icon className="w-3.5 h-3.5 shrink-0" />
                       <span className="truncate">{d.label}</span>
                     </Link>
