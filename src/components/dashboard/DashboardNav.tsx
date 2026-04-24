@@ -127,7 +127,7 @@ export function DashboardNav() {
                         <Link
                           to="/technical-health/cwv"
                           className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                            path === "/technical-health/cwv"
+                            path.startsWith("/technical-health/cwv")
                               ? "bg-primary/10 text-primary border border-primary/20"
                               : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
                           }`}
