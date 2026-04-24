@@ -466,6 +466,18 @@ function RevenueTooltip({ active, payload, label }: { active?: boolean; payload?
   );
 }
 
+function StatusTrendTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ dataKey: string; value: number | null }>; label?: string }) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="rounded-md border border-border bg-popover px-3 py-2 text-xs shadow-lg">
+      <p className="font-medium mb-1.5">{label}</p>
+      {payload.filter((p) => p.value !== null).map((p) => (
+        <div key={p.dataKey} className="flex justify-between gap-5 font-mono text-[11px]"><span className="text-muted-foreground">{p.dataKey}</span><span>{p.value}%</span></div>
+      ))}
+    </div>
+  );
+}
+
 function VitalsTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ dataKey: string; value: number }>; label?: string }) {
   if (!active || !payload?.length) return null;
   return (
