@@ -5,7 +5,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 const RANGES = ["7d", "30d", "90d"] as const;
 const PAGE_TYPES = ["All page types", "Routes", "Stops", "City", "Operator", "Blog"];
 
-export function TechHeader() {
+export function TechHeader({ title = "Technical Health" }: { title?: string }) {
   const [range, setRange] = useState<(typeof RANGES)[number]>("30d");
   const [pageType, setPageType] = useState(PAGE_TYPES[0]);
 
@@ -16,7 +16,7 @@ export function TechHeader() {
           <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
             Growth driver · Technical
           </p>
-          <h1 className="text-2xl font-bold tracking-tight mt-0.5">Technical Health</h1>
+          <h1 className="text-2xl font-bold tracking-tight mt-0.5">{title}</h1>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
