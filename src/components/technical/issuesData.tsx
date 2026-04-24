@@ -1,8 +1,5 @@
-import { Spider, Bot, FileSearch, Link as LinkIcon, ServerCrash, Gauge } from "lucide-react";
+import { Bug, Bot, FileSearch, Link as LinkIcon, ServerCrash, Gauge } from "lucide-react";
 import type { Issue } from "./IssueCard";
-
-// Replace Spider (not in lucide) — use Bug/Activity instead
-import { Bug, Activity } from "lucide-react";
 
 const trend = (vals: number[]) =>
   vals.map((score, i) => ({ week: `W${i + 1}`, score }));
@@ -137,6 +134,3 @@ export const ISSUES: Issue[] = [
     },
   },
 ];
-
-// re-export to satisfy imports above (Activity not used directly; tree-shake)
-export const _icons = { Activity, Spider: undefined, Bot, FileSearch, LinkIcon, ServerCrash, Gauge };

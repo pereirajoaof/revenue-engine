@@ -13,6 +13,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardTechnicalHealthRouteImport } from './routes/dashboard.technical-health'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
@@ -34,37 +35,62 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardTechnicalHealthRoute =
+  DashboardTechnicalHealthRouteImport.update({
+    id: '/technical-health',
+    path: '/technical-health',
+    getParentRoute: () => DashboardRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
+  '/dashboard/technical-health': typeof DashboardTechnicalHealthRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
+  '/dashboard/technical-health': typeof DashboardTechnicalHealthRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
+  '/dashboard/technical-health': typeof DashboardTechnicalHealthRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/onboarding' | '/settings'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/onboarding'
+    | '/settings'
+    | '/dashboard/technical-health'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/onboarding' | '/settings'
-  id: '__root__' | '/' | '/dashboard' | '/onboarding' | '/settings'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/onboarding'
+    | '/settings'
+    | '/dashboard/technical-health'
+  id:
+    | '__root__'
+    | '/'
+    | '/dashboard'
+    | '/onboarding'
+    | '/settings'
+    | '/dashboard/technical-health'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashboardRoute: typeof DashboardRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   OnboardingRoute: typeof OnboardingRoute
   SettingsRoute: typeof SettingsRoute
 }
@@ -99,12 +125,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/technical-health': {
+      id: '/dashboard/technical-health'
+      path: '/technical-health'
+      fullPath: '/dashboard/technical-health'
+      preLoaderRoute: typeof DashboardTechnicalHealthRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
+interface DashboardRouteChildren {
+  DashboardTechnicalHealthRoute: typeof DashboardTechnicalHealthRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardTechnicalHealthRoute: DashboardTechnicalHealthRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashboardRoute: DashboardRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   OnboardingRoute: OnboardingRoute,
   SettingsRoute: SettingsRoute,
 }
