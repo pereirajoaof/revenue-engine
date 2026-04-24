@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Activity, ArrowDownRight, ArrowUpRight, Download, Gauge, Layers3, Target, TrendingUp } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Activity, ArrowDownRight, ArrowUpDown, ArrowUpRight, Download, Gauge, Layers3, Target, TrendingUp } from "lucide-react";
 import {
   Area,
   AreaChart,
@@ -98,6 +99,22 @@ const URL_EXAMPLES = [
   { url: "/routes/edinburgh-to-glasgow", status: "good", clicks: "1,340", impressions: "13,529", ctr: "9.9%", position: "2.0", lcp: "1.31s", inp: "180ms", cls: "0.000" },
   { url: "/city/birmingham", status: "ni", clicks: "2,631", impressions: "10,625", ctr: "24.8%", position: "1.8", lcp: "1.51s", inp: "221ms", cls: "0.120" },
 ] as const;
+
+type UrlExample = (typeof URL_EXAMPLES)[number];
+type SortKey = keyof UrlExample;
+type SortDirection = "asc" | "desc";
+
+const URL_SORT_COLUMNS: { key: SortKey; label: string; align: "left" | "center" | "right"; className: string }[] = [
+  { key: "url", label: "URL", align: "left", className: "px-1" },
+  { key: "status", label: "Status", align: "center", className: "px-3" },
+  { key: "clicks", label: "Clicks", align: "right", className: "px-3" },
+  { key: "impressions", label: "Impr.", align: "right", className: "px-3" },
+  { key: "ctr", label: "CTR", align: "right", className: "px-3" },
+  { key: "position", label: "Pos.", align: "right", className: "px-3" },
+  { key: "lcp", label: "LCP", align: "right", className: "px-3" },
+  { key: "inp", label: "INP", align: "right", className: "px-3" },
+  { key: "cls", label: "CLS", align: "right", className: "px-1" },
+];
 
 function CwvDashboardPage() {
   return (
