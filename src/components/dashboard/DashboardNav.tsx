@@ -50,8 +50,13 @@ export function DashboardNav() {
   const active = PROFILES[0];
   const path = location.pathname;
   const search = location.search as Record<string, string> | undefined;
-  const activeDriver = path === "/dashboard" ? search?.driver : undefined;
-  const isRevenueParentActive = path === "/dashboard";
+  const isTechRoute = path === "/dashboard/technical-health";
+  const activeDriver = isTechRoute
+    ? "technical-health"
+    : path === "/dashboard"
+      ? search?.driver
+      : undefined;
+  const isRevenueParentActive = path === "/dashboard" || path.startsWith("/dashboard/");
   const [driversOpen, setDriversOpen] = useState(true);
 
   const handleLogout = () => {
@@ -105,16 +110,25 @@ export function DashboardNav() {
               {GROWTH_DRIVERS.map((d) => {
                 const isActive = activeDriver === d.key;
                 const Icon = d.icon;
+                const className = `w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-[12.5px] transition-colors ${
+                  isActive
+                    ? "bg-primary/10 text-primary border border-primary/20"
+                    : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
+                }`;
+                if (d.key === "technical-health") {
+                  return (
+                    <Link key={d.key} to="/dashboard/technical-health" className={className}>
+                      <Icon className="w-3.5 h-3.5 shrink-0" />
+                      <span className="truncate">{d.label}</span>
+                    </Link>
+                  );
+                }
                 return (
                   <Link
                     key={d.key}
                     to="/dashboard"
                     search={{ driver: d.key }}
-                    className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-[12.5px] transition-colors ${
-                      isActive
-                        ? "bg-primary/10 text-primary border border-primary/20"
-                        : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
-                    }`}
+                    className={className}
                   >
                     <Icon className="w-3.5 h-3.5 shrink-0" />
                     <span className="truncate">{d.label}</span>
