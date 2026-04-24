@@ -16,6 +16,7 @@ import {
   Globe,
   FileText,
   Activity,
+  Gauge,
   Link2,
   MapPin,
 } from "lucide-react";
