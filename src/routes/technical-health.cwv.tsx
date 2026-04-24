@@ -412,6 +412,7 @@ function sortValue(row: UrlExample, key: SortKey): string | number {
 
 function UrlExamplesTable() {
   const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection }>({ key: "clicks", direction: "desc" });
+  const [selectedUrl, setSelectedUrl] = useState<UrlExample | null>(null);
   const sortedRows = useMemo(() => {
     return [...URL_EXAMPLES].sort((a, b) => {
       const aValue = sortValue(a, sort.key);
@@ -443,7 +444,11 @@ function UrlExamplesTable() {
         <tbody className="divide-y divide-border">
           {sortedRows.map((row) => (
             <tr key={row.url} className="hover:bg-surface/40 transition-colors">
-              <td className="max-w-[320px] truncate px-1 py-3 font-mono text-xs text-primary">{row.url}</td>
+              <td className="max-w-[320px] px-1 py-3">
+                <button onClick={() => setSelectedUrl(row)} className="block max-w-[320px] truncate font-mono text-xs text-primary underline-offset-4 hover:underline">
+                  {row.url}
+                </button>
+              </td>
               <td className="px-3 py-3 text-center"><StatusPill status={row.status} /></td>
               <td className="px-3 py-3 text-right font-mono">{row.clicks}</td>
               <td className="px-3 py-3 text-right font-mono">{row.impressions}</td>
@@ -457,6 +462,7 @@ function UrlExamplesTable() {
         </tbody>
       </table>
       <button className="w-full border-t border-border py-3 text-xs text-muted-foreground hover:text-foreground transition-colors">Show all 29 URLs</button>
+      <UrlDiagnosisSheet row={selectedUrl} open={Boolean(selectedUrl)} onOpenChange={(open) => !open && setSelectedUrl(null)} />
     </div>
   );
 }
