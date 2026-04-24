@@ -280,6 +280,15 @@ function DeepDive() {
         <div className="flex flex-col gap-3 border-b border-border p-5 md:flex-row md:items-center md:justify-between">
           <SectionHeading icon={<Activity className="w-4 h-4" />} title="Bus Route page type" subtitle="CTR and revenue opportunity by CWV status, using controlled URL samples." />
           <div className="flex flex-wrap items-center gap-2">
+            <DemoDiagnosisButton />
+            <button
+              type="button"
+              onClick={exportUrlTableCsv}
+              className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-2.5 py-1 text-[11px] font-mono font-semibold text-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+            >
+              <Download className="h-3.5 w-3.5" />
+              Export CSV
+            </button>
             <span className="rounded-md border border-primary/30 bg-primary/10 px-2.5 py-1 text-[11px] font-mono font-semibold text-primary">+£17,787/wk</span>
             <span className="rounded-md border border-border bg-surface px-2.5 py-1 text-[11px] font-mono text-muted-foreground">≈ £924,924/yr est.</span>
           </div>
@@ -440,6 +449,23 @@ function sortValue(row: UrlExample, key: SortKey): string | number {
   if (key === "status") return { good: 0, ni: 1, poor: 2 }[row.status];
   if (key === "url") return row.url;
   return Number(String(row[key]).replace(/[^0-9.-]/g, ""));
+}
+
+function DemoDiagnosisButton() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="inline-flex items-center gap-1.5 rounded-md border border-primary/30 bg-primary/10 px-2.5 py-1 text-[11px] font-mono font-semibold text-primary transition-colors hover:bg-primary/15"
+      >
+        <Activity className="h-3.5 w-3.5" />
+        Preview diagnosis
+      </button>
+      <UrlDiagnosisSheet row={URL_EXAMPLES[0]} open={open} onOpenChange={setOpen} />
+    </>
+  );
 }
 
 function UrlExamplesTable() {
