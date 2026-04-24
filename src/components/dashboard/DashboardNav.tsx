@@ -1,5 +1,24 @@
+import { useState } from "react";
 import { Link, useNavigate, useLocation } from "@tanstack/react-router";
-import { LayoutDashboard, Search, Bell, Settings, ChevronUp, LogOut, UserCog, UserPlus, Check } from "lucide-react";
+import {
+  LayoutDashboard,
+  Search,
+  Bell,
+  Settings,
+  ChevronUp,
+  ChevronDown,
+  LogOut,
+  UserCog,
+  UserPlus,
+  Check,
+  Sparkles,
+  MousePointer2,
+  Globe,
+  FileText,
+  Activity,
+  Link2,
+  MapPin,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +32,16 @@ import {
 const PROFILES = [
   { initials: "JS", name: "Jane Smith", domain: "acme.com" },
   { initials: "MR", name: "Marco Rossi", domain: "northwind.io" },
+];
+
+const GROWTH_DRIVERS = [
+  { key: "brand-authority", label: "Brand Authority", icon: Sparkles },
+  { key: "user-experience", label: "User Experience", icon: MousePointer2 },
+  { key: "website-authority", label: "Website Authority", icon: Globe },
+  { key: "content-quality", label: "Content Quality", icon: FileText },
+  { key: "technical-health", label: "Technical Health", icon: Activity },
+  { key: "links", label: "Links", icon: Link2 },
+  { key: "geo-locale", label: "Geo / Locale", icon: MapPin },
 ];
 
 export function DashboardNav() {
