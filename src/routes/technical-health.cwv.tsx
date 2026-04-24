@@ -4,11 +4,11 @@ import {
   Area,
   AreaChart,
   Bar,
-  BarChart,
   CartesianGrid,
   Cell,
   ComposedChart,
   Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -70,11 +70,17 @@ const PERFORMANCE = [
   { pageType: "Blog", current: 155, potential: 171 },
 ];
 
-const BREAKDOWN = [
-  { metric: "LCP", good: 48, ni: 22, poor: 30 },
-  { metric: "INP", good: 67, ni: 18, poor: 15 },
-  { metric: "CLS", good: 89, ni: 7, poor: 4 },
+const STATUS_WEEKLY = [
+  { week: "Mar 23", good: 18.9, ni: 10.8, poor: null },
+  { week: "Mar 30", good: 46.6, ni: 9.4, poor: 61.7 },
+  { week: "Apr 6", good: 20.8, ni: 8.3, poor: 62.0 },
 ];
+
+const STATUS_SUMMARY = [
+  { status: "good", label: "Good", sample: 8, clicks: "5,053", impressions: "24,239", ctr: "20.8%", growth: "baseline" },
+  { status: "ni", label: "Needs improvement", sample: 19, clicks: "11,711", impressions: "141,501", ctr: "8.3%", growth: "+£17,787/wk" },
+  { status: "poor", label: "Poor", sample: 2, clicks: "3,798", impressions: "6,126", ctr: "62.0%", growth: "—" },
+] as const;
 
 const TREND = [
   { week: "W1", score: 74, risk: 340 },
@@ -85,10 +91,13 @@ const TREND = [
   { week: "W6", score: 70, risk: 386, release: "Experiment" },
 ];
 
-const URLS = {
-  worst: ["/routes/london-to-bristol", "/routes/manchester-to-leeds", "/stops/victoria-coach-station", "/city/birmingham", "/operator/national-express"],
-  best: ["/routes/edinburgh-to-glasgow", "/routes/oxford-to-london", "/stops/golders-green", "/city/york", "/operator/megabus"],
-};
+const URL_EXAMPLES = [
+  { url: "/routes/london-to-bristol", status: "ni", clicks: "1,110", impressions: "40,412", ctr: "2.7%", position: "5.0", lcp: "1.41s", inp: "204ms", cls: "0.010" },
+  { url: "/routes/manchester-to-leeds", status: "ni", clicks: "489", impressions: "30,724", ctr: "1.6%", position: "6.3", lcp: "1.12s", inp: "180ms", cls: "0.220" },
+  { url: "/stops/victoria-coach-station", status: "ni", clicks: "679", impressions: "16,397", ctr: "4.1%", position: "10.7", lcp: "1.52s", inp: "215ms", cls: "0.010" },
+  { url: "/routes/edinburgh-to-glasgow", status: "good", clicks: "1,340", impressions: "13,529", ctr: "9.9%", position: "2.0", lcp: "1.31s", inp: "180ms", cls: "0.000" },
+  { url: "/city/birmingham", status: "ni", clicks: "2,631", impressions: "10,625", ctr: "24.8%", position: "1.8", lcp: "1.51s", inp: "221ms", cls: "0.120" },
+] as const;
 
 function CwvDashboardPage() {
   return (
@@ -203,34 +212,42 @@ function PerformancePotentialChart() {
 
 function DeepDive() {
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-      <section className="xl:col-span-2 rounded-xl border border-border bg-card p-5 shadow-sm">
-        <SectionHeading icon={<Activity className="w-4 h-4" />} title="Bus Route page type" subtitle="CWV diagnosis and financial justification for the highest-value opportunity." />
-        <div className="mt-5 grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <div>
-            <h3 className="text-sm font-semibold">CWV breakdown</h3>
-            <div className="mt-3 h-[220px]">
+    <div className="space-y-6">
+      <section className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+        <div className="flex flex-col gap-3 border-b border-border p-5 md:flex-row md:items-center md:justify-between">
+          <SectionHeading icon={<Activity className="w-4 h-4" />} title="Bus Route page type" subtitle="CTR and revenue opportunity by CWV status, using controlled URL samples." />
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-md border border-primary/30 bg-primary/10 px-2.5 py-1 text-[11px] font-mono font-semibold text-primary">+£17,787/wk</span>
+            <span className="rounded-md border border-border bg-surface px-2.5 py-1 text-[11px] font-mono text-muted-foreground">≈ £924,924/yr est.</span>
+          </div>
+        </div>
+        <div className="p-5">
+          <div className="rounded-lg bg-surface/45 p-4">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h3 className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">CTR by CWV status — weekly</h3>
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <LegendDot label="Good" className="bg-primary" />
+                <LegendDot label="NI" className="bg-chart-4" />
+                <LegendDot label="Poor" className="bg-destructive" />
+              </div>
+            </div>
+            <div className="h-[210px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={BREAKDOWN} layout="vertical" margin={{ top: 4, right: 8, bottom: 4, left: 0 }}>
-                  <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" horizontal={false} />
-                  <XAxis type="number" hide />
-                  <YAxis type="category" dataKey="metric" tick={{ fill: "var(--foreground)", fontSize: 11, fontFamily: "var(--font-mono)" }} axisLine={false} tickLine={false} width={34} />
-                  <Tooltip content={<VitalsTooltip />} />
-                  <Bar dataKey="good" stackId="a" fill="var(--primary)" radius={[4, 0, 0, 4]} />
-                  <Bar dataKey="ni" stackId="a" fill="var(--chart-4)" />
-                  <Bar dataKey="poor" stackId="a" fill="var(--destructive)" radius={[0, 4, 4, 0]} />
-                </BarChart>
+                <LineChart data={STATUS_WEEKLY} margin={{ top: 8, right: 18, bottom: 0, left: 0 }}>
+                  <CartesianGrid stroke="var(--border)" vertical={false} />
+                  <XAxis dataKey="week" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 11, fontFamily: "var(--font-mono)" }} tickFormatter={(v) => `${v}%`} axisLine={false} tickLine={false} />
+                  <Tooltip content={<StatusTrendTooltip />} />
+                  <Line type="monotone" dataKey="good" stroke="var(--primary)" strokeWidth={2} dot={{ r: 3, fill: "var(--primary)" }} connectNulls />
+                  <Line type="monotone" dataKey="ni" stroke="var(--chart-4)" strokeWidth={2} dot={{ r: 3, fill: "var(--chart-4)" }} connectNulls />
+                  <Line type="monotone" dataKey="poor" stroke="var(--destructive)" strokeWidth={2} dot={{ r: 3, fill: "var(--destructive)" }} connectNulls />
+                </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
-          <RevenueModel />
+          <StatusSummary />
+          <UrlExamplesTable />
         </div>
-      </section>
-
-      <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
-        <SectionHeading icon={<Layers3 className="w-4 h-4" />} title="URL examples" subtitle="Controlled samples for context, not raw exploration." />
-        <UrlList title="Worst 5" urls={URLS.worst} status="poor" />
-        <UrlList title="Best 5" urls={URLS.best} status="good" />
       </section>
 
       <section className="xl:col-span-3 rounded-xl border border-border bg-card p-5 shadow-sm">
@@ -338,6 +355,89 @@ function ConfidenceBadge({ confidence }: { confidence: Confidence }) {
   return <span className={`inline-flex rounded-md border px-2 py-1 text-[10px] font-mono uppercase tracking-wider ${classes[confidence]}`}>{confidence}</span>;
 }
 
+function LegendDot({ label, className }: { label: string; className: string }) {
+  return <span className="inline-flex items-center gap-1.5"><span className={`h-1.5 w-3 rounded-full ${className}`} />{label}</span>;
+}
+
+function StatusSummary() {
+  return (
+    <div className="mt-5 overflow-x-auto border-b border-border">
+      <table className="w-full min-w-[760px] text-sm">
+        <thead className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+          <tr className="border-b border-border">
+            <th className="py-3 text-left font-medium">Performance</th>
+            <th className="py-3 text-right font-medium">Sample size</th>
+            <th className="py-3 text-right font-medium">Clicks</th>
+            <th className="py-3 text-right font-medium">Impressions</th>
+            <th className="py-3 text-right font-medium">CTR</th>
+            <th className="py-3 text-right font-medium">Potential growth</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-border">
+          {STATUS_SUMMARY.map((row) => (
+            <tr key={row.status}>
+              <td className="py-3"><StatusPill status={row.status} label={row.label} /></td>
+              <td className="py-3 text-right font-mono">{row.sample}</td>
+              <td className="py-3 text-right font-mono">{row.clicks}</td>
+              <td className="py-3 text-right font-mono">{row.impressions}</td>
+              <td className="py-3 text-right font-mono text-foreground">{row.ctr}</td>
+              <td className={`py-3 text-right font-mono ${row.growth.startsWith("+") ? "text-primary" : "text-muted-foreground"}`}>{row.growth}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function UrlExamplesTable() {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[920px] text-sm">
+        <thead className="bg-surface/40 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+          <tr>
+            <th className="px-1 py-3 text-left font-medium">URL</th>
+            <th className="px-3 py-3 text-center font-medium">Status</th>
+            <th className="px-3 py-3 text-right font-medium">Clicks</th>
+            <th className="px-3 py-3 text-right font-medium">Impr.</th>
+            <th className="px-3 py-3 text-right font-medium">CTR</th>
+            <th className="px-3 py-3 text-right font-medium">Pos.</th>
+            <th className="px-3 py-3 text-right font-medium">LCP</th>
+            <th className="px-3 py-3 text-right font-medium">INP</th>
+            <th className="px-1 py-3 text-right font-medium">CLS</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-border">
+          {URL_EXAMPLES.map((row) => (
+            <tr key={row.url} className="hover:bg-surface/40 transition-colors">
+              <td className="max-w-[320px] truncate px-1 py-3 font-mono text-xs text-primary">{row.url}</td>
+              <td className="px-3 py-3 text-center"><StatusPill status={row.status} /></td>
+              <td className="px-3 py-3 text-right font-mono">{row.clicks}</td>
+              <td className="px-3 py-3 text-right font-mono">{row.impressions}</td>
+              <td className="px-3 py-3 text-right font-mono">{row.ctr}</td>
+              <td className="px-3 py-3 text-right font-mono">{row.position}</td>
+              <td className="px-3 py-3 text-right font-mono text-primary">{row.lcp}</td>
+              <td className="px-3 py-3 text-right font-mono text-chart-4">{row.inp}</td>
+              <td className="px-1 py-3 text-right font-mono text-primary">{row.cls}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button className="w-full border-t border-border py-3 text-xs text-muted-foreground hover:text-foreground transition-colors">Show all 29 URLs</button>
+    </div>
+  );
+}
+
+function StatusPill({ status, label }: { status: VitalsStatus; label?: string }) {
+  const classes: Record<VitalsStatus, string> = {
+    good: "border-primary/25 bg-primary/10 text-primary",
+    ni: "border-chart-4/35 bg-chart-4/10 text-chart-4",
+    poor: "border-destructive/25 bg-destructive/10 text-destructive",
+  };
+  const text = label ?? (status === "ni" ? "NI" : status === "good" ? "Good" : "Poor");
+  return <span className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] ${classes[status]}`}><span className="h-1.5 w-1.5 rounded-full bg-current" />{text}</span>;
+}
+
 function UrlList({ title, urls, status }: { title: string; urls: string[]; status: VitalsStatus }) {
   return (
     <div className="mt-4">
@@ -361,6 +461,18 @@ function RevenueTooltip({ active, payload, label }: { active?: boolean; payload?
       <p className="font-medium mb-1.5">{label}</p>
       {payload.map((p) => (
         <div key={p.dataKey} className="flex justify-between gap-5 font-mono text-[11px]"><span className="text-muted-foreground">{p.dataKey}</span><span>£{p.value}k</span></div>
+      ))}
+    </div>
+  );
+}
+
+function StatusTrendTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ dataKey: string; value: number | null }>; label?: string }) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="rounded-md border border-border bg-popover px-3 py-2 text-xs shadow-lg">
+      <p className="font-medium mb-1.5">{label}</p>
+      {payload.filter((p) => p.value !== null).map((p) => (
+        <div key={p.dataKey} className="flex justify-between gap-5 font-mono text-[11px]"><span className="text-muted-foreground">{p.dataKey}</span><span>{p.value}%</span></div>
       ))}
     </div>
   );
