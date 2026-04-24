@@ -391,24 +391,37 @@ function StatusSummary() {
 }
 
 function UrlExamplesTable() {
+  const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection }>({ key: "clicks", direction: "desc" });
+  const sortedRows = useMemo(() => {
+    return [...URL_EXAMPLES].sort((a, b) => {
+      const aValue = sortValue(a, sort.key);
+      const bValue = sortValue(b, sort.key);
+      const result = typeof aValue === "string" && typeof bValue === "string" ? aValue.localeCompare(bValue) : Number(aValue) - Number(bValue);
+      return sort.direction === "asc" ? result : -result;
+    });
+  }, [sort]);
+
+  const toggleSort = (key: SortKey) => {
+    setSort((current) => ({ key, direction: current.key === key && current.direction === "desc" ? "asc" : "desc" }));
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[920px] text-sm">
         <thead className="bg-surface/40 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
           <tr>
-            <th className="px-1 py-3 text-left font-medium">URL</th>
-            <th className="px-3 py-3 text-center font-medium">Status</th>
-            <th className="px-3 py-3 text-right font-medium">Clicks</th>
-            <th className="px-3 py-3 text-right font-medium">Impr.</th>
-            <th className="px-3 py-3 text-right font-medium">CTR</th>
-            <th className="px-3 py-3 text-right font-medium">Pos.</th>
-            <th className="px-3 py-3 text-right font-medium">LCP</th>
-            <th className="px-3 py-3 text-right font-medium">INP</th>
-            <th className="px-1 py-3 text-right font-medium">CLS</th>
+            {URL_SORT_COLUMNS.map((column) => (
+              <th key={column.key} className={`${column.className} py-3 font-medium text-${column.align}`}>
+                <button onClick={() => toggleSort(column.key)} className={`inline-flex items-center gap-1 transition-colors hover:text-foreground ${column.align === "right" ? "justify-end" : column.align === "center" ? "justify-center" : "justify-start"} w-full`}>
+                  {column.label}
+                  <ArrowUpDown className={`h-3 w-3 ${sort.key === column.key ? "text-primary" : "text-muted-foreground/60"}`} />
+                </button>
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
-          {URL_EXAMPLES.map((row) => (
+          {sortedRows.map((row) => (
             <tr key={row.url} className="hover:bg-surface/40 transition-colors">
               <td className="max-w-[320px] truncate px-1 py-3 font-mono text-xs text-primary">{row.url}</td>
               <td className="px-3 py-3 text-center"><StatusPill status={row.status} /></td>
