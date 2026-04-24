@@ -420,6 +420,27 @@ function sortValue(row: UrlExample, key: SortKey): string | number {
   return Number(String(row[key]).replace(/[^0-9.-]/g, ""));
 }
 
+function exportUrlExamplesCsv(rows: UrlExample[]) {
+  const escapeCell = (value: string) => `"${value.replace(/"/g, '""')}"`;
+  const headers = URL_SORT_COLUMNS.map((column) => column.label);
+  const csv = [
+    headers,
+    ...rows.map((row) => URL_SORT_COLUMNS.map((column) => row[column.key])),
+  ]
+    .map((cells) => cells.map(escapeCell).join(","))
+    .join("\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "page-type-deep-dive-urls.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
 function UrlExamplesTable() {
   const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection }>({ key: "clicks", direction: "desc" });
   const [selectedUrl, setSelectedUrl] = useState<UrlExample | null>(null);
@@ -437,8 +458,15 @@ function UrlExamplesTable() {
   };
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[920px] text-sm">
+    <div>
+      <div className="flex items-center justify-end border-b border-border py-3">
+        <button onClick={() => exportUrlExamplesCsv(sortedRows)} className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors hover:bg-surface/70">
+          <Download className="h-3.5 w-3.5" />
+          Export CSV
+        </button>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[920px] text-sm">
         <thead className="bg-surface/40 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
           <tr>
             {URL_SORT_COLUMNS.map((column) => (
@@ -471,6 +499,7 @@ function UrlExamplesTable() {
           ))}
         </tbody>
       </table>
+      </div>
       <button className="w-full border-t border-border py-3 text-xs text-muted-foreground hover:text-foreground transition-colors">Show all 29 URLs</button>
       <UrlDiagnosisSheet row={selectedUrl} open={Boolean(selectedUrl)} onOpenChange={(open) => !open && setSelectedUrl(null)} />
     </div>
