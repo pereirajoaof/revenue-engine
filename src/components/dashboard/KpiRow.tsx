@@ -1,4 +1,4 @@
-import { ArrowDownRight, ArrowUpRight, ShieldAlert } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
 type RiskTone = "low" | "medium" | "high";
 
