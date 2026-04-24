@@ -467,6 +467,104 @@ function UrlExamplesTable() {
   );
 }
 
+function UrlDiagnosisSheet({ row, open, onOpenChange }: { row: UrlExample | null; open: boolean; onOpenChange: (open: boolean) => void }) {
+  const [complete, setComplete] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    setComplete(false);
+    const timer = window.setTimeout(() => setComplete(true), 1400);
+    return () => window.clearTimeout(timer);
+  }, [open, row?.url]);
+
+  if (!row) return null;
+  const diagnosis = DIAGNOSIS_COPY[row.status];
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent className="w-full overflow-y-auto border-l border-border bg-card p-0 sm:max-w-2xl lg:max-w-3xl">
+        <SheetHeader className="border-b border-border px-6 py-5 text-left">
+          <SheetTitle className="font-mono text-xs uppercase tracking-wider text-muted-foreground">URL diagnosis</SheetTitle>
+          <SheetDescription className="truncate font-mono text-sm text-foreground">{row.url}</SheetDescription>
+          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5"><Smartphone className="h-3.5 w-3.5 text-primary" />Mobile</span>
+            <span className="inline-flex items-center gap-1.5"><Wifi className="h-3.5 w-3.5 text-primary" />Slow 4G</span>
+            <span>Last run just now</span>
+            <button className="inline-flex items-center gap-1 text-primary hover:underline"><RefreshCw className="h-3 w-3" />Re-run</button>
+          </div>
+        </SheetHeader>
+
+        <div className="space-y-6 px-6 py-5">
+          {!complete ? (
+            <div className="rounded-lg border border-border bg-surface/45 p-5">
+              <div className="flex items-center gap-2 text-sm font-medium"><Loader2 className="h-4 w-4 animate-spin text-primary" />Running analysis…</div>
+              <div className="mt-4 space-y-2 font-mono text-xs text-muted-foreground">
+                {ANALYSIS_STEPS.map((step, index) => <p key={step}>{index < 3 ? "✓" : "→"} {step}</p>)}
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <VitalTile label="LCP" value={diagnosis.lcp} status={row.status === "good" ? "good" : "poor"} />
+                <VitalTile label="INP" value={diagnosis.inp} status={row.status === "poor" ? "ni" : "good"} />
+                <VitalTile label="CLS" value={diagnosis.cls} status={Number(diagnosis.cls) > 0.1 ? "poor" : "good"} />
+                <VitalTile label="Revenue risk" value={row.status === "good" ? "Low" : "High"} status={row.status} />
+              </div>
+
+              <div className="rounded-lg border border-border bg-surface/35 p-5">
+                <h4 className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Findings</h4>
+                <p className="mt-2 text-sm text-foreground">{diagnosis.summary}</p>
+              </div>
+
+              <AnnotatedPagePreview />
+            </>
+          )}
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+function VitalTile({ label, value, status }: { label: string; value: string; status: VitalsStatus }) {
+  return (
+    <div className="rounded-lg border border-border bg-surface/35 p-4 text-center">
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="mt-2 font-mono text-xl font-bold text-foreground">{value}</p>
+      <div className={`mt-2 inline-flex items-center gap-1 text-xs ${status === "good" ? "text-primary" : status === "ni" ? "text-chart-4" : "text-destructive"}`}>
+        <span className="h-2 w-2 rounded-full bg-current" />{status === "ni" ? "Needs work" : status}
+      </div>
+    </div>
+  );
+}
+
+function AnnotatedPagePreview() {
+  return (
+    <div className="overflow-hidden rounded-lg border border-border bg-background">
+      <div className="border-b border-border px-5 py-4">
+        <h4 className="font-mono text-xs uppercase tracking-wider text-muted-foreground">Screenshot — issues highlighted</h4>
+      </div>
+      <div className="relative p-4">
+        <div className="relative overflow-hidden rounded-md border border-border bg-surface">
+          <div className="flex items-center justify-between border-b border-border bg-card px-5 py-4">
+            <div className="h-8 w-8 rounded-md bg-destructive/15" />
+            <div className="flex gap-4 text-muted-foreground"><Gauge className="h-5 w-5" /><Target className="h-5 w-5" /><span className="font-mono text-xl">≡</span></div>
+          </div>
+          <div className="relative grid grid-cols-3 gap-2 p-3">
+            <div className="col-span-2 h-36 rounded-md bg-primary/15" />
+            <div className="h-36 rounded-md bg-chart-4/20" />
+            <div className="h-24 rounded-md bg-muted" />
+            <div className="h-24 rounded-md bg-muted" />
+            <div className="h-24 rounded-md bg-muted" />
+            <div className="absolute left-2 top-2 right-2 h-[176px] rounded-md border-4 border-destructive" />
+            <div className="absolute left-4 top-4 rounded-md bg-destructive px-3 py-1.5 font-mono text-xs font-bold text-destructive-foreground">LCP element</div>
+            <div className="absolute bottom-8 right-8 rounded-md border border-chart-4/40 bg-chart-4/15 px-3 py-2 text-xs text-chart-4">CLS shift: fare module moved after render</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function StatusPill({ status, label }: { status: VitalsStatus; label?: string }) {
   const classes: Record<VitalsStatus, string> = {
     good: "border-primary/25 bg-primary/10 text-primary",
