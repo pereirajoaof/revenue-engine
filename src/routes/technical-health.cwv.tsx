@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Activity, ArrowDownRight, ArrowUpDown, ArrowUpRight, Check, Download, Gauge, Loader2, RefreshCw, Smartphone, Target, TrendingUp, Wifi } from "lucide-react";
+import { Activity, ArrowDownRight, ArrowUpDown, ArrowUpRight, Download, Gauge, Loader2, RefreshCw, Smartphone, Target, TrendingUp, Wifi } from "lucide-react";
 import {
   Area,
   AreaChart,
@@ -16,7 +16,6 @@ import {
   YAxis,
 } from "recharts";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const Route = createFileRoute("/technical-health/cwv")({
   component: CwvDashboardPage,
@@ -143,28 +142,36 @@ const URL_SORT_COLUMNS: { key: SortKey; label: string; align: "left" | "center" 
 function CwvDashboardPage() {
   return (
     <main className="px-6 lg:px-8 py-6 space-y-6">
-      <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="bg-surface border border-border">
-          <TabsTrigger value="overview">Impact overview</TabsTrigger>
-          <TabsTrigger value="deep-dive">Page type deep dive</TabsTrigger>
-          <TabsTrigger value="opportunities">Opportunities table</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="overview" className="space-y-6">
-          <HeroKpis />
-          <BiggestOpportunities />
-          <PerformancePotentialChart />
-        </TabsContent>
-
-        <TabsContent value="deep-dive" className="space-y-6">
-          <DeepDive />
-        </TabsContent>
-
-        <TabsContent value="opportunities" className="space-y-6">
-          <OpportunitiesTable />
-        </TabsContent>
-      </Tabs>
+      <CwvSectionNav />
+      <OverviewContent />
     </main>
+  );
+}
+
+export function CwvSectionNav() {
+  const linkClass = "inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground";
+  return (
+    <nav className="inline-flex h-9 items-center justify-center rounded-lg border border-border bg-surface p-1">
+      <Link to="/technical-health/cwv" activeOptions={{ exact: true }} className={linkClass} activeProps={{ className: `${linkClass} bg-background text-foreground shadow` }}>
+        Impact overview
+      </Link>
+      <Link to="/technical-health/cwv/deep-dive" className={linkClass} activeProps={{ className: `${linkClass} bg-background text-foreground shadow` }}>
+        Page type deep dive
+      </Link>
+      <Link to="/technical-health/cwv/opportunities" className={linkClass} activeProps={{ className: `${linkClass} bg-background text-foreground shadow` }}>
+        Opportunities table
+      </Link>
+    </nav>
+  );
+}
+
+function OverviewContent() {
+  return (
+    <div className="space-y-6">
+      <HeroKpis />
+      <BiggestOpportunities />
+      <PerformancePotentialChart />
+    </div>
   );
 }
 
