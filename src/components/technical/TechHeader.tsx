@@ -1,15 +1,13 @@
 import { useState } from "react";
-import { ChevronDown, Calendar, Globe } from "lucide-react";
+import { ChevronDown, Calendar } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const RANGES = ["7d", "30d", "90d"] as const;
 const PAGE_TYPES = ["All page types", "Routes", "Stops", "City", "Operator", "Blog"];
-const MARKETS = ["All markets", "UK", "US", "DE", "FR", "ES"];
 
 export function TechHeader() {
   const [range, setRange] = useState<(typeof RANGES)[number]>("30d");
   const [pageType, setPageType] = useState(PAGE_TYPES[0]);
-  const [market, setMarket] = useState(MARKETS[0]);
 
   return (
     <header className="border-b border-border bg-background/80 backdrop-blur sticky top-0 z-30">
@@ -22,26 +20,26 @@ export function TechHeader() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center gap-1 p-1 rounded-md bg-surface border border-border">
-            <Calendar className="w-3.5 h-3.5 text-muted-foreground ml-1.5" />
+          {/* Date range */}
+          <div className="flex items-center rounded-md border border-border bg-surface p-0.5">
+            <Calendar className="w-3.5 h-3.5 text-muted-foreground ml-2" />
             {RANGES.map((r) => (
               <button
                 key={r}
                 type="button"
                 onClick={() => setRange(r)}
-                className={`px-2.5 py-1 text-xs font-mono rounded transition-colors ${
-                  range === r
-                    ? "bg-background text-foreground border border-border"
-                    : "text-muted-foreground hover:text-foreground"
+                className={`px-3 py-1.5 text-xs font-mono rounded-sm transition-colors ${
+                  range === r ? "bg-card text-foreground" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {r === "7d" ? "Last 7d" : r === "30d" ? "Last 30d" : "Last 90d"}
+                {r === "7d" ? "Last 7 days" : r === "30d" ? "Last 30 days" : "Last 90 days"}
               </button>
             ))}
           </div>
 
-          <Pill icon={null} value={pageType} options={PAGE_TYPES} onChange={setPageType} />
-          <Pill icon={<Globe className="w-3.5 h-3.5" />} value={market} options={MARKETS} onChange={setMarket} />
+          {/* Page Type filter */}
+          <PageTypeFilter value={pageType} options={PAGE_TYPES} onChange={setPageType} />
+
           <ThemeToggle />
         </div>
       </div>
@@ -49,13 +47,11 @@ export function TechHeader() {
   );
 }
 
-function Pill({
-  icon,
+function PageTypeFilter({
   value,
   options,
   onChange,
 }: {
-  icon: React.ReactNode;
   value: string;
   options: string[];
   onChange: (v: string) => void;
@@ -66,16 +62,16 @@ function Pill({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs rounded-md bg-surface border border-border hover:bg-surface/70 transition-colors"
+        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-border bg-surface text-xs hover:bg-card transition-colors"
       >
-        {icon}
-        <span>{value}</span>
+        <span className="text-muted-foreground font-mono">Page Type:</span>
+        <span className="text-foreground">{value}</span>
         <ChevronDown className="w-3 h-3 text-muted-foreground" />
       </button>
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 mt-1 z-20 min-w-[160px] rounded-md border border-border bg-popover shadow-lg p-1">
+          <div className="absolute right-0 mt-1 z-20 min-w-[180px] rounded-md border border-border bg-popover shadow-lg p-1">
             {options.map((opt) => (
               <button
                 key={opt}
