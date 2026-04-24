@@ -16,6 +16,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TechnicalHealthIndexRouteImport } from './routes/technical-health.index'
 import { Route as TechnicalHealthCwvRouteImport } from './routes/technical-health.cwv'
+import { Route as TechnicalHealthCwvIndexRouteImport } from './routes/technical-health.cwv.index'
 import { Route as TechnicalHealthCwvPageTypeDeepDiveRouteImport } from './routes/technical-health.cwv.page-type-deep-dive'
 import { Route as TechnicalHealthCwvOpportunitiesRouteImport } from './routes/technical-health.cwv.opportunities'
 
@@ -54,6 +55,11 @@ const TechnicalHealthCwvRoute = TechnicalHealthCwvRouteImport.update({
   path: '/cwv',
   getParentRoute: () => TechnicalHealthRoute,
 } as any)
+const TechnicalHealthCwvIndexRoute = TechnicalHealthCwvIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TechnicalHealthCwvRoute,
+} as any)
 const TechnicalHealthCwvPageTypeDeepDiveRoute =
   TechnicalHealthCwvPageTypeDeepDiveRouteImport.update({
     id: '/page-type-deep-dive',
@@ -77,16 +83,17 @@ export interface FileRoutesByFullPath {
   '/technical-health/': typeof TechnicalHealthIndexRoute
   '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
   '/technical-health/cwv/page-type-deep-dive': typeof TechnicalHealthCwvPageTypeDeepDiveRoute
+  '/technical-health/cwv/': typeof TechnicalHealthCwvIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
-  '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health': typeof TechnicalHealthIndexRoute
   '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
   '/technical-health/cwv/page-type-deep-dive': typeof TechnicalHealthCwvPageTypeDeepDiveRoute
+  '/technical-health/cwv': typeof TechnicalHealthCwvIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -99,6 +106,7 @@ export interface FileRoutesById {
   '/technical-health/': typeof TechnicalHealthIndexRoute
   '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
   '/technical-health/cwv/page-type-deep-dive': typeof TechnicalHealthCwvPageTypeDeepDiveRoute
+  '/technical-health/cwv/': typeof TechnicalHealthCwvIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -112,16 +120,17 @@ export interface FileRouteTypes {
     | '/technical-health/'
     | '/technical-health/cwv/opportunities'
     | '/technical-health/cwv/page-type-deep-dive'
+    | '/technical-health/cwv/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/dashboard'
     | '/onboarding'
     | '/settings'
-    | '/technical-health/cwv'
     | '/technical-health'
     | '/technical-health/cwv/opportunities'
     | '/technical-health/cwv/page-type-deep-dive'
+    | '/technical-health/cwv'
   id:
     | '__root__'
     | '/'
@@ -133,6 +142,7 @@ export interface FileRouteTypes {
     | '/technical-health/'
     | '/technical-health/cwv/opportunities'
     | '/technical-health/cwv/page-type-deep-dive'
+    | '/technical-health/cwv/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -194,6 +204,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TechnicalHealthCwvRouteImport
       parentRoute: typeof TechnicalHealthRoute
     }
+    '/technical-health/cwv/': {
+      id: '/technical-health/cwv/'
+      path: '/'
+      fullPath: '/technical-health/cwv/'
+      preLoaderRoute: typeof TechnicalHealthCwvIndexRouteImport
+      parentRoute: typeof TechnicalHealthCwvRoute
+    }
     '/technical-health/cwv/page-type-deep-dive': {
       id: '/technical-health/cwv/page-type-deep-dive'
       path: '/page-type-deep-dive'
@@ -214,12 +231,14 @@ declare module '@tanstack/react-router' {
 interface TechnicalHealthCwvRouteChildren {
   TechnicalHealthCwvOpportunitiesRoute: typeof TechnicalHealthCwvOpportunitiesRoute
   TechnicalHealthCwvPageTypeDeepDiveRoute: typeof TechnicalHealthCwvPageTypeDeepDiveRoute
+  TechnicalHealthCwvIndexRoute: typeof TechnicalHealthCwvIndexRoute
 }
 
 const TechnicalHealthCwvRouteChildren: TechnicalHealthCwvRouteChildren = {
   TechnicalHealthCwvOpportunitiesRoute: TechnicalHealthCwvOpportunitiesRoute,
   TechnicalHealthCwvPageTypeDeepDiveRoute:
     TechnicalHealthCwvPageTypeDeepDiveRoute,
+  TechnicalHealthCwvIndexRoute: TechnicalHealthCwvIndexRoute,
 }
 
 const TechnicalHealthCwvRouteWithChildren =
