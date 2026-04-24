@@ -2,10 +2,16 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 
 import appCss from "../styles.css?url";
 import { ThemeProvider } from "@/hooks/use-theme";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 function NotFoundComponent() {
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-6 py-16">
+      {/* Theme toggle — top right */}
+      <div className="absolute top-6 right-6 z-20">
+        <ThemeToggle />
+      </div>
+
       {/* Ambient organic glow */}
       <div
         aria-hidden
