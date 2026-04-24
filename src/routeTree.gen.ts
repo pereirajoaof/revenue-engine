@@ -14,6 +14,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TechnicalHealthIndexRouteImport } from './routes/technical-health.index'
 
 const TechnicalHealthRoute = TechnicalHealthRouteImport.update({
   id: '/technical-health',
@@ -40,20 +41,26 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TechnicalHealthIndexRoute = TechnicalHealthIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TechnicalHealthRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
-  '/technical-health': typeof TechnicalHealthRoute
+  '/technical-health': typeof TechnicalHealthRouteWithChildren
+  '/technical-health/': typeof TechnicalHealthIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
-  '/technical-health': typeof TechnicalHealthRoute
+  '/technical-health': typeof TechnicalHealthIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -61,7 +68,8 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
-  '/technical-health': typeof TechnicalHealthRoute
+  '/technical-health': typeof TechnicalHealthRouteWithChildren
+  '/technical-health/': typeof TechnicalHealthIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -71,6 +79,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/settings'
     | '/technical-health'
+    | '/technical-health/'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/dashboard' | '/onboarding' | '/settings' | '/technical-health'
   id:
@@ -80,6 +89,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/settings'
     | '/technical-health'
+    | '/technical-health/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -87,7 +97,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   OnboardingRoute: typeof OnboardingRoute
   SettingsRoute: typeof SettingsRoute
-  TechnicalHealthRoute: typeof TechnicalHealthRoute
+  TechnicalHealthRoute: typeof TechnicalHealthRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -127,15 +137,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/technical-health/': {
+      id: '/technical-health/'
+      path: '/'
+      fullPath: '/technical-health/'
+      preLoaderRoute: typeof TechnicalHealthIndexRouteImport
+      parentRoute: typeof TechnicalHealthRoute
+    }
   }
 }
+
+interface TechnicalHealthRouteChildren {
+  TechnicalHealthIndexRoute: typeof TechnicalHealthIndexRoute
+}
+
+const TechnicalHealthRouteChildren: TechnicalHealthRouteChildren = {
+  TechnicalHealthIndexRoute: TechnicalHealthIndexRoute,
+}
+
+const TechnicalHealthRouteWithChildren = TechnicalHealthRoute._addFileChildren(
+  TechnicalHealthRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
   OnboardingRoute: OnboardingRoute,
   SettingsRoute: SettingsRoute,
-  TechnicalHealthRoute: TechnicalHealthRoute,
+  TechnicalHealthRoute: TechnicalHealthRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
