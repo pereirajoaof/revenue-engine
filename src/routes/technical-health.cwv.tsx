@@ -105,6 +105,19 @@ type UrlExample = (typeof URL_EXAMPLES)[number];
 type SortKey = keyof UrlExample;
 type SortDirection = "asc" | "desc";
 
+const ANALYSIS_STEPS = [
+  "Launching browser session…",
+  "Configuring mobile device + Slow 4G profile…",
+  "Collecting field and lab CWV signals…",
+  "Finding LCP and CLS contributing elements…",
+] as const;
+
+const DIAGNOSIS_COPY: Record<VitalsStatus, { lcp: string; inp: string; cls: string; summary: string }> = {
+  good: { lcp: "1.31s", inp: "180ms", cls: "0.000", summary: "No blocking CWV issue detected for this sample URL." },
+  ni: { lcp: "3.18s", inp: "221ms", cls: "0.120", summary: "Hero media and late fare module movement are reducing eligibility for Good CWV." },
+  poor: { lcp: "4.82s", inp: "310ms", cls: "0.260", summary: "The first visible content is delayed and route cards shift after initial render." },
+};
+
 const URL_SORT_COLUMNS: { key: SortKey; label: string; align: "left" | "center" | "right"; className: string }[] = [
   { key: "url", label: "URL", align: "left", className: "px-1" },
   { key: "status", label: "Status", align: "center", className: "px-3" },
