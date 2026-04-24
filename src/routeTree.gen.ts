@@ -15,6 +15,7 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TechnicalHealthIndexRouteImport } from './routes/technical-health.index'
+import { Route as TechnicalHealthCwvRouteImport } from './routes/technical-health.cwv'
 
 const TechnicalHealthRoute = TechnicalHealthRouteImport.update({
   id: '/technical-health',
@@ -46,6 +47,11 @@ const TechnicalHealthIndexRoute = TechnicalHealthIndexRouteImport.update({
   path: '/',
   getParentRoute: () => TechnicalHealthRoute,
 } as any)
+const TechnicalHealthCwvRoute = TechnicalHealthCwvRouteImport.update({
+  id: '/cwv',
+  path: '/cwv',
+  getParentRoute: () => TechnicalHealthRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
+  '/technical-health/cwv': typeof TechnicalHealthCwvRoute
   '/technical-health/': typeof TechnicalHealthIndexRoute
 }
 export interface FileRoutesByTo {
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
+  '/technical-health/cwv': typeof TechnicalHealthCwvRoute
   '/technical-health': typeof TechnicalHealthIndexRoute
 }
 export interface FileRoutesById {
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
+  '/technical-health/cwv': typeof TechnicalHealthCwvRoute
   '/technical-health/': typeof TechnicalHealthIndexRoute
 }
 export interface FileRouteTypes {
@@ -79,9 +88,16 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/settings'
     | '/technical-health'
+    | '/technical-health/cwv'
     | '/technical-health/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/onboarding' | '/settings' | '/technical-health'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/onboarding'
+    | '/settings'
+    | '/technical-health/cwv'
+    | '/technical-health'
   id:
     | '__root__'
     | '/'
@@ -89,6 +105,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/settings'
     | '/technical-health'
+    | '/technical-health/cwv'
     | '/technical-health/'
   fileRoutesById: FileRoutesById
 }
@@ -144,14 +161,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TechnicalHealthIndexRouteImport
       parentRoute: typeof TechnicalHealthRoute
     }
+    '/technical-health/cwv': {
+      id: '/technical-health/cwv'
+      path: '/cwv'
+      fullPath: '/technical-health/cwv'
+      preLoaderRoute: typeof TechnicalHealthCwvRouteImport
+      parentRoute: typeof TechnicalHealthRoute
+    }
   }
 }
 
 interface TechnicalHealthRouteChildren {
+  TechnicalHealthCwvRoute: typeof TechnicalHealthCwvRoute
   TechnicalHealthIndexRoute: typeof TechnicalHealthIndexRoute
 }
 
 const TechnicalHealthRouteChildren: TechnicalHealthRouteChildren = {
+  TechnicalHealthCwvRoute: TechnicalHealthCwvRoute,
   TechnicalHealthIndexRoute: TechnicalHealthIndexRoute,
 }
 
