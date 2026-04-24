@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Activity, ArrowDownRight, ArrowUpRight, Download, Gauge, Layers3, Target, TrendingUp } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Activity, ArrowDownRight, ArrowUpDown, ArrowUpRight, Download, Gauge, Layers3, Target, TrendingUp } from "lucide-react";
 import {
   Area,
   AreaChart,
@@ -98,6 +99,22 @@ const URL_EXAMPLES = [
   { url: "/routes/edinburgh-to-glasgow", status: "good", clicks: "1,340", impressions: "13,529", ctr: "9.9%", position: "2.0", lcp: "1.31s", inp: "180ms", cls: "0.000" },
   { url: "/city/birmingham", status: "ni", clicks: "2,631", impressions: "10,625", ctr: "24.8%", position: "1.8", lcp: "1.51s", inp: "221ms", cls: "0.120" },
 ] as const;
+
+type UrlExample = (typeof URL_EXAMPLES)[number];
+type SortKey = keyof UrlExample;
+type SortDirection = "asc" | "desc";
+
+const URL_SORT_COLUMNS: { key: SortKey; label: string; align: "left" | "center" | "right"; className: string }[] = [
+  { key: "url", label: "URL", align: "left", className: "px-1" },
+  { key: "status", label: "Status", align: "center", className: "px-3" },
+  { key: "clicks", label: "Clicks", align: "right", className: "px-3" },
+  { key: "impressions", label: "Impr.", align: "right", className: "px-3" },
+  { key: "ctr", label: "CTR", align: "right", className: "px-3" },
+  { key: "position", label: "Pos.", align: "right", className: "px-3" },
+  { key: "lcp", label: "LCP", align: "right", className: "px-3" },
+  { key: "inp", label: "INP", align: "right", className: "px-3" },
+  { key: "cls", label: "CLS", align: "right", className: "px-1" },
+];
 
 function CwvDashboardPage() {
   return (
@@ -373,25 +390,44 @@ function StatusSummary() {
   );
 }
 
+function sortValue(row: UrlExample, key: SortKey): string | number {
+  if (key === "status") return { good: 0, ni: 1, poor: 2 }[row.status];
+  if (key === "url") return row.url;
+  return Number(String(row[key]).replace(/[^0-9.-]/g, ""));
+}
+
 function UrlExamplesTable() {
+  const [sort, setSort] = useState<{ key: SortKey; direction: SortDirection }>({ key: "clicks", direction: "desc" });
+  const sortedRows = useMemo(() => {
+    return [...URL_EXAMPLES].sort((a, b) => {
+      const aValue = sortValue(a, sort.key);
+      const bValue = sortValue(b, sort.key);
+      const result = typeof aValue === "string" && typeof bValue === "string" ? aValue.localeCompare(bValue) : Number(aValue) - Number(bValue);
+      return sort.direction === "asc" ? result : -result;
+    });
+  }, [sort]);
+
+  const toggleSort = (key: SortKey) => {
+    setSort((current) => ({ key, direction: current.key === key && current.direction === "desc" ? "asc" : "desc" }));
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[920px] text-sm">
         <thead className="bg-surface/40 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
           <tr>
-            <th className="px-1 py-3 text-left font-medium">URL</th>
-            <th className="px-3 py-3 text-center font-medium">Status</th>
-            <th className="px-3 py-3 text-right font-medium">Clicks</th>
-            <th className="px-3 py-3 text-right font-medium">Impr.</th>
-            <th className="px-3 py-3 text-right font-medium">CTR</th>
-            <th className="px-3 py-3 text-right font-medium">Pos.</th>
-            <th className="px-3 py-3 text-right font-medium">LCP</th>
-            <th className="px-3 py-3 text-right font-medium">INP</th>
-            <th className="px-1 py-3 text-right font-medium">CLS</th>
+            {URL_SORT_COLUMNS.map((column) => (
+              <th key={column.key} className={`${column.className} py-3 font-medium text-${column.align}`}>
+                <button onClick={() => toggleSort(column.key)} className={`inline-flex items-center gap-1 transition-colors hover:text-foreground ${column.align === "right" ? "justify-end" : column.align === "center" ? "justify-center" : "justify-start"} w-full`}>
+                  {column.label}
+                  <ArrowUpDown className={`h-3 w-3 ${sort.key === column.key ? "text-primary" : "text-muted-foreground/60"}`} />
+                </button>
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
-          {URL_EXAMPLES.map((row) => (
+          {sortedRows.map((row) => (
             <tr key={row.url} className="hover:bg-surface/40 transition-colors">
               <td className="max-w-[320px] truncate px-1 py-3 font-mono text-xs text-primary">{row.url}</td>
               <td className="px-3 py-3 text-center"><StatusPill status={row.status} /></td>
