@@ -355,6 +355,89 @@ function ConfidenceBadge({ confidence }: { confidence: Confidence }) {
   return <span className={`inline-flex rounded-md border px-2 py-1 text-[10px] font-mono uppercase tracking-wider ${classes[confidence]}`}>{confidence}</span>;
 }
 
+function LegendDot({ label, className }: { label: string; className: string }) {
+  return <span className="inline-flex items-center gap-1.5"><span className={`h-1.5 w-3 rounded-full ${className}`} />{label}</span>;
+}
+
+function StatusSummary() {
+  return (
+    <div className="mt-5 overflow-x-auto border-b border-border">
+      <table className="w-full min-w-[760px] text-sm">
+        <thead className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+          <tr className="border-b border-border">
+            <th className="py-3 text-left font-medium">Performance</th>
+            <th className="py-3 text-right font-medium">Sample size</th>
+            <th className="py-3 text-right font-medium">Clicks</th>
+            <th className="py-3 text-right font-medium">Impressions</th>
+            <th className="py-3 text-right font-medium">CTR</th>
+            <th className="py-3 text-right font-medium">Potential growth</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-border">
+          {STATUS_SUMMARY.map((row) => (
+            <tr key={row.status}>
+              <td className="py-3"><StatusPill status={row.status} label={row.label} /></td>
+              <td className="py-3 text-right font-mono">{row.sample}</td>
+              <td className="py-3 text-right font-mono">{row.clicks}</td>
+              <td className="py-3 text-right font-mono">{row.impressions}</td>
+              <td className="py-3 text-right font-mono text-foreground">{row.ctr}</td>
+              <td className={`py-3 text-right font-mono ${row.growth.startsWith("+") ? "text-primary" : "text-muted-foreground"}`}>{row.growth}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function UrlExamplesTable() {
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[920px] text-sm">
+        <thead className="bg-surface/40 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+          <tr>
+            <th className="px-1 py-3 text-left font-medium">URL</th>
+            <th className="px-3 py-3 text-center font-medium">Status</th>
+            <th className="px-3 py-3 text-right font-medium">Clicks</th>
+            <th className="px-3 py-3 text-right font-medium">Impr.</th>
+            <th className="px-3 py-3 text-right font-medium">CTR</th>
+            <th className="px-3 py-3 text-right font-medium">Pos.</th>
+            <th className="px-3 py-3 text-right font-medium">LCP</th>
+            <th className="px-3 py-3 text-right font-medium">INP</th>
+            <th className="px-1 py-3 text-right font-medium">CLS</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-border">
+          {URL_EXAMPLES.map((row) => (
+            <tr key={row.url} className="hover:bg-surface/40 transition-colors">
+              <td className="max-w-[320px] truncate px-1 py-3 font-mono text-xs text-primary">{row.url}</td>
+              <td className="px-3 py-3 text-center"><StatusPill status={row.status} /></td>
+              <td className="px-3 py-3 text-right font-mono">{row.clicks}</td>
+              <td className="px-3 py-3 text-right font-mono">{row.impressions}</td>
+              <td className="px-3 py-3 text-right font-mono">{row.ctr}</td>
+              <td className="px-3 py-3 text-right font-mono">{row.position}</td>
+              <td className="px-3 py-3 text-right font-mono text-primary">{row.lcp}</td>
+              <td className="px-3 py-3 text-right font-mono text-chart-4">{row.inp}</td>
+              <td className="px-1 py-3 text-right font-mono text-primary">{row.cls}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button className="w-full border-t border-border py-3 text-xs text-muted-foreground hover:text-foreground transition-colors">Show all 29 URLs</button>
+    </div>
+  );
+}
+
+function StatusPill({ status, label }: { status: VitalsStatus; label?: string }) {
+  const classes: Record<VitalsStatus, string> = {
+    good: "border-primary/25 bg-primary/10 text-primary",
+    ni: "border-chart-4/35 bg-chart-4/10 text-chart-4",
+    poor: "border-destructive/25 bg-destructive/10 text-destructive",
+  };
+  const text = label ?? (status === "ni" ? "NI" : status === "good" ? "Good" : "Poor");
+  return <span className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] ${classes[status]}`}><span className="h-1.5 w-1.5 rounded-full bg-current" />{text}</span>;
+}
+
 function UrlList({ title, urls, status }: { title: string; urls: string[]; status: VitalsStatus }) {
   return (
     <div className="mt-4">
