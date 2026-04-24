@@ -140,15 +140,37 @@ const URL_SORT_COLUMNS: { key: SortKey; label: string; align: "left" | "center" 
   { key: "cls", label: "CLS", align: "right", className: "px-1" },
 ];
 
+function exportUrlTableCsv() {
+  const headers = ["URL", "Status", "Clicks", "Impr.", "CTR", "Pos.", "LCP", "INP", "CLS"];
+  const rows = URL_EXAMPLES.map((row) => [row.url, row.status === "ni" ? "Needs Improvement" : row.status === "good" ? "Good" : "Poor", row.clicks, row.impressions, row.ctr, row.position, row.lcp, row.inp, row.cls]);
+  const csv = [headers, ...rows].map((cells) => cells.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+  const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8;" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "cwv-url-table.csv";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 function CwvDashboardPage() {
   return (
     <main className="px-6 lg:px-8 py-6 space-y-6">
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="bg-surface border border-border">
-          <TabsTrigger value="overview">Impact overview</TabsTrigger>
-          <TabsTrigger value="deep-dive">Page type deep dive</TabsTrigger>
-          <TabsTrigger value="opportunities">Opportunities table</TabsTrigger>
-        </TabsList>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <TabsList className="w-fit bg-surface border border-border">
+            <TabsTrigger value="overview">Impact overview</TabsTrigger>
+            <TabsTrigger value="deep-dive">Page type deep dive</TabsTrigger>
+            <TabsTrigger value="opportunities">Opportunities table</TabsTrigger>
+          </TabsList>
+          <button
+            type="button"
+            onClick={exportUrlTableCsv}
+            className="inline-flex w-fit items-center gap-1.5 rounded-md border border-border bg-surface px-3 py-2 text-xs font-mono uppercase tracking-wider text-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+          >
+            <Download className="h-3.5 w-3.5" />
+            Export CSV
+          </button>
+        </div>
 
         <TabsContent value="overview" className="space-y-6">
           <HeroKpis />
