@@ -466,9 +466,9 @@ function UrlExamplesTable() {
                       event.stopPropagation();
                       setSelectedUrl(row);
                     }}
-                    className="min-w-0 flex-1 truncate text-left font-mono text-xs text-primary underline-offset-4 hover:underline"
+                    className="shrink-0 rounded-md border border-primary/30 bg-primary/10 px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-primary transition-colors hover:bg-primary/15"
                   >
-                    {row.url}
+                    Analyze
                   </button>
                   <button
                     type="button"
@@ -476,9 +476,9 @@ function UrlExamplesTable() {
                       event.stopPropagation();
                       setSelectedUrl(row);
                     }}
-                    className="shrink-0 rounded-md border border-border bg-surface px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+                    className="min-w-0 flex-1 truncate text-left font-mono text-xs text-primary underline-offset-4 hover:underline"
                   >
-                    Diagnose
+                    {row.url}
                   </button>
                 </div>
               </td>
