@@ -141,9 +141,9 @@ function AuthorityHero({ data, score, delta, confidence }: { data: typeof AUTHOR
         <div className="flex flex-col justify-between gap-6">
           <div>
             <div className="inline-flex items-center gap-2 rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-primary">
-              <Sparkles className="w-3.5 h-3.5" /> Authority index
+              <Sparkles className="w-3.5 h-3.5" /> Brand Authority
             </div>
-            <p className="mt-5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Brand Authority Score</p>
+            <p className="mt-5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Score</p>
             <div className="mt-2 flex items-end gap-3">
               <span className="font-mono text-7xl font-bold leading-none tabular-nums">{score}</span>
               <span className="mb-2 font-mono text-xl text-muted-foreground">/100</span>
@@ -267,7 +267,8 @@ function SparklineTooltip({ active, payload }: { active?: boolean; payload?: Arr
 }
 
 function buildAuthorityView(range: Range, pageType: string) {
-  const pageShift = pageType === "All page types" ? 0 : (pageType.length % 5) - 2;
+  const safePageType = pageType || PAGE_TYPES[0];
+  const pageShift = safePageType === "All page types" ? 0 : (safePageType.length % 5) - 2;
   const marketShift = 0;
   const multiplier = RANGE_MULTIPLIER[range];
   const scoreShift = Math.round((pageShift + marketShift) * 1.5);
