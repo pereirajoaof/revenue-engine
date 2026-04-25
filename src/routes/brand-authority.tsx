@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, Calendar, ChevronDown, CircleDot, ShieldCheck, Sparkles, TrendingUp } from "lucide-react";
 import { Line, LineChart, ReferenceDot, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -189,8 +189,9 @@ function AuthorityHero({ data, score, delta, confidence }: { data: typeof AUTHOR
 function AuthorityCards({ metrics }: { metrics: AuthorityMetric[] }) {
   return (
     <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-      {metrics.map((metric) => (
-        <button key={metric.label} type="button" aria-label={`Open ${metric.label} detail page`} className="group rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-colors hover:border-primary/40 hover:bg-surface/40 focus:outline-none focus:ring-2 focus:ring-ring">
+      {metrics.map((metric) => {
+        const content = (
+          <>
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{metric.label}</p>
@@ -211,8 +212,23 @@ function AuthorityCards({ metrics }: { metrics: AuthorityMetric[] }) {
             </ResponsiveContainer>
           </div>
           <p className="mt-3 line-clamp-2 text-xs text-muted-foreground">{metric.driver}</p>
-        </button>
-      ))}
+          </>
+        );
+
+        if (metric.label === "Domain Age") {
+          return (
+            <Link key={metric.label} to="/brand-authority/domain-age" aria-label="Open Domain Age detail page" className="group rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-colors hover:border-primary/40 hover:bg-surface/40 focus:outline-none focus:ring-2 focus:ring-ring">
+              {content}
+            </Link>
+          );
+        }
+
+        return (
+          <button key={metric.label} type="button" aria-label={`Open ${metric.label} detail page`} className="group rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-colors hover:border-primary/40 hover:bg-surface/40 focus:outline-none focus:ring-2 focus:ring-ring">
+            {content}
+          </button>
+        );
+      })}
     </section>
   );
 }
