@@ -21,6 +21,7 @@ import { Route as BrandAuthorityPageAgeRouteImport } from './routes/brand-author
 import { Route as BrandAuthorityDomainAgeRouteImport } from './routes/brand-authority_.domain-age'
 import { Route as TechnicalHealthCwvOpportunitiesRouteImport } from './routes/technical-health.cwv.opportunities'
 import { Route as TechnicalHealthCwvDeepDiveRouteImport } from './routes/technical-health.cwv.deep-dive'
+import { Route as BrandAuthorityPageAgeOutliersRouteImport } from './routes/brand-authority_.page-age.outliers'
 
 const TechnicalHealthRoute = TechnicalHealthRouteImport.update({
   id: '/technical-health',
@@ -84,6 +85,12 @@ const TechnicalHealthCwvDeepDiveRoute =
     path: '/deep-dive',
     getParentRoute: () => TechnicalHealthCwvRoute,
   } as any)
+const BrandAuthorityPageAgeOutliersRoute =
+  BrandAuthorityPageAgeOutliersRouteImport.update({
+    id: '/outliers',
+    path: '/outliers',
+    getParentRoute: () => BrandAuthorityPageAgeRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -93,9 +100,10 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
-  '/brand-authority/page-age': typeof BrandAuthorityPageAgeRoute
+  '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health/': typeof TechnicalHealthIndexRoute
+  '/brand-authority/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
   '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
   '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
 }
@@ -106,9 +114,10 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
-  '/brand-authority/page-age': typeof BrandAuthorityPageAgeRoute
+  '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health': typeof TechnicalHealthIndexRoute
+  '/brand-authority/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
   '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
   '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
 }
@@ -121,9 +130,10 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
   '/brand-authority_/domain-age': typeof BrandAuthorityDomainAgeRoute
-  '/brand-authority_/page-age': typeof BrandAuthorityPageAgeRoute
+  '/brand-authority_/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health/': typeof TechnicalHealthIndexRoute
+  '/brand-authority_/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
   '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
   '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
 }
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/brand-authority/page-age'
     | '/technical-health/cwv'
     | '/technical-health/'
+    | '/brand-authority/page-age/outliers'
     | '/technical-health/cwv/deep-dive'
     | '/technical-health/cwv/opportunities'
   fileRoutesByTo: FileRoutesByTo
@@ -153,6 +164,7 @@ export interface FileRouteTypes {
     | '/brand-authority/page-age'
     | '/technical-health/cwv'
     | '/technical-health'
+    | '/brand-authority/page-age/outliers'
     | '/technical-health/cwv/deep-dive'
     | '/technical-health/cwv/opportunities'
   id:
@@ -167,6 +179,7 @@ export interface FileRouteTypes {
     | '/brand-authority_/page-age'
     | '/technical-health/cwv'
     | '/technical-health/'
+    | '/brand-authority_/page-age/outliers'
     | '/technical-health/cwv/deep-dive'
     | '/technical-health/cwv/opportunities'
   fileRoutesById: FileRoutesById
@@ -179,7 +192,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   TechnicalHealthRoute: typeof TechnicalHealthRouteWithChildren
   BrandAuthorityDomainAgeRoute: typeof BrandAuthorityDomainAgeRoute
-  BrandAuthorityPageAgeRoute: typeof BrandAuthorityPageAgeRoute
+  BrandAuthorityPageAgeRoute: typeof BrandAuthorityPageAgeRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -268,6 +281,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TechnicalHealthCwvDeepDiveRouteImport
       parentRoute: typeof TechnicalHealthCwvRoute
     }
+    '/brand-authority_/page-age/outliers': {
+      id: '/brand-authority_/page-age/outliers'
+      path: '/outliers'
+      fullPath: '/brand-authority/page-age/outliers'
+      preLoaderRoute: typeof BrandAuthorityPageAgeOutliersRouteImport
+      parentRoute: typeof BrandAuthorityPageAgeRoute
+    }
   }
 }
 
@@ -298,6 +318,19 @@ const TechnicalHealthRouteWithChildren = TechnicalHealthRoute._addFileChildren(
   TechnicalHealthRouteChildren,
 )
 
+interface BrandAuthorityPageAgeRouteChildren {
+  BrandAuthorityPageAgeOutliersRoute: typeof BrandAuthorityPageAgeOutliersRoute
+}
+
+const BrandAuthorityPageAgeRouteChildren: BrandAuthorityPageAgeRouteChildren = {
+  BrandAuthorityPageAgeOutliersRoute: BrandAuthorityPageAgeOutliersRoute,
+}
+
+const BrandAuthorityPageAgeRouteWithChildren =
+  BrandAuthorityPageAgeRoute._addFileChildren(
+    BrandAuthorityPageAgeRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BrandAuthorityRoute: BrandAuthorityRoute,
@@ -306,7 +339,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   TechnicalHealthRoute: TechnicalHealthRouteWithChildren,
   BrandAuthorityDomainAgeRoute: BrandAuthorityDomainAgeRoute,
-  BrandAuthorityPageAgeRoute: BrandAuthorityPageAgeRoute,
+  BrandAuthorityPageAgeRoute: BrandAuthorityPageAgeRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
