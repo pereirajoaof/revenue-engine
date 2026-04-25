@@ -130,6 +130,7 @@ export function DashboardNav() {
                         <span className="truncate">{d.label}</span>
                       </Link>
                       {isActive && (
+                        <>
                         <Link
                           to="/brand-authority/domain-age"
                           className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
@@ -152,6 +153,7 @@ export function DashboardNav() {
                           <FileText className="w-3 h-3 shrink-0" />
                           <span className="truncate">Page Age</span>
                         </Link>
+                        </>
                       )}
                     </div>
                   );
