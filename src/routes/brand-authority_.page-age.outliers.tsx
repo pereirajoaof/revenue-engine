@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Download, Filter, Flag, Search } from "lucide-react";
+import { AlertTriangle, ArrowUpRight, CheckCircle2, Download, Filter, Flag, Search, Target } from "lucide-react";
 import { useMemo, useState } from "react";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -36,6 +36,8 @@ function PageAgeOutliersPage() {
   const [group, setGroup] = useState<(typeof GROUPS)[number]>("All groups");
   const [flag, setFlag] = useState<(typeof FLAGS)[number]>("All flags");
   const filtered = useMemo(() => OUTLIER_ROWS.filter((row) => (group === "All groups" || row.group === group) && (flag === "All flags" || row.flag === flag)), [group, flag]);
+  const biggestWinner = OUTLIER_ROWS.reduce((best, row) => (row.ctr - row.avgCtr > best.ctr - best.avgCtr ? row : best), OUTLIER_ROWS[0]);
+  const biggestRisk = OUTLIER_ROWS.reduce((worst, row) => (row.ctr - row.avgCtr < worst.ctr - worst.avgCtr ? row : worst), OUTLIER_ROWS[0]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -57,10 +59,27 @@ function PageAgeOutliersPage() {
         </header>
 
         <main className="space-y-6 px-6 py-6 lg:px-8">
-          <section className="grid gap-4 md:grid-cols-3">
-            <SummaryCard label="Tracked outliers" value={OUTLIER_ROWS.length.toString()} detail="Across all age groups" />
-            <SummaryCard label="Green flags" value={OUTLIER_ROWS.filter((row) => row.flag === "Green flag").length.toString()} detail="Patterns to replicate" />
-            <SummaryCard label="Red flags" value={OUTLIER_ROWS.filter((row) => row.flag === "Red flag").length.toString()} detail="Pages needing review" />
+          <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
+            <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Page maturity intelligence</p>
+                  <h2 className="mt-2 max-w-3xl text-2xl font-bold tracking-tight">URL-level CTR outliers for prioritising SEO and product work</h2>
+                  <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">Compare each URL against its age-group average to separate pages worth replicating from pages that need snippet, intent, or lifecycle intervention.</p>
+                </div>
+                <Target className="h-6 w-6 shrink-0 text-primary" />
+              </div>
+              <div className="mt-6 grid gap-3 md:grid-cols-3">
+                <SummaryCard label="Tracked outliers" value={OUTLIER_ROWS.length.toString()} detail="Across all age groups" />
+                <SummaryCard label="Green flags" value={OUTLIER_ROWS.filter((row) => row.flag === "Green flag").length.toString()} detail="Patterns to replicate" tone="positive" />
+                <SummaryCard label="Red flags" value={OUTLIER_ROWS.filter((row) => row.flag === "Red flag").length.toString()} detail="Pages needing review" tone="risk" />
+              </div>
+            </div>
+
+            <div className="grid gap-4">
+              <SpotlightCard title="Biggest green flag" row={biggestWinner} icon={<CheckCircle2 className="h-5 w-5 text-primary" />} />
+              <SpotlightCard title="Biggest red flag" row={biggestRisk} icon={<AlertTriangle className="h-5 w-5 text-destructive" />} />
+            </div>
           </section>
 
           <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
@@ -73,6 +92,11 @@ function PageAgeOutliersPage() {
                 <FilterSelect value={group} options={GROUPS} onChange={setGroup} />
                 <FilterSelect value={flag} options={FLAGS} onChange={setFlag} />
               </div>
+            </div>
+            <div className="mb-4 flex flex-wrap gap-2">
+              {GROUPS.slice(1).map((item) => (
+                <button key={item} type="button" onClick={() => setGroup(item)} className={`rounded-md border px-3 py-1.5 text-xs font-mono transition-colors ${group === item ? "border-primary bg-primary/10 text-primary" : "border-border bg-surface/45 text-muted-foreground hover:text-foreground"}`}>{item}</button>
+              ))}
             </div>
             <div className="overflow-x-auto rounded-lg border border-border">
               <table className="w-full min-w-[1120px] border-collapse text-left text-sm">
