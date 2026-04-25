@@ -23,9 +23,8 @@ export const Route = createFileRoute("/brand-authority")({
   }),
 });
 
-const RANGES = ["7d", "30d", "90d", "12m"] as const;
+const RANGES = ["7d", "30d", "90d"] as const;
 const PAGE_TYPES = ["All page types", "Routes", "Stops", "City", "Operator", "Blog"];
-const MARKETS = ["All markets", "United Kingdom", "Ireland", "Germany"];
 
 type Range = (typeof RANGES)[number];
 type AuthorityMetric = {
@@ -62,20 +61,19 @@ const AUTHORITY_METRICS: AuthorityMetric[] = [
   { label: "Page Age", score: 58, delta: -4.1, status: "Weak", trend: [68, 67, 66, 65, 63, 62, 61, 60, 59, 59, 58, 58], driver: "Freshness decay on older templates" },
 ];
 
-const RANGE_MULTIPLIER: Record<Range, number> = { "7d": 0.42, "30d": 0.7, "90d": 1, "12m": 1.18 };
+const RANGE_MULTIPLIER: Record<Range, number> = { "7d": 0.42, "30d": 0.7, "90d": 1 };
 
 function BrandAuthorityPage() {
   const [range, setRange] = useState<Range>("90d");
   const [pageType, setPageType] = useState(PAGE_TYPES[0]);
-  const [market, setMarket] = useState(MARKETS[0]);
 
-  const filtered = useMemo(() => buildAuthorityView(range, pageType, market), [range, pageType, market]);
+  const filtered = useMemo(() => buildAuthorityView(range, pageType), [range, pageType]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <DashboardNav />
       <div className="lg:pl-56">
-        <BrandAuthorityHeader range={range} pageType={pageType} market={market} onRange={setRange} onPageType={setPageType} onMarket={setMarket} />
+        <BrandAuthorityHeader range={range} pageType={pageType} onRange={setRange} onPageType={setPageType} />
         <main className="px-6 lg:px-8 py-6 space-y-6">
           <AuthorityHero data={filtered.trend} score={filtered.score} delta={filtered.delta} confidence={filtered.confidence} />
           <AuthorityCards metrics={filtered.metrics} />
