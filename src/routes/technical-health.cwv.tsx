@@ -92,6 +92,15 @@ const TREND = [
   { week: "W6", score: 70, risk: 386, release: "Experiment" },
 ];
 
+const CWV_PROGRESS = [
+  { week: "Mar 3", good: 49, ni: 34, poor: 17, risk: 486 },
+  { week: "Mar 10", good: 52, ni: 33, poor: 15, risk: 462 },
+  { week: "Mar 17", good: 55, ni: 31, poor: 14, risk: 448, marker: "LCP fixes" },
+  { week: "Mar 24", good: 57, ni: 30, poor: 13, risk: 431 },
+  { week: "Mar 31", good: 59, ni: 29, poor: 12, risk: 420 },
+  { week: "Apr 7", good: 61, ni: 28, poor: 11, risk: 412, marker: "CLS rollout" },
+];
+
 const URL_EXAMPLES: readonly {
   url: string;
   status: VitalsStatus;
@@ -175,6 +184,7 @@ function OverviewContent() {
   return (
     <div className="space-y-6">
       <HeroKpis />
+      <CwvProgressTrend />
       <BiggestOpportunities />
       <PerformancePotentialChart />
     </div>
@@ -215,6 +225,58 @@ function HeroKpis() {
         );
       })}
     </div>
+  );
+}
+
+function CwvProgressTrend() {
+  const first = CWV_PROGRESS[0];
+  const latest = CWV_PROGRESS[CWV_PROGRESS.length - 1];
+  const progress = [
+    { label: "Good URLs", value: `+${latest.good - first.good} pp`, context: `${latest.good}% now`, tone: "primary" },
+    { label: "Poor URLs", value: `${latest.poor - first.poor} pp`, context: `${latest.poor}% now`, tone: "destructive" },
+    { label: "Revenue risk", value: `-£${first.risk - latest.risk}k`, context: `£${latest.risk}k now`, tone: "primary" },
+  ] as const;
+
+  return (
+    <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <SectionHeading icon={<Activity className="w-4 h-4" />} title="CWV progress over time" subtitle="URL status mix and revenue risk trend across the last six weeks." />
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 lg:min-w-[420px]">
+          {progress.map((item) => (
+            <div key={item.label} className="rounded-lg border border-border bg-surface/45 px-3 py-2">
+              <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{item.label}</p>
+              <p className={`mt-1 font-mono text-lg font-bold tabular-nums ${item.tone === "primary" ? "text-primary" : "text-destructive"}`}>{item.value}</p>
+              <p className="text-[11px] text-muted-foreground">{item.context}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1fr)_220px]">
+        <div className="h-[260px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={CWV_PROGRESS} margin={{ top: 8, right: 18, bottom: 0, left: 0 }}>
+              <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="week" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 11, fontFamily: "var(--font-mono)" }} tickFormatter={(v) => `${v}%`} axisLine={false} tickLine={false} />
+              <Tooltip content={<VitalsTooltip />} />
+              <Area type="monotone" dataKey="good" stackId="1" stroke="var(--primary)" fill="var(--primary)" fillOpacity={0.78} name="Good" />
+              <Area type="monotone" dataKey="ni" stackId="1" stroke="var(--chart-4)" fill="var(--chart-4)" fillOpacity={0.42} name="Needs improvement" />
+              <Area type="monotone" dataKey="poor" stackId="1" stroke="var(--destructive)" fill="var(--destructive)" fillOpacity={0.58} name="Poor" />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="space-y-3 rounded-lg border border-border bg-surface/35 p-4">
+          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Status mix</p>
+          <LegendDot label="Good" className="bg-primary" />
+          <LegendDot label="Needs improvement" className="bg-chart-4" />
+          <LegendDot label="Poor" className="bg-destructive" />
+          <div className="border-t border-border pt-3 text-xs leading-relaxed text-muted-foreground">
+            More URLs are moving into Good while revenue risk is trending down after the latest fixes.
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
