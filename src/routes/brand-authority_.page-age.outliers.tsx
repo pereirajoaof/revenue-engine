@@ -117,8 +117,17 @@ function PageAgeOutliersPage() {
   );
 }
 
-function SummaryCard({ label, value, detail }: { label: string; value: string; detail: string }) {
-  return <div className="rounded-xl border border-border bg-card p-5 shadow-sm"><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{label}</p><p className="mt-2 font-mono text-3xl font-bold">{value}</p><p className="mt-1 text-sm text-muted-foreground">{detail}</p></div>;
+function SummaryCard({ label, value, detail, tone = "neutral" }: { label: string; value: string; detail: string; tone?: "neutral" | "positive" | "risk" }) {
+  return <div className="rounded-lg border border-border bg-surface/40 p-4"><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{label}</p><p className={`mt-2 font-mono text-3xl font-bold ${tone === "positive" ? "text-primary" : tone === "risk" ? "text-destructive" : "text-foreground"}`}>{value}</p><p className="mt-1 text-sm text-muted-foreground">{detail}</p></div>;
+}
+
+function SpotlightCard({ title, row, icon }: { title: string; row: (typeof OUTLIER_ROWS)[number]; icon: React.ReactNode }) {
+  const delta = row.ctr - row.avgCtr;
+  return <div className="rounded-xl border border-border bg-card p-5 shadow-sm"><div className="flex items-start justify-between gap-3"><div><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{title}</p><h3 className="mt-1 break-all font-mono text-sm font-bold">{row.url}</h3></div>{icon}</div><div className="mt-4 grid grid-cols-3 gap-2 rounded-lg border border-border bg-surface/40 p-3"><Metric label="CTR" value={`${row.ctr}%`} /><Metric label="Avg" value={`${row.avgCtr}%`} /><Metric label="Delta" value={`${delta > 0 ? "+" : ""}${delta.toFixed(1)}pp`} tone={delta > 0 ? "positive" : "risk"} /></div><p className="mt-3 text-sm text-muted-foreground">{row.action}</p></div>;
+}
+
+function Metric({ label, value, tone = "neutral" }: { label: string; value: string; tone?: "neutral" | "positive" | "risk" }) {
+  return <div><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{label}</p><p className={`mt-1 font-mono text-sm font-bold ${tone === "positive" ? "text-primary" : tone === "risk" ? "text-destructive" : "text-foreground"}`}>{value}</p></div>;
 }
 
 function FilterSelect<T extends string>({ value, options, onChange }: { value: T; options: readonly T[]; onChange: (value: T) => void }) {
