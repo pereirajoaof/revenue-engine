@@ -52,12 +52,15 @@ export function DashboardNav() {
   const path = location.pathname;
   const search = location.search as Record<string, string> | undefined;
   const isTechRoute = path.startsWith("/technical-health");
+  const isBrandRoute = path.startsWith("/brand-authority");
   const activeDriver = isTechRoute
     ? "technical-health"
-    : path === "/dashboard"
+    : isBrandRoute
+      ? "brand-authority"
+      : path === "/dashboard"
       ? search?.driver
       : undefined;
-  const isRevenueParentActive = path === "/dashboard" || isTechRoute;
+  const isRevenueParentActive = path === "/dashboard" || isTechRoute || isBrandRoute;
   const [driversOpen, setDriversOpen] = useState(true);
 
   const handleLogout = () => {
@@ -116,6 +119,14 @@ export function DashboardNav() {
                     ? "bg-primary/10 text-primary border border-primary/20"
                     : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
                 }`;
+                if (d.key === "brand-authority") {
+                  return (
+                    <Link key={d.key} to="/brand-authority" className={className}>
+                      <Icon className="w-3.5 h-3.5 shrink-0" />
+                      <span className="truncate">{d.label}</span>
+                    </Link>
+                  );
+                }
                 if (d.key === "technical-health") {
                   return (
                     <div key={d.key}>
