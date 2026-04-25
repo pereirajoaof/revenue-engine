@@ -23,9 +23,8 @@ export const Route = createFileRoute("/brand-authority")({
   }),
 });
 
-const RANGES = ["7d", "30d", "90d", "12m"] as const;
+const RANGES = ["7d", "30d", "90d"] as const;
 const PAGE_TYPES = ["All page types", "Routes", "Stops", "City", "Operator", "Blog"];
-const MARKETS = ["All markets", "United Kingdom", "Ireland", "Germany"];
 
 type Range = (typeof RANGES)[number];
 type AuthorityMetric = {
@@ -62,20 +61,19 @@ const AUTHORITY_METRICS: AuthorityMetric[] = [
   { label: "Page Age", score: 58, delta: -4.1, status: "Weak", trend: [68, 67, 66, 65, 63, 62, 61, 60, 59, 59, 58, 58], driver: "Freshness decay on older templates" },
 ];
 
-const RANGE_MULTIPLIER: Record<Range, number> = { "7d": 0.42, "30d": 0.7, "90d": 1, "12m": 1.18 };
+const RANGE_MULTIPLIER: Record<Range, number> = { "7d": 0.42, "30d": 0.7, "90d": 1 };
 
 function BrandAuthorityPage() {
   const [range, setRange] = useState<Range>("90d");
   const [pageType, setPageType] = useState(PAGE_TYPES[0]);
-  const [market, setMarket] = useState(MARKETS[0]);
 
-  const filtered = useMemo(() => buildAuthorityView(range, pageType, market), [range, pageType, market]);
+  const filtered = useMemo(() => buildAuthorityView(range, pageType), [range, pageType]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <DashboardNav />
       <div className="lg:pl-56">
-        <BrandAuthorityHeader range={range} pageType={pageType} market={market} onRange={setRange} onPageType={setPageType} onMarket={setMarket} />
+        <BrandAuthorityHeader range={range} pageType={pageType} onRange={setRange} onPageType={setPageType} />
         <main className="px-6 lg:px-8 py-6 space-y-6">
           <AuthorityHero data={filtered.trend} score={filtered.score} delta={filtered.delta} confidence={filtered.confidence} />
           <AuthorityCards metrics={filtered.metrics} />
@@ -86,7 +84,7 @@ function BrandAuthorityPage() {
   );
 }
 
-function BrandAuthorityHeader({ range, pageType, market, onRange, onPageType, onMarket }: { range: Range; pageType: string; market: string; onRange: (range: Range) => void; onPageType: (pageType: string) => void; onMarket: (market: string) => void }) {
+function BrandAuthorityHeader({ range, pageType, onRange, onPageType }: { range: Range; pageType: string; onRange: (range: Range) => void; onPageType: (pageType: string) => void }) {
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur">
       <div className="px-6 lg:px-8 py-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -104,7 +102,6 @@ function BrandAuthorityHeader({ range, pageType, market, onRange, onPageType, on
             ))}
           </div>
           <FilterMenu label="Page Type" value={pageType} options={PAGE_TYPES} onChange={onPageType} />
-          <FilterMenu label="Market" value={market} options={MARKETS} onChange={onMarket} />
           <ThemeToggle />
         </div>
       </div>
@@ -269,9 +266,9 @@ function SparklineTooltip({ active, payload }: { active?: boolean; payload?: Arr
   return <div className="rounded-md border border-border bg-popover px-2 py-1 font-mono text-xs shadow-md">{payload[0].value}/100</div>;
 }
 
-function buildAuthorityView(range: Range, pageType: string, market: string) {
+function buildAuthorityView(range: Range, pageType: string) {
   const pageShift = pageType === "All page types" ? 0 : (pageType.length % 5) - 2;
-  const marketShift = market === "All markets" ? 0 : (market.length % 4) - 1;
+  const marketShift = 0;
   const multiplier = RANGE_MULTIPLIER[range];
   const scoreShift = Math.round((pageShift + marketShift) * 1.5);
   const score = clamp(79 + scoreShift, 0, 100);
