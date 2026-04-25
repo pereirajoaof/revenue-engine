@@ -265,6 +265,46 @@ function AverageCtrByAgeChart() {
   );
 }
 
+function AgeGroupOutliers() {
+  return (
+    <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
+      <div className="mb-4">
+        <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">URL outliers by age group</p>
+        <h2 className="mt-1 text-lg font-semibold">Green flags and red flags against each group average</h2>
+      </div>
+      <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-5">
+        {AGE_GROUP_OUTLIERS.map((item) => (
+          <div key={item.group} className="rounded-lg border border-border bg-surface/40 p-3">
+            <div className="mb-3 flex items-start justify-between gap-3">
+              <div>
+                <h3 className="font-semibold">{item.group}</h3>
+                <p className="mt-0.5 font-mono text-xs text-muted-foreground">Avg CTR {item.averageCtr}%</p>
+              </div>
+            </div>
+            <OutlierRow tone="green" label="Green flag" outlier={item.green} averageCtr={item.averageCtr} />
+            <OutlierRow tone="red" label="Red flag" outlier={item.red} averageCtr={item.averageCtr} />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function OutlierRow({ tone, label, outlier, averageCtr }: { tone: "green" | "red"; label: string; outlier: { url: string; ctr: number; note: string }; averageCtr: number }) {
+  const delta = outlier.ctr - averageCtr;
+  return (
+    <div className="border-t border-border py-3 first:border-t-0 first:pt-0 last:pb-0">
+      <div className="flex items-center justify-between gap-2">
+        <span className={`text-xs font-semibold ${tone === "green" ? "text-primary" : "text-destructive"}`}>{label}</span>
+        <span className={`font-mono text-xs font-bold ${tone === "green" ? "text-primary" : "text-destructive"}`}>{delta > 0 ? "+" : ""}{delta.toFixed(1)}pp</span>
+      </div>
+      <p className="mt-1 break-all font-mono text-xs text-foreground">{outlier.url}</p>
+      <p className="mt-1 font-mono text-xs text-muted-foreground">CTR {outlier.ctr}%</p>
+      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{outlier.note}</p>
+    </div>
+  );
+}
+
 function DistributionRow({ label, percent, warning }: { label: string; percent: number; warning?: boolean }) {
   return (
     <div>
