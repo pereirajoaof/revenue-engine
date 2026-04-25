@@ -17,7 +17,7 @@ import { Route as BrandAuthorityRouteImport } from './routes/brand-authority'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TechnicalHealthIndexRouteImport } from './routes/technical-health.index'
 import { Route as TechnicalHealthCwvRouteImport } from './routes/technical-health.cwv'
-import { Route as BrandAuthorityDomainAgeRouteImport } from './routes/brand-authority.domain-age'
+import { Route as BrandAuthorityDomainAgeRouteImport } from './routes/brand-authority_.domain-age'
 import { Route as TechnicalHealthCwvOpportunitiesRouteImport } from './routes/technical-health.cwv.opportunities'
 import { Route as TechnicalHealthCwvDeepDiveRouteImport } from './routes/technical-health.cwv.deep-dive'
 
@@ -62,9 +62,9 @@ const TechnicalHealthCwvRoute = TechnicalHealthCwvRouteImport.update({
   getParentRoute: () => TechnicalHealthRoute,
 } as any)
 const BrandAuthorityDomainAgeRoute = BrandAuthorityDomainAgeRouteImport.update({
-  id: '/domain-age',
-  path: '/domain-age',
-  getParentRoute: () => BrandAuthorityRoute,
+  id: '/brand-authority_/domain-age',
+  path: '/brand-authority/domain-age',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const TechnicalHealthCwvOpportunitiesRoute =
   TechnicalHealthCwvOpportunitiesRouteImport.update({
@@ -81,7 +81,7 @@ const TechnicalHealthCwvDeepDiveRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/brand-authority': typeof BrandAuthorityRouteWithChildren
+  '/brand-authority': typeof BrandAuthorityRoute
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
@@ -94,7 +94,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/brand-authority': typeof BrandAuthorityRouteWithChildren
+  '/brand-authority': typeof BrandAuthorityRoute
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
@@ -107,12 +107,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/brand-authority': typeof BrandAuthorityRouteWithChildren
+  '/brand-authority': typeof BrandAuthorityRoute
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
-  '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
+  '/brand-authority_/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health/': typeof TechnicalHealthIndexRoute
   '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
@@ -152,7 +152,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/settings'
     | '/technical-health'
-    | '/brand-authority/domain-age'
+    | '/brand-authority_/domain-age'
     | '/technical-health/cwv'
     | '/technical-health/'
     | '/technical-health/cwv/deep-dive'
@@ -161,11 +161,12 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BrandAuthorityRoute: typeof BrandAuthorityRouteWithChildren
+  BrandAuthorityRoute: typeof BrandAuthorityRoute
   DashboardRoute: typeof DashboardRoute
   OnboardingRoute: typeof OnboardingRoute
   SettingsRoute: typeof SettingsRoute
   TechnicalHealthRoute: typeof TechnicalHealthRouteWithChildren
+  BrandAuthorityDomainAgeRoute: typeof BrandAuthorityDomainAgeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -226,12 +227,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TechnicalHealthCwvRouteImport
       parentRoute: typeof TechnicalHealthRoute
     }
-    '/brand-authority/domain-age': {
-      id: '/brand-authority/domain-age'
-      path: '/domain-age'
+    '/brand-authority_/domain-age': {
+      id: '/brand-authority_/domain-age'
+      path: '/brand-authority/domain-age'
       fullPath: '/brand-authority/domain-age'
       preLoaderRoute: typeof BrandAuthorityDomainAgeRouteImport
-      parentRoute: typeof BrandAuthorityRoute
+      parentRoute: typeof rootRouteImport
     }
     '/technical-health/cwv/opportunities': {
       id: '/technical-health/cwv/opportunities'
@@ -249,18 +250,6 @@ declare module '@tanstack/react-router' {
     }
   }
 }
-
-interface BrandAuthorityRouteChildren {
-  BrandAuthorityDomainAgeRoute: typeof BrandAuthorityDomainAgeRoute
-}
-
-const BrandAuthorityRouteChildren: BrandAuthorityRouteChildren = {
-  BrandAuthorityDomainAgeRoute: BrandAuthorityDomainAgeRoute,
-}
-
-const BrandAuthorityRouteWithChildren = BrandAuthorityRoute._addFileChildren(
-  BrandAuthorityRouteChildren,
-)
 
 interface TechnicalHealthCwvRouteChildren {
   TechnicalHealthCwvDeepDiveRoute: typeof TechnicalHealthCwvDeepDiveRoute
@@ -291,11 +280,12 @@ const TechnicalHealthRouteWithChildren = TechnicalHealthRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BrandAuthorityRoute: BrandAuthorityRouteWithChildren,
+  BrandAuthorityRoute: BrandAuthorityRoute,
   DashboardRoute: DashboardRoute,
   OnboardingRoute: OnboardingRoute,
   SettingsRoute: SettingsRoute,
   TechnicalHealthRoute: TechnicalHealthRouteWithChildren,
+  BrandAuthorityDomainAgeRoute: BrandAuthorityDomainAgeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
