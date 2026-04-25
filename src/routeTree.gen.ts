@@ -17,6 +17,7 @@ import { Route as BrandAuthorityRouteImport } from './routes/brand-authority'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TechnicalHealthIndexRouteImport } from './routes/technical-health.index'
 import { Route as TechnicalHealthCwvRouteImport } from './routes/technical-health.cwv'
+import { Route as BrandAuthorityPageAgeRouteImport } from './routes/brand-authority_.page-age'
 import { Route as BrandAuthorityDomainAgeRouteImport } from './routes/brand-authority_.domain-age'
 import { Route as TechnicalHealthCwvOpportunitiesRouteImport } from './routes/technical-health.cwv.opportunities'
 import { Route as TechnicalHealthCwvDeepDiveRouteImport } from './routes/technical-health.cwv.deep-dive'
@@ -61,6 +62,11 @@ const TechnicalHealthCwvRoute = TechnicalHealthCwvRouteImport.update({
   path: '/cwv',
   getParentRoute: () => TechnicalHealthRoute,
 } as any)
+const BrandAuthorityPageAgeRoute = BrandAuthorityPageAgeRouteImport.update({
+  id: '/brand-authority_/page-age',
+  path: '/brand-authority/page-age',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrandAuthorityDomainAgeRoute = BrandAuthorityDomainAgeRouteImport.update({
   id: '/brand-authority_/domain-age',
   path: '/brand-authority/domain-age',
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
+  '/brand-authority/page-age': typeof BrandAuthorityPageAgeRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health/': typeof TechnicalHealthIndexRoute
   '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
+  '/brand-authority/page-age': typeof BrandAuthorityPageAgeRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health': typeof TechnicalHealthIndexRoute
   '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
   '/brand-authority_/domain-age': typeof BrandAuthorityDomainAgeRoute
+  '/brand-authority_/page-age': typeof BrandAuthorityPageAgeRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health/': typeof TechnicalHealthIndexRoute
   '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/technical-health'
     | '/brand-authority/domain-age'
+    | '/brand-authority/page-age'
     | '/technical-health/cwv'
     | '/technical-health/'
     | '/technical-health/cwv/deep-dive'
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/settings'
     | '/brand-authority/domain-age'
+    | '/brand-authority/page-age'
     | '/technical-health/cwv'
     | '/technical-health'
     | '/technical-health/cwv/deep-dive'
@@ -153,6 +164,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/technical-health'
     | '/brand-authority_/domain-age'
+    | '/brand-authority_/page-age'
     | '/technical-health/cwv'
     | '/technical-health/'
     | '/technical-health/cwv/deep-dive'
@@ -167,6 +179,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   TechnicalHealthRoute: typeof TechnicalHealthRouteWithChildren
   BrandAuthorityDomainAgeRoute: typeof BrandAuthorityDomainAgeRoute
+  BrandAuthorityPageAgeRoute: typeof BrandAuthorityPageAgeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -227,6 +240,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TechnicalHealthCwvRouteImport
       parentRoute: typeof TechnicalHealthRoute
     }
+    '/brand-authority_/page-age': {
+      id: '/brand-authority_/page-age'
+      path: '/brand-authority/page-age'
+      fullPath: '/brand-authority/page-age'
+      preLoaderRoute: typeof BrandAuthorityPageAgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/brand-authority_/domain-age': {
       id: '/brand-authority_/domain-age'
       path: '/brand-authority/domain-age'
@@ -286,6 +306,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   TechnicalHealthRoute: TechnicalHealthRouteWithChildren,
   BrandAuthorityDomainAgeRoute: BrandAuthorityDomainAgeRoute,
+  BrandAuthorityPageAgeRoute: BrandAuthorityPageAgeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

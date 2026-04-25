@@ -40,7 +40,7 @@ const TREND_DATA = [
   { month: "Mar", newPages: 60, maturePages: 31 },
 ];
 
-const KPI_DETAILS = [
+const KPI_DETAILS: ReadonlyArray<{ label: string; value: string; note: string; warning?: boolean }> = [
   { label: "Avg page age", value: "1.2y", note: "Mean looks healthy" },
   { label: "Median page age", value: "12d", note: "Important contrast", warning: true },
   { label: "Total tracked pages", value: "549", note: "Across selected scope" },
@@ -175,7 +175,7 @@ function FilterMenu({ label, value, options, onChange }: { label: string; value:
   );
 }
 
-function AgeDistributionChart({ data }: { data: typeof AGE_DISTRIBUTION }) {
+function AgeDistributionChart({ data }: { data: ReadonlyArray<(typeof AGE_DISTRIBUTION)[number]> }) {
   return (
     <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
       <div className="mb-4 flex items-center justify-between gap-3">
@@ -187,7 +187,7 @@ function AgeDistributionChart({ data }: { data: typeof AGE_DISTRIBUTION }) {
       </div>
       <div className="h-[300px] rounded-lg border border-border bg-background/45 p-4">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 16, right: 18, bottom: 4, left: 0 }}>
+          <BarChart data={[...data]} margin={{ top: 16, right: 18, bottom: 4, left: 0 }}>
             <XAxis dataKey="bucket" axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
             <YAxis axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} width={34} tickFormatter={(value) => `${value}%`} />
             <Tooltip content={<DistributionTooltip />} cursor={{ fill: "var(--surface)" }} />
