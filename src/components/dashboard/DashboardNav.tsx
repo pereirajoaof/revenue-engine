@@ -53,6 +53,7 @@ export function DashboardNav() {
   const search = location.search as Record<string, string> | undefined;
   const isTechRoute = path.startsWith("/technical-health");
   const isBrandRoute = path.startsWith("/brand-authority");
+  const isDomainAgeRoute = path === "/brand-authority/domain-age";
   const activeDriver = isTechRoute
     ? "technical-health"
     : isBrandRoute
@@ -121,10 +122,25 @@ export function DashboardNav() {
                 }`;
                 if (d.key === "brand-authority") {
                   return (
-                    <Link key={d.key} to="/brand-authority" className={className}>
-                      <Icon className="w-3.5 h-3.5 shrink-0" />
-                      <span className="truncate">{d.label}</span>
-                    </Link>
+                    <div key={d.key}>
+                      <Link to="/brand-authority" className={className}>
+                        <Icon className="w-3.5 h-3.5 shrink-0" />
+                        <span className="truncate">{d.label}</span>
+                      </Link>
+                      {isActive && (
+                        <Link
+                          to="/brand-authority/domain-age"
+                          className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                            isDomainAgeRoute
+                              ? "bg-primary/10 text-primary border border-primary/20"
+                              : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
+                          }`}
+                        >
+                          <Clock className="w-3 h-3 shrink-0" />
+                          <span className="truncate">Domain Age</span>
+                        </Link>
+                      )}
+                    </div>
                   );
                 }
                 if (d.key === "technical-health") {
