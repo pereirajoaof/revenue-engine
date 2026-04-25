@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, CheckCircle2, CircleDot, Clock3, Info, Minus, ShieldCheck } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { CheckCircle2, CircleDot, Clock3, Info, Minus, ShieldCheck } from "lucide-react";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -50,9 +50,7 @@ function DomainAgePage() {
         <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur">
           <div className="px-6 py-5 lg:px-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <Link to="/brand-authority" className="inline-flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-muted-foreground transition-colors hover:text-primary">
-                <ArrowLeft className="h-3.5 w-3.5" /> Brand Authority
-              </Link>
+              <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Growth driver · Brand Authority</p>
               <h1 className="mt-1 text-2xl font-bold tracking-tight">Domain Age</h1>
             </div>
             <ThemeToggle />
