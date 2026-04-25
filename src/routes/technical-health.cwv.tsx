@@ -99,7 +99,7 @@ const CWV_PROGRESS = [
   { week: "Mar 24", good: 57, ni: 30, poor: 13, risk: 431 },
   { week: "Mar 31", good: 59, ni: 29, poor: 12, risk: 420 },
   { week: "Apr 7", good: 61, ni: 28, poor: 11, risk: 412, marker: "CLS rollout" },
-] as const;
+];
 
 const URL_EXAMPLES: readonly {
   url: string;
