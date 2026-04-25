@@ -91,7 +91,7 @@ function BrandAuthorityHeader({ range, pageType, market, onRange, onPageType, on
     <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur">
       <div className="px-6 lg:px-8 py-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Growth driver · Brand</p>
+          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Growth driver</p>
           <h1 className="mt-0.5 text-2xl font-bold tracking-tight">Brand Authority</h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
