@@ -30,6 +30,14 @@ const AGE_DISTRIBUTION = [
   { bucket: "Legacy", range: "3y+", percent: 9, count: 50, tone: "neutral" },
 ] as const;
 
+const CTR_BY_AGE_GROUP = [
+  { bucket: "New", range: "0–30d", ctr: 1.4, pages: 329 },
+  { bucket: "Recent", range: "31–90d", ctr: 2.1, pages: 5 },
+  { bucket: "Established", range: "91–365d", ctr: 3.8, pages: 44 },
+  { bucket: "Mature", range: "1–3y", ctr: 5.2, pages: 121 },
+  { bucket: "Legacy", range: "3y+", ctr: 3.6, pages: 50 },
+] as const;
+
 const TREND_DATA = [
   { month: "Oct", newPages: 38, maturePages: 41 },
   { month: "Nov", newPages: 43, maturePages: 38 },
@@ -115,6 +123,8 @@ function PageAgePage() {
             <AgeDistributionChart data={scopedDistribution} />
             <KpiGrid />
           </section>
+
+          <AverageCtrByAgeChart />
 
           <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
             <TrendChart />
@@ -219,6 +229,30 @@ function KpiGrid() {
         ))}
       </div>
     </div>
+  );
+}
+
+function AverageCtrByAgeChart() {
+  return (
+    <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <div>
+          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Average CTR by age group</p>
+          <h2 className="mt-1 text-lg font-semibold">CTR improves as pages earn maturity</h2>
+        </div>
+        <LineChartIcon className="h-5 w-5 text-primary" />
+      </div>
+      <div className="h-[300px] rounded-lg border border-border bg-background/45 p-4">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={[...CTR_BY_AGE_GROUP]} margin={{ top: 16, right: 18, bottom: 4, left: 0 }}>
+            <XAxis dataKey="bucket" axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
+            <YAxis axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} width={38} tickFormatter={(value) => `${value}%`} />
+            <Tooltip content={<CtrTooltip />} cursor={{ fill: "var(--surface)" }} />
+            <Bar dataKey="ctr" name="Average CTR" fill="var(--primary)" radius={[6, 6, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </section>
   );
 }
 
@@ -370,6 +404,18 @@ function DistributionTooltip({ active, payload }: { active?: boolean; payload?: 
       <p className="font-mono font-bold text-foreground">{item.bucket} · {item.range}</p>
       <p className="mt-1 text-muted-foreground">{item.percent}% of pages</p>
       <p className="font-mono text-muted-foreground">{item.count.toLocaleString()} pages</p>
+    </div>
+  );
+}
+
+function CtrTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload?: { bucket: string; range: string; ctr: number; pages: number } }> }) {
+  if (!active || !payload?.length || !payload[0].payload) return null;
+  const item = payload[0].payload;
+  return (
+    <div className="rounded-md border border-border bg-popover px-3 py-2 text-xs shadow-md">
+      <p className="font-mono font-bold text-foreground">{item.bucket} · {item.range}</p>
+      <p className="mt-1 text-muted-foreground">Average CTR: <span className="font-mono text-foreground">{item.ctr}%</span></p>
+      <p className="font-mono text-muted-foreground">{item.pages.toLocaleString()} pages</p>
     </div>
   );
 }
