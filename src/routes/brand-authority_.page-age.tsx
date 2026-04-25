@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowUpRight, Calendar, ChevronDown, CircleDot, LineChart as LineChartIcon, TriangleAlert } from "lucide-react";
+import { ArrowUpRight, Calendar, ChevronDown, CircleDot, LineChart as LineChartIcon, Table2, TriangleAlert } from "lucide-react";
 import { Area, AreaChart, Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -268,9 +268,14 @@ function AverageCtrByAgeChart() {
 function AgeGroupOutliers() {
   return (
     <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
-      <div className="mb-4">
-        <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">URL outliers by age group</p>
-        <h2 className="mt-1 text-lg font-semibold">Green flags and red flags against each group average</h2>
+      <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">URL outliers by age group</p>
+          <h2 className="mt-1 text-lg font-semibold">Green flags and red flags against each group average</h2>
+        </div>
+        <Link to="/brand-authority/page-age/outliers" className="inline-flex items-center gap-2 self-start rounded-md border border-border bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90 lg:self-auto">
+          <Table2 className="h-3.5 w-3.5" /> View full table
+        </Link>
       </div>
       <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-5">
         {AGE_GROUP_OUTLIERS.map((item) => (
