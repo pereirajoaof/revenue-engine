@@ -244,7 +244,7 @@ function AverageCtrByAgeChart() {
       </div>
       <div className="h-[300px] rounded-lg border border-border bg-background/45 p-4">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={CTR_BY_AGE_GROUP} margin={{ top: 16, right: 18, bottom: 4, left: 0 }}>
+          <BarChart data={[...CTR_BY_AGE_GROUP]} margin={{ top: 16, right: 18, bottom: 4, left: 0 }}>
             <XAxis dataKey="bucket" axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
             <YAxis axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} width={38} tickFormatter={(value) => `${value}%`} />
             <Tooltip content={<CtrTooltip />} cursor={{ fill: "var(--surface)" }} />
@@ -404,6 +404,18 @@ function DistributionTooltip({ active, payload }: { active?: boolean; payload?: 
       <p className="font-mono font-bold text-foreground">{item.bucket} · {item.range}</p>
       <p className="mt-1 text-muted-foreground">{item.percent}% of pages</p>
       <p className="font-mono text-muted-foreground">{item.count.toLocaleString()} pages</p>
+    </div>
+  );
+}
+
+function CtrTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload?: { bucket: string; range: string; ctr: number; pages: number } }> }) {
+  if (!active || !payload?.length || !payload[0].payload) return null;
+  const item = payload[0].payload;
+  return (
+    <div className="rounded-md border border-border bg-popover px-3 py-2 text-xs shadow-md">
+      <p className="font-mono font-bold text-foreground">{item.bucket} · {item.range}</p>
+      <p className="mt-1 text-muted-foreground">Average CTR: <span className="font-mono text-foreground">{item.ctr}%</span></p>
+      <p className="font-mono text-muted-foreground">{item.pages.toLocaleString()} pages</p>
     </div>
   );
 }
