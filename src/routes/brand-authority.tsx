@@ -84,7 +84,7 @@ function BrandAuthorityPage() {
   );
 }
 
-function BrandAuthorityHeader({ range, pageType, market, onRange, onPageType, onMarket }: { range: Range; pageType: string; market: string; onRange: (range: Range) => void; onPageType: (pageType: string) => void; onMarket: (market: string) => void }) {
+function BrandAuthorityHeader({ range, pageType, onRange, onPageType }: { range: Range; pageType: string; onRange: (range: Range) => void; onPageType: (pageType: string) => void }) {
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur">
       <div className="px-6 lg:px-8 py-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -102,7 +102,6 @@ function BrandAuthorityHeader({ range, pageType, market, onRange, onPageType, on
             ))}
           </div>
           <FilterMenu label="Page Type" value={pageType} options={PAGE_TYPES} onChange={onPageType} />
-          <FilterMenu label="Market" value={market} options={MARKETS} onChange={onMarket} />
           <ThemeToggle />
         </div>
       </div>
@@ -267,9 +266,9 @@ function SparklineTooltip({ active, payload }: { active?: boolean; payload?: Arr
   return <div className="rounded-md border border-border bg-popover px-2 py-1 font-mono text-xs shadow-md">{payload[0].value}/100</div>;
 }
 
-function buildAuthorityView(range: Range, pageType: string, market: string) {
+function buildAuthorityView(range: Range, pageType: string) {
   const pageShift = pageType === "All page types" ? 0 : (pageType.length % 5) - 2;
-  const marketShift = market === "All markets" ? 0 : (market.length % 4) - 1;
+  const marketShift = 0;
   const multiplier = RANGE_MULTIPLIER[range];
   const scoreShift = Math.round((pageShift + marketShift) * 1.5);
   const score = clamp(79 + scoreShift, 0, 100);
