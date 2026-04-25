@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AlertTriangle, ArrowUpRight, CheckCircle2, Download, Filter, Flag, Search, Target } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Download, Filter, Flag, Search, Target } from "lucide-react";
 import { useMemo, useState } from "react";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
