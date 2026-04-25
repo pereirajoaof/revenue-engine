@@ -60,7 +60,6 @@ function DomainAgePage() {
         </header>
 
         <main className="space-y-6 px-6 py-6 lg:px-8">
-          <BrandAuthoritySectionNav />
           <section className="grid gap-4 xl:grid-cols-[360px_minmax(0,1fr)]">
             <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
               <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Domain Age Score</p>
@@ -178,21 +177,6 @@ function DomainAgePage() {
         </main>
       </div>
     </div>
-  );
-}
-
-function BrandAuthoritySectionNav() {
-  const linkClass = "inline-flex h-8 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground";
-
-  return (
-    <nav className="inline-flex h-9 items-center justify-center rounded-lg border border-border bg-surface p-1">
-      <Link to="/brand-authority/domain-age" activeOptions={{ exact: true }} className={linkClass} activeProps={{ className: `${linkClass} bg-background text-foreground shadow` }}>
-        Domain Age
-      </Link>
-      <Link to="/brand-authority/page-age" className={linkClass} activeProps={{ className: `${linkClass} bg-background text-foreground shadow` }}>
-        Page Age
-      </Link>
-    </nav>
   );
 }
 
