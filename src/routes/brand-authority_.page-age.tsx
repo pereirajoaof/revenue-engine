@@ -19,7 +19,6 @@ export const Route = createFileRoute("/brand-authority_/page-age")({
 
 const RANGES = ["7d", "30d", "90d"] as const;
 const PAGE_TYPES = ["All page types", "Routes", "Stops", "City", "Operator", "Blog"];
-const FOLDERS = ["All folders", "/routes/", "/stops/", "/cities/", "/blog/"];
 
 type Range = (typeof RANGES)[number];
 
@@ -56,14 +55,13 @@ const IMPACT_ROWS = [
 function PageAgePage() {
   const [range, setRange] = useState<Range>("90d");
   const [pageType, setPageType] = useState(PAGE_TYPES[0]);
-  const [folder, setFolder] = useState(FOLDERS[0]);
   const score = 72;
   const delta = 3.2;
   const dominantNew = AGE_DISTRIBUTION[0].percent;
   const matureShare = AGE_DISTRIBUTION[3].percent + AGE_DISTRIBUTION[4].percent;
   const diagnosis = dominantNew > 50 ? "Unbalanced — too many new pages" : matureShare >= 45 ? "Healthy distribution of content age" : "Content is aging — risk of decay";
 
-  const scopedDistribution = useMemo(() => AGE_DISTRIBUTION, [range, pageType, folder]);
+  const scopedDistribution = useMemo(() => AGE_DISTRIBUTION, [range, pageType]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -78,7 +76,6 @@ function PageAgePage() {
             <div className="flex flex-wrap items-center gap-2">
               <RangeFilter value={range} onChange={setRange} />
               <FilterMenu label="Page Type" value={pageType} options={PAGE_TYPES} onChange={setPageType} />
-              <FilterMenu label="Folder" value={folder} options={FOLDERS} onChange={setFolder} />
               <ThemeToggle />
             </div>
           </div>
