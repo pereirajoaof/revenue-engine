@@ -300,6 +300,13 @@ export function DeepDive() {
             </div>
           </div>
           <StatusSummary />
+        </div>
+      </section>
+      <section className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
+        <div className="border-b border-border p-5">
+          <SectionHeading icon={<Wifi className="w-4 h-4" />} title="URL samples" subtitle="Exportable URLs used in the page type analysis, with click, ranking, and CWV metrics." />
+        </div>
+        <div className="p-5">
           <UrlExamplesTable />
         </div>
       </section>
