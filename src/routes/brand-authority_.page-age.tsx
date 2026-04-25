@@ -38,6 +38,14 @@ const CTR_BY_AGE_GROUP = [
   { bucket: "Legacy", range: "3y+", ctr: 3.6, pages: 50 },
 ] as const;
 
+const AGE_GROUP_OUTLIERS = [
+  { group: "New", averageCtr: 1.4, green: { url: "/routes/london-to-manchester", ctr: 6.8, note: "Early traction from strong demand match" }, red: { url: "/blog/cheap-weekend-routes", ctr: 0.3, note: "High impressions with weak SERP pull" } },
+  { group: "Recent", averageCtr: 2.1, green: { url: "/stops/victoria-coach-station", ctr: 5.4, note: "Brand-adjacent query is lifting clicks" }, red: { url: "/routes/bristol-to-bath", ctr: 0.7, note: "Ranking but not earning clicks yet" } },
+  { group: "Established", averageCtr: 3.8, green: { url: "/city/birmingham", ctr: 8.1, note: "Snippet and intent alignment look strong" }, red: { url: "/operator/national-express", ctr: 1.5, note: "Likely losing clicks to richer results" } },
+  { group: "Mature", averageCtr: 5.2, green: { url: "/routes/edinburgh-to-glasgow", ctr: 10.6, note: "Compounding authority is converting well" }, red: { url: "/city/leeds", ctr: 2.0, note: "Refresh candidate despite mature age" } },
+  { group: "Legacy", averageCtr: 3.6, green: { url: "/routes/airport-transfers", ctr: 7.2, note: "Evergreen page still outperforming" }, red: { url: "/blog/old-timetable-guide", ctr: 0.9, note: "Potential decay or outdated intent" } },
+] as const;
+
 const TREND_DATA = [
   { month: "Oct", newPages: 38, maturePages: 41 },
   { month: "Nov", newPages: 43, maturePages: 38 },
@@ -125,6 +133,7 @@ function PageAgePage() {
           </section>
 
           <AverageCtrByAgeChart />
+          <AgeGroupOutliers />
 
           <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
             <TrendChart />
