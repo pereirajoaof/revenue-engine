@@ -223,6 +223,14 @@ function AuthorityCards({ metrics }: { metrics: AuthorityMetric[] }) {
           );
         }
 
+        if (metric.label === "Page Age") {
+          return (
+            <Link key={metric.label} to="/brand-authority/page-age" aria-label="Open Page Age detail page" className="group rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-colors hover:border-primary/40 hover:bg-surface/40 focus:outline-none focus:ring-2 focus:ring-ring">
+              {content}
+            </Link>
+          );
+        }
+
         return (
           <button key={metric.label} type="button" aria-label={`Open ${metric.label} detail page`} className="group rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-colors hover:border-primary/40 hover:bg-surface/40 focus:outline-none focus:ring-2 focus:ring-ring">
             {content}
