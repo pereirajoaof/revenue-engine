@@ -19,6 +19,7 @@ import {
   Gauge,
   Link2,
   MapPin,
+  Clock,
 } from "lucide-react";
 import {
   DropdownMenu,
