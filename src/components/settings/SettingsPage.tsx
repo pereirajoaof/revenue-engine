@@ -4,6 +4,7 @@ import {
   LayoutGrid,
   Tag,
   Globe2,
+  Gauge,
   RefreshCw,
   AlertTriangle,
 } from "lucide-react";
@@ -14,6 +15,7 @@ import { EconomicsSection } from "./sections/EconomicsSection";
 import { PageTypesSection } from "./sections/PageTypesSection";
 import { BrandKeywordsSection } from "./sections/BrandKeywordsSection";
 import { MarketsSection } from "./sections/MarketsSection";
+import { CwvSection } from "./sections/CwvSection";
 import { RecalculationSection } from "./sections/RecalculationSection";
 import { DangerZoneSection } from "./sections/DangerZoneSection";
 
@@ -23,6 +25,7 @@ const NAV = [
   { id: "pageTypes", label: "Page Types", icon: LayoutGrid },
   { id: "brand", label: "Brand Keywords", icon: Tag },
   { id: "markets", label: "Markets", icon: Globe2 },
+  { id: "cwv", label: "CWV", icon: Gauge },
   { id: "recalc", label: "Recalculation", icon: RefreshCw },
   { id: "danger", label: "Danger Zone", icon: AlertTriangle },
 ] as const;
@@ -128,6 +131,15 @@ export function SettingsPage({ dirty, markDirty }: Props) {
             description="Primary markets affect CTR benchmarks and demand calculations."
           >
             <MarketsSection onDirty={() => markDirty("markets")} />
+          </SectionCard>
+
+          <SectionCard
+            id="section-cwv"
+            icon={<Gauge className="w-4 h-4" />}
+            title="CWV"
+            description="Controls which Chrome UX Report device data is fetched for Core Web Vitals."
+          >
+            <CwvSection onDirty={() => markDirty("cwv")} />
           </SectionCard>
 
           <SectionCard
