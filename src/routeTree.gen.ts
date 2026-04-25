@@ -13,6 +13,7 @@ import { Route as TechnicalHealthRouteImport } from './routes/technical-health'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as BrandAuthorityRouteImport } from './routes/brand-authority'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TechnicalHealthIndexRouteImport } from './routes/technical-health.index'
 import { Route as TechnicalHealthCwvRouteImport } from './routes/technical-health.cwv'
@@ -37,6 +38,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandAuthorityRoute = BrandAuthorityRouteImport.update({
+  id: '/brand-authority',
+  path: '/brand-authority',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -69,6 +75,7 @@ const TechnicalHealthCwvDeepDiveRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/brand-authority': typeof BrandAuthorityRoute
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
@@ -80,6 +87,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/brand-authority': typeof BrandAuthorityRoute
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
@@ -91,6 +99,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/brand-authority': typeof BrandAuthorityRoute
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/brand-authority'
     | '/dashboard'
     | '/onboarding'
     | '/settings'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/brand-authority'
     | '/dashboard'
     | '/onboarding'
     | '/settings'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/brand-authority'
     | '/dashboard'
     | '/onboarding'
     | '/settings'
@@ -137,6 +149,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BrandAuthorityRoute: typeof BrandAuthorityRoute
   DashboardRoute: typeof DashboardRoute
   OnboardingRoute: typeof OnboardingRoute
   SettingsRoute: typeof SettingsRoute
@@ -171,6 +184,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand-authority': {
+      id: '/brand-authority'
+      path: '/brand-authority'
+      fullPath: '/brand-authority'
+      preLoaderRoute: typeof BrandAuthorityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -240,6 +260,7 @@ const TechnicalHealthRouteWithChildren = TechnicalHealthRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BrandAuthorityRoute: BrandAuthorityRoute,
   DashboardRoute: DashboardRoute,
   OnboardingRoute: OnboardingRoute,
   SettingsRoute: SettingsRoute,

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowDownRight, ArrowUpRight, Calendar, ChevronDown, CircleDot, Gem, Info, Search, ShieldCheck, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Calendar, ChevronDown, CircleDot, ShieldCheck, Sparkles, TrendingUp } from "lucide-react";
 import { Line, LineChart, ReferenceDot, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -220,7 +220,7 @@ function AuthorityCards({ metrics }: { metrics: AuthorityMetric[] }) {
   );
 }
 
-function DriversOfChange({ drivers }: { drivers: { label: string; value: string; direction: "up" | "down"; note: string }[] }) {
+function DriversOfChange({ drivers }: { drivers: readonly { label: string; value: string; direction: "up" | "down"; note: string }[] }) {
   return (
     <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
       <div className="mb-4 flex items-center justify-between gap-3">
