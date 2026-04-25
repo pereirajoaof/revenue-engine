@@ -92,6 +92,15 @@ const TREND = [
   { week: "W6", score: 70, risk: 386, release: "Experiment" },
 ];
 
+const CWV_PROGRESS = [
+  { week: "Mar 3", good: 49, ni: 34, poor: 17, risk: 486 },
+  { week: "Mar 10", good: 52, ni: 33, poor: 15, risk: 462 },
+  { week: "Mar 17", good: 55, ni: 31, poor: 14, risk: 448, marker: "LCP fixes" },
+  { week: "Mar 24", good: 57, ni: 30, poor: 13, risk: 431 },
+  { week: "Mar 31", good: 59, ni: 29, poor: 12, risk: 420 },
+  { week: "Apr 7", good: 61, ni: 28, poor: 11, risk: 412, marker: "CLS rollout" },
+] as const;
+
 const URL_EXAMPLES: readonly {
   url: string;
   status: VitalsStatus;
@@ -175,6 +184,7 @@ function OverviewContent() {
   return (
     <div className="space-y-6">
       <HeroKpis />
+      <CwvProgressTrend />
       <BiggestOpportunities />
       <PerformancePotentialChart />
     </div>
