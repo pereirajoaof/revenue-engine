@@ -1,6 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowLeft, ArrowUpRight, Calendar, ChevronDown, CircleDot, LineChart as LineChartIcon, TriangleAlert } from "lucide-react";
+import { ArrowUpRight, Calendar, ChevronDown, CircleDot, LineChart as LineChartIcon, TriangleAlert } from "lucide-react";
 import { Area, AreaChart, Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -72,9 +72,7 @@ function PageAgePage() {
         <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur">
           <div className="flex flex-col gap-4 px-6 py-5 lg:flex-row lg:items-center lg:justify-between lg:px-8">
             <div>
-              <Link to="/brand-authority" className="inline-flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-muted-foreground transition-colors hover:text-primary">
-                <ArrowLeft className="h-3.5 w-3.5" /> Brand Authority
-              </Link>
+              <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Brand Authority</p>
               <h1 className="mt-1 text-2xl font-bold tracking-tight">Page Age</h1>
             </div>
             <div className="flex flex-wrap items-center gap-2">
