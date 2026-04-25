@@ -238,7 +238,7 @@ function AverageCtrByAgeChart() {
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
           <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Average CTR by age group</p>
-          <h2 className="mt-1 text-lg font-semibold">CTR improves as pages earn maturity</h2>
+          <h2 className="mt-1 text-lg font-semibold">CTR performance as pages earn maturity</h2>
         </div>
         <LineChartIcon className="h-5 w-5 text-primary" />
       </div>
