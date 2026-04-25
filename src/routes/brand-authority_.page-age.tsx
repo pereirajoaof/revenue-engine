@@ -72,7 +72,7 @@ function PageAgePage() {
         <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur">
           <div className="flex flex-col gap-4 px-6 py-5 lg:flex-row lg:items-center lg:justify-between lg:px-8">
             <div>
-              <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Brand Authority</p>
+              <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Growth driver · Brand Authority</p>
               <h1 className="mt-1 text-2xl font-bold tracking-tight">Page Age</h1>
             </div>
             <div className="flex flex-wrap items-center gap-2">
