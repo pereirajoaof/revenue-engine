@@ -20,6 +20,7 @@ import {
   Link2,
   MapPin,
   Clock,
+  Target,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -55,7 +56,8 @@ export function DashboardNav() {
   const isTechRoute = path.startsWith("/technical-health");
   const isBrandRoute = path.startsWith("/brand-authority");
   const isDomainAgeRoute = path === "/brand-authority/domain-age";
-  const isPageAgeRoute = path === "/brand-authority/page-age";
+  const isPageAgeRoute = path.startsWith("/brand-authority/page-age");
+  const isSiteFocusRoute = path === "/brand-authority/site-focus";
   const activeDriver = isTechRoute
     ? "technical-health"
     : isBrandRoute
@@ -152,6 +154,17 @@ export function DashboardNav() {
                         >
                           <FileText className="w-3 h-3 shrink-0" />
                           <span className="truncate">Page Age</span>
+                        </Link>
+                        <Link
+                          to="/brand-authority/site-focus"
+                          className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                            isSiteFocusRoute
+                              ? "bg-primary/10 text-primary border border-primary/20"
+                              : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
+                          }`}
+                        >
+                          <Target className="w-3 h-3 shrink-0" />
+                          <span className="truncate">Site Focus</span>
                         </Link>
                         </>
                       )}
