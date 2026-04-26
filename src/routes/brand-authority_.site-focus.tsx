@@ -262,9 +262,10 @@ function ScatterPoint({ page, selected, onSelect }: { page: DerivedPage; selecte
 function Scatter3D({ pages, selectedUrl, angle, onAngleChange, onSelect }: { pages: DerivedPage[]; centroid: [number, number, number]; selectedUrl: string; angle: { x: number; y: number }; onAngleChange: (angle: { x: number; y: number }) => void; onSelect: (url: string) => void }) {
   const [dragStart, setDragStart] = useState<{ x: number; y: number; ax: number; ay: number } | null>(null);
   const projected = pages.map((page) => ({ page, point: project3d(page.x, page.y, page.currentRevenue / 180000, angle) })).sort((a, b) => a.point.depth - b.point.depth);
+  const riskPages = projected.filter(({ page }) => page.segment === "Off-Topic").sort((a, b) => b.page.currentRevenue - a.page.currentRevenue).slice(0, 3);
   return (
     <div
-      className="h-full w-full cursor-grab active:cursor-grabbing"
+      className="relative h-full w-full cursor-grab overflow-hidden bg-[radial-gradient(circle_at_50%_18%,var(--primary)_0%,transparent_32%),linear-gradient(180deg,var(--card)_0%,var(--background)_100%)] active:cursor-grabbing"
       onPointerDown={(event) => setDragStart({ x: event.clientX, y: event.clientY, ax: angle.x, ay: angle.y })}
       onPointerMove={(event) => {
         if (!dragStart) return;
@@ -274,22 +275,37 @@ function Scatter3D({ pages, selectedUrl, angle, onAngleChange, onSelect }: { pag
       onPointerLeave={() => setDragStart(null)}
     >
       <svg viewBox="0 0 900 520" className="h-full w-full" role="img" aria-label="3D topical map with revenue height">
-        <line x1="210" y1="370" x2="690" y2="370" stroke="var(--border)" />
-        <line x1="450" y1="120" x2="450" y2="405" stroke="var(--border)" strokeDasharray="6 6" />
-        <text x="468" y="132" className="fill-muted-foreground text-[11px] font-mono">revenue height</text>
-        <circle cx="450" cy="360" r="150" fill="none" stroke="var(--border)" strokeDasharray="7 7" />
+        <defs>
+          <filter id="premiumGlow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="8" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+          <linearGradient id="revenuePillar" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="var(--primary)" stopOpacity="0.85" /><stop offset="100%" stopColor="var(--primary)" stopOpacity="0.08" /></linearGradient>
+          <radialGradient id="floorGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="var(--primary)" stopOpacity="0.18" /><stop offset="100%" stopColor="var(--primary)" stopOpacity="0" /></radialGradient>
+        </defs>
+        <ellipse cx="450" cy="392" rx="330" ry="86" fill="url(#floorGlow)" />
+        {[0, 1, 2, 3, 4].map((row) => <path key={`row-${row}`} d={`M ${220 + row * 44} ${418 - row * 26} L ${708 - row * 34} ${418 - row * 26}`} stroke="var(--border)" strokeOpacity="0.45" />)}
+        {[0, 1, 2, 3, 4, 5].map((col) => <path key={`col-${col}`} d={`M ${258 + col * 72} 430 L ${358 + col * 38} 246`} stroke="var(--border)" strokeOpacity="0.28" />)}
+        <ellipse cx="450" cy="360" rx="185" ry="58" fill="none" stroke="var(--primary)" strokeOpacity="0.42" strokeDasharray="7 7" />
+        <ellipse cx="450" cy="360" rx="292" ry="92" fill="none" stroke="var(--destructive)" strokeOpacity="0.28" strokeDasharray="10 8" />
+        <line x1="450" y1="122" x2="450" y2="412" stroke="var(--primary)" strokeOpacity="0.45" strokeDasharray="6 6" />
+        <text x="470" y="132" className="fill-primary text-[11px] font-mono">revenue altitude</text>
+        <text x="642" y="308" className="fill-destructive text-[11px] font-mono">risk frontier</text>
         {projected.map(({ page, point }) => {
           const selected = page.url === selectedUrl;
+          const radius = 8 + Math.sqrt(page.currentRevenue) / 58;
+          const baseY = 404 - point.depth * 20;
           return (
             <g key={page.url} className="cursor-pointer" onClick={() => onSelect(page.url)}>
               <title>{`${page.url}\nRevenue: ${formatMoney(page.currentRevenue)}\nRadius score: ${page.radiusScore}\nPage type: ${page.pageType}`}</title>
-              <line x1={point.x} y1="390" x2={point.x} y2={point.y} stroke="var(--border)" strokeOpacity="0.65" />
-              {selected && <circle cx={point.x} cy={point.y} r="18" fill="none" stroke="var(--ring)" strokeWidth="2" />}
-              <circle cx={point.x} cy={point.y} r={9 + Math.sqrt(page.currentRevenue) / 55} fill={segmentMeta[page.segment].fill} opacity={0.35 + page.confidence * 0.55} stroke="var(--background)" strokeWidth="2" />
+              <ellipse cx={point.x} cy={baseY} rx={radius * 1.45} ry={radius * 0.45} fill={segmentMeta[page.segment].fill} opacity="0.16" />
+              <line x1={point.x} y1={baseY} x2={point.x} y2={point.y} stroke={page.segment === "Core Topic" ? "url(#revenuePillar)" : segmentMeta[page.segment].fill} strokeWidth={Math.max(2, radius / 4)} strokeOpacity={page.segment === "Off-Topic" ? 0.7 : 0.42} />
+              {page.segment === "Off-Topic" && <circle cx={point.x} cy={point.y} r={radius + 14} fill={segmentMeta[page.segment].fill} opacity="0.12" filter="url(#premiumGlow)" />}
+              {selected && <circle cx={point.x} cy={point.y} r={radius + 10} fill="none" stroke="var(--ring)" strokeWidth="2.5" filter="url(#premiumGlow)" />}
+              <circle cx={point.x} cy={point.y} r={radius} fill={segmentMeta[page.segment].fill} opacity={0.42 + page.confidence * 0.5} stroke="var(--background)" strokeWidth="2.5" filter={selected || page.segment === "Off-Topic" ? "url(#premiumGlow)" : undefined} />
             </g>
           );
         })}
+        {riskPages.map(({ page, point }) => <g key={`label-${page.url}`} className="pointer-events-none"><path d={`M ${point.x + 12} ${point.y - 10} L ${point.x + 74} ${point.y - 34}`} stroke="var(--destructive)" strokeOpacity="0.55" /><rect x={point.x + 76} y={point.y - 50} width="128" height="34" rx="6" fill="var(--card)" stroke="var(--destructive)" strokeOpacity="0.35" /><text x={point.x + 86} y={point.y - 36} className="fill-destructive text-[10px] font-mono">{formatMoney(page.currentRevenue)} at risk</text><text x={point.x + 86} y={point.y - 24} className="fill-muted-foreground text-[9px]">radius {page.radiusScore}</text></g>)}
       </svg>
+      <div className="absolute left-4 top-4 rounded-lg border border-border bg-card/90 px-4 py-3 shadow-xl backdrop-blur"><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Advanced view</p><p className="mt-1 text-sm font-semibold">Revenue rises vertically; drift expands outward.</p></div>
       <div className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-md border border-border bg-card/90 px-3 py-2 text-xs text-muted-foreground shadow-sm"><MousePointer2 className="h-3.5 w-3.5" /> Drag to orbit · no auto-rotation</div>
     </div>
   );
