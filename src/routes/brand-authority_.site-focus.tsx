@@ -3,15 +3,11 @@ import { useMemo, useState } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
-  BarChart3,
   ChevronDown,
   Download,
   Eye,
-  Filter,
-  Link2,
   MousePointer2,
   Orbit,
-  PanelRightOpen,
   RefreshCcw,
   Search,
   Target,
@@ -19,7 +15,6 @@ import {
   TriangleAlert,
   X,
 } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -36,7 +31,6 @@ export const Route = createFileRoute("/brand-authority_/site-focus")({
 });
 
 type Segment = "Core Topic" | "Adjacent" | "Off-Topic";
-type ViewMode = "business" | "seo";
 type MapMode = "2d" | "3d";
 type SortKey = "url" | "radiusScore" | "cluster" | "currentRevenue" | "potentialRevenue";
 
@@ -92,7 +86,6 @@ const ACTIONS = [
 ] as const;
 
 function SiteFocusPage() {
-  const [viewMode, setViewMode] = useState<ViewMode>("business");
   const [mapMode, setMapMode] = useState<MapMode>("2d");
   const [selectedUrl, setSelectedUrl] = useState(pageEmbeddings[10].url);
   const [sortKey, setSortKey] = useState<SortKey>("radiusScore");
@@ -124,7 +117,6 @@ function SiteFocusPage() {
               <h1 className="mt-1 text-2xl font-bold tracking-tight">Site Focus</h1>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <ViewToggle value={viewMode} onChange={setViewMode} />
               <button type="button" onClick={() => exportCsv(sortedOutside)} className="inline-flex items-center gap-2 rounded-md border border-border bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
                 <Download className="h-3.5 w-3.5" /> Export data
               </button>
@@ -147,7 +139,6 @@ function SiteFocusPage() {
               centroid={model.centroid}
               selectedUrl={selectedPage.url}
               mapMode={mapMode}
-              viewMode={viewMode}
               angle={angle}
               onAngleChange={setAngle}
               onSelect={setSelectedUrl}
@@ -161,28 +152,11 @@ function SiteFocusPage() {
             <ActionLayer />
           </section>
 
-          {viewMode === "seo" && (
-            <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
-              <RadiusDistribution pages={model.pages} />
-              <ClusterBreakdown pages={model.pages} />
-            </section>
-          )}
+          <ClusterBreakdown pages={model.pages} />
 
           <PagesOutsideRadius rows={sortedOutside} sortKey={sortKey} sortDir={sortDir} onSort={handleSort} onExport={() => exportCsv(sortedOutside)} />
         </main>
       </div>
-    </div>
-  );
-}
-
-function ViewToggle({ value, onChange }: { value: ViewMode; onChange: (value: ViewMode) => void }) {
-  return (
-    <div className="flex items-center rounded-md border border-border bg-surface p-0.5">
-      {(["business", "seo"] as const).map((mode) => (
-        <button key={mode} type="button" onClick={() => onChange(mode)} className={`rounded-sm px-3 py-1.5 text-xs font-mono transition-colors ${value === mode ? "bg-card text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
-          {mode === "business" ? "Business View" : "SEO Analysis"}
-        </button>
-      ))}
     </div>
   );
 }
@@ -201,7 +175,7 @@ function KpiCard({ label, value, detail, trend, trendType, neutral }: { label: s
   );
 }
 
-function TopicalMapPanel({ pages, centroid, selectedUrl, mapMode, viewMode, angle, onAngleChange, onSelect, onMapMode }: { pages: DerivedPage[]; centroid: [number, number, number]; selectedUrl: string; mapMode: MapMode; viewMode: ViewMode; angle: { x: number; y: number }; onAngleChange: (angle: { x: number; y: number }) => void; onSelect: (url: string) => void; onMapMode: (mode: MapMode) => void }) {
+function TopicalMapPanel({ pages, centroid, selectedUrl, mapMode, angle, onAngleChange, onSelect, onMapMode }: { pages: DerivedPage[]; centroid: [number, number, number]; selectedUrl: string; mapMode: MapMode; angle: { x: number; y: number }; onAngleChange: (angle: { x: number; y: number }) => void; onSelect: (url: string) => void; onMapMode: (mode: MapMode) => void }) {
   return (
     <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
       <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -222,13 +196,13 @@ function TopicalMapPanel({ pages, centroid, selectedUrl, mapMode, viewMode, angl
         </div>
       </div>
       <div className="relative h-[520px] overflow-hidden rounded-lg border border-border bg-background/45">
-        {mapMode === "2d" ? <Scatter2D pages={pages} selectedUrl={selectedUrl} viewMode={viewMode} onSelect={onSelect} /> : <Scatter3D pages={pages} centroid={centroid} selectedUrl={selectedUrl} angle={angle} onAngleChange={onAngleChange} onSelect={onSelect} />}
+        {mapMode === "2d" ? <Scatter2D pages={pages} selectedUrl={selectedUrl} onSelect={onSelect} /> : <Scatter3D pages={pages} centroid={centroid} selectedUrl={selectedUrl} angle={angle} onAngleChange={onAngleChange} onSelect={onSelect} />}
       </div>
     </section>
   );
 }
 
-function Scatter2D({ pages, selectedUrl, viewMode, onSelect }: { pages: DerivedPage[]; selectedUrl: string; viewMode: ViewMode; onSelect: (url: string) => void }) {
+function Scatter2D({ pages, selectedUrl, onSelect }: { pages: DerivedPage[]; selectedUrl: string; onSelect: (url: string) => void }) {
   return (
     <svg viewBox="0 0 900 520" className="h-full w-full" role="img" aria-label="Topical authority scatter plot">
       <defs>
@@ -238,7 +212,7 @@ function Scatter2D({ pages, selectedUrl, viewMode, onSelect }: { pages: DerivedP
       <circle cx="450" cy="260" r="210" fill="url(#siteRadius)" stroke="var(--border)" strokeDasharray="7 7" />
       <circle cx="450" cy="260" r="8" fill="var(--primary)" />
       <text x="466" y="255" className="fill-muted-foreground text-[11px] font-mono">site centroid</text>
-      {viewMode === "seo" && ["Intercity routes", "City hubs", "POI pages", "Travel guides"].map((label, index) => (
+      {["Intercity routes", "City hubs", "POI pages", "Travel guides"].map((label, index) => (
         <text key={label} x={[512, 330, 705, 665][index]} y={[184, 170, 82, 392][index]} className="fill-muted-foreground text-[11px] font-mono">{label}</text>
       ))}
       {pages.map((page) => <ScatterPoint key={page.url} page={page} selected={page.url === selectedUrl} onSelect={onSelect} />)}
@@ -363,19 +337,70 @@ function ActionLayer() {
   );
 }
 
-function RadiusDistribution({ pages }: { pages: DerivedPage[] }) {
-  const buckets = [
-    { bucket: "0–30", pages: pages.filter((p) => p.radiusScore <= 30).length },
-    { bucket: "31–60", pages: pages.filter((p) => p.radiusScore > 30 && p.radiusScore <= 60).length },
-    { bucket: "61–80", pages: pages.filter((p) => p.radiusScore > 60 && p.radiusScore <= 80).length },
-    { bucket: "81–100", pages: pages.filter((p) => p.radiusScore > 80).length },
-  ];
-  return <section className="rounded-xl border border-border bg-card p-5 shadow-sm"><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Radius distribution</p><h2 className="mt-1 text-lg font-semibold">How far pages drift from the centroid</h2><div className="mt-4 h-[260px]"><ResponsiveContainer width="100%" height="100%"><BarChart data={buckets}><CartesianGrid stroke="var(--border)" vertical={false} /><XAxis dataKey="bucket" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} axisLine={false} tickLine={false} /><YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} axisLine={false} tickLine={false} /><Tooltip cursor={{ fill: "var(--surface)" }} content={<SimpleTooltip />} /><Bar dataKey="pages" fill="var(--primary)" radius={[6, 6, 0, 0]} /></BarChart></ResponsiveContainer></div></section>;
+function ClusterBreakdown({ pages }: { pages: DerivedPage[] }) {
+  const clusters = [...new Set(pages.map((page) => page.cluster))].map((cluster, index) => {
+    const clusterPages = pages.filter((page) => page.cluster === cluster);
+    const revenue = clusterPages.reduce((sum, page) => sum + page.currentRevenue, 0);
+    const potential = clusterPages.reduce((sum, page) => sum + page.potentialRevenue, 0);
+    const gap = potential - revenue;
+    const avgRadius = clusterPages.reduce((sum, page) => sum + page.radiusScore, 0) / clusterPages.length;
+    const focusScore = Math.max(0, Math.round(100 - avgRadius));
+    const revenuePerPage = revenue / clusterPages.length;
+    const priorityScore = gap / 1800 + revenue / 9500 + avgRadius * 0.85;
+    const priority = priorityScore > 95 ? "High" : priorityScore > 58 ? "Medium" : "Low";
+    const trend = [6.2, 4.8, -2.7, 8.1, -1.9, 3.4, 5.6, -3.1][index % 8];
+    const action = avgRadius > 70 ? "Reposition cluster closer to core topic" : gap > 50000 ? "Expand high-performing coverage" : focusScore < 65 ? "Consolidate overlapping pages" : "Improve internal linking within cluster";
+    return { cluster, pages: clusterPages.length, revenue, potential, gap, avgRadius, focusScore, revenuePerPage, priority, trend, action };
+  }).sort((a, b) => b.gap - a.gap);
+
+  return (
+    <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
+      <div className="mb-4 flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Cluster breakdown</p>
+          <h2 className="mt-1 text-lg font-semibold">Topic clusters by revenue potential</h2>
+        </div>
+        <p className="max-w-xl text-sm text-muted-foreground">Identify which clusters are efficient, aligned, underperforming, and worth prioritising next.</p>
+      </div>
+      <div className="grid gap-4 xl:grid-cols-2">
+        {clusters.map((cluster) => <ClusterCard key={cluster.cluster} cluster={cluster} />)}
+      </div>
+    </section>
+  );
 }
 
-function ClusterBreakdown({ pages }: { pages: DerivedPage[] }) {
-  const clusters = [...new Set(pages.map((page) => page.cluster))].map((cluster) => ({ cluster, pages: pages.filter((page) => page.cluster === cluster).length, revenue: pages.filter((page) => page.cluster === cluster).reduce((sum, page) => sum + page.currentRevenue, 0) })).sort((a, b) => b.revenue - a.revenue);
-  return <section className="rounded-xl border border-border bg-card p-5 shadow-sm"><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Cluster breakdown</p><h2 className="mt-1 text-lg font-semibold">Topic clusters by revenue</h2><div className="mt-4 space-y-3">{clusters.map((cluster) => <div key={cluster.cluster} className="rounded-lg border border-border bg-surface/40 p-3"><div className="flex items-center justify-between gap-3"><p className="text-sm font-semibold">{cluster.cluster}</p><p className="font-mono text-sm font-bold text-primary">{formatMoney(cluster.revenue)}</p></div><p className="mt-1 text-xs text-muted-foreground">{cluster.pages} pages · internal linking overlay ready</p></div>)}</div></section>;
+function ClusterCard({ cluster }: { cluster: { cluster: string; pages: number; revenue: number; potential: number; gap: number; avgRadius: number; focusScore: number; revenuePerPage: number; priority: string; trend: number; action: string } }) {
+  return (
+    <article className="rounded-xl border border-border bg-surface/40 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h3 className="font-semibold">{cluster.cluster}</h3>
+          <p className="mt-1 text-xs text-muted-foreground">{cluster.pages} pages · {cluster.avgRadius < 40 ? "Low" : cluster.avgRadius < 70 ? "Medium" : "High"} drift</p>
+        </div>
+        <span className={`rounded-md border px-2 py-1 font-mono text-[10px] font-bold uppercase ${cluster.priority === "High" ? "border-primary/30 bg-primary/10 text-primary" : cluster.priority === "Medium" ? "border-border bg-card text-foreground" : "border-border bg-background text-muted-foreground"}`}>Priority: {cluster.priority}</span>
+      </div>
+      <div className="mt-4 grid grid-cols-3 gap-2">
+        <Metric label="Revenue" value={formatMoney(cluster.revenue)} tone="positive" />
+        <Metric label="Potential" value={formatMoney(cluster.potential)} tone="positive" />
+        <Metric label="Gap" value={formatMoney(cluster.gap)} tone="positive" />
+      </div>
+      <div className="mt-3 grid grid-cols-2 gap-2 lg:grid-cols-4">
+        <Metric label="Rev / page" value={formatMoney(cluster.revenuePerPage)} />
+        <Metric label="Focus score" value={`${cluster.focusScore}/100`} />
+        <Metric label="Avg radius" value={`${Math.round(cluster.avgRadius)}`} tone={cluster.avgRadius > 70 ? "risk" : "neutral"} />
+        <Metric label="Trend" value={`${cluster.trend > 0 ? "+" : ""}${cluster.trend}% WoW`} tone={cluster.trend > 0 ? "positive" : "risk"} />
+      </div>
+      <MiniSparkline positive={cluster.trend > 0} />
+      <div className="mt-3 rounded-lg border border-primary/20 bg-primary/10 px-3 py-2">
+        <p className="text-xs font-semibold text-primary">{cluster.action}</p>
+      </div>
+    </article>
+  );
+}
+
+function MiniSparkline({ positive }: { positive: boolean }) {
+  const points = positive ? "0,28 26,24 52,25 78,17 104,19 130,10 156,6" : "0,9 26,12 52,10 78,18 104,16 130,24 156,27";
+  return <svg viewBox="0 0 156 34" className="mt-3 h-9 w-full" aria-hidden="true"><path d="M0 31H156" stroke="var(--border)" /><polyline points={points} fill="none" stroke={positive ? "var(--primary)" : "var(--destructive)"} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>;
 }
 
 function PagesOutsideRadius({ rows, sortKey, sortDir, onSort, onExport }: { rows: DerivedPage[]; sortKey: SortKey; sortDir: "asc" | "desc"; onSort: (key: SortKey) => void; onExport: () => void }) {
@@ -405,11 +430,6 @@ function Th({ children }: { children: React.ReactNode }) {
 
 function Td({ children, mono, className = "" }: { children: React.ReactNode; mono?: boolean; className?: string }) {
   return <td className={`px-3 py-3 ${mono ? "font-mono text-xs tabular-nums" : ""} ${className}`}>{children}</td>;
-}
-
-function SimpleTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number }>; label?: string }) {
-  if (!active || !payload?.length) return null;
-  return <div className="rounded-lg border border-border bg-card px-3 py-2 text-xs shadow-xl"><p className="font-mono font-bold">{label}</p><p className="text-muted-foreground">Pages: {payload[0].value}</p></div>;
 }
 
 function buildTopicalModel(pages: PageEmbedding[]) {
