@@ -3,15 +3,11 @@ import { useMemo, useState } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
-  BarChart3,
   ChevronDown,
   Download,
   Eye,
-  Filter,
-  Link2,
   MousePointer2,
   Orbit,
-  PanelRightOpen,
   RefreshCcw,
   Search,
   Target,
@@ -19,7 +15,6 @@ import {
   TriangleAlert,
   X,
 } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -36,7 +31,6 @@ export const Route = createFileRoute("/brand-authority_/site-focus")({
 });
 
 type Segment = "Core Topic" | "Adjacent" | "Off-Topic";
-type ViewMode = "business" | "seo";
 type MapMode = "2d" | "3d";
 type SortKey = "url" | "radiusScore" | "cluster" | "currentRevenue" | "potentialRevenue";
 
@@ -92,7 +86,6 @@ const ACTIONS = [
 ] as const;
 
 function SiteFocusPage() {
-  const [viewMode, setViewMode] = useState<ViewMode>("business");
   const [mapMode, setMapMode] = useState<MapMode>("2d");
   const [selectedUrl, setSelectedUrl] = useState(pageEmbeddings[10].url);
   const [sortKey, setSortKey] = useState<SortKey>("radiusScore");
@@ -124,7 +117,6 @@ function SiteFocusPage() {
               <h1 className="mt-1 text-2xl font-bold tracking-tight">Site Focus</h1>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <ViewToggle value={viewMode} onChange={setViewMode} />
               <button type="button" onClick={() => exportCsv(sortedOutside)} className="inline-flex items-center gap-2 rounded-md border border-border bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
                 <Download className="h-3.5 w-3.5" /> Export data
               </button>
@@ -147,7 +139,6 @@ function SiteFocusPage() {
               centroid={model.centroid}
               selectedUrl={selectedPage.url}
               mapMode={mapMode}
-              viewMode={viewMode}
               angle={angle}
               onAngleChange={setAngle}
               onSelect={setSelectedUrl}
@@ -161,28 +152,11 @@ function SiteFocusPage() {
             <ActionLayer />
           </section>
 
-          {viewMode === "seo" && (
-            <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
-              <RadiusDistribution pages={model.pages} />
-              <ClusterBreakdown pages={model.pages} />
-            </section>
-          )}
+          <ClusterBreakdown pages={model.pages} />
 
           <PagesOutsideRadius rows={sortedOutside} sortKey={sortKey} sortDir={sortDir} onSort={handleSort} onExport={() => exportCsv(sortedOutside)} />
         </main>
       </div>
-    </div>
-  );
-}
-
-function ViewToggle({ value, onChange }: { value: ViewMode; onChange: (value: ViewMode) => void }) {
-  return (
-    <div className="flex items-center rounded-md border border-border bg-surface p-0.5">
-      {(["business", "seo"] as const).map((mode) => (
-        <button key={mode} type="button" onClick={() => onChange(mode)} className={`rounded-sm px-3 py-1.5 text-xs font-mono transition-colors ${value === mode ? "bg-card text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
-          {mode === "business" ? "Business View" : "SEO Analysis"}
-        </button>
-      ))}
     </div>
   );
 }
@@ -201,7 +175,7 @@ function KpiCard({ label, value, detail, trend, trendType, neutral }: { label: s
   );
 }
 
-function TopicalMapPanel({ pages, centroid, selectedUrl, mapMode, viewMode, angle, onAngleChange, onSelect, onMapMode }: { pages: DerivedPage[]; centroid: [number, number, number]; selectedUrl: string; mapMode: MapMode; viewMode: ViewMode; angle: { x: number; y: number }; onAngleChange: (angle: { x: number; y: number }) => void; onSelect: (url: string) => void; onMapMode: (mode: MapMode) => void }) {
+function TopicalMapPanel({ pages, centroid, selectedUrl, mapMode, angle, onAngleChange, onSelect, onMapMode }: { pages: DerivedPage[]; centroid: [number, number, number]; selectedUrl: string; mapMode: MapMode; angle: { x: number; y: number }; onAngleChange: (angle: { x: number; y: number }) => void; onSelect: (url: string) => void; onMapMode: (mode: MapMode) => void }) {
   return (
     <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
       <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -222,13 +196,13 @@ function TopicalMapPanel({ pages, centroid, selectedUrl, mapMode, viewMode, angl
         </div>
       </div>
       <div className="relative h-[520px] overflow-hidden rounded-lg border border-border bg-background/45">
-        {mapMode === "2d" ? <Scatter2D pages={pages} selectedUrl={selectedUrl} viewMode={viewMode} onSelect={onSelect} /> : <Scatter3D pages={pages} centroid={centroid} selectedUrl={selectedUrl} angle={angle} onAngleChange={onAngleChange} onSelect={onSelect} />}
+        {mapMode === "2d" ? <Scatter2D pages={pages} selectedUrl={selectedUrl} onSelect={onSelect} /> : <Scatter3D pages={pages} centroid={centroid} selectedUrl={selectedUrl} angle={angle} onAngleChange={onAngleChange} onSelect={onSelect} />}
       </div>
     </section>
   );
 }
 
-function Scatter2D({ pages, selectedUrl, viewMode, onSelect }: { pages: DerivedPage[]; selectedUrl: string; viewMode: ViewMode; onSelect: (url: string) => void }) {
+function Scatter2D({ pages, selectedUrl, onSelect }: { pages: DerivedPage[]; selectedUrl: string; onSelect: (url: string) => void }) {
   return (
     <svg viewBox="0 0 900 520" className="h-full w-full" role="img" aria-label="Topical authority scatter plot">
       <defs>
@@ -238,7 +212,7 @@ function Scatter2D({ pages, selectedUrl, viewMode, onSelect }: { pages: DerivedP
       <circle cx="450" cy="260" r="210" fill="url(#siteRadius)" stroke="var(--border)" strokeDasharray="7 7" />
       <circle cx="450" cy="260" r="8" fill="var(--primary)" />
       <text x="466" y="255" className="fill-muted-foreground text-[11px] font-mono">site centroid</text>
-      {viewMode === "seo" && ["Intercity routes", "City hubs", "POI pages", "Travel guides"].map((label, index) => (
+      {["Intercity routes", "City hubs", "POI pages", "Travel guides"].map((label, index) => (
         <text key={label} x={[512, 330, 705, 665][index]} y={[184, 170, 82, 392][index]} className="fill-muted-foreground text-[11px] font-mono">{label}</text>
       ))}
       {pages.map((page) => <ScatterPoint key={page.url} page={page} selected={page.url === selectedUrl} onSelect={onSelect} />)}
