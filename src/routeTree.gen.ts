@@ -17,6 +17,7 @@ import { Route as BrandAuthorityRouteImport } from './routes/brand-authority'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TechnicalHealthIndexRouteImport } from './routes/technical-health.index'
 import { Route as TechnicalHealthCwvRouteImport } from './routes/technical-health.cwv'
+import { Route as BrandAuthoritySiteFocusRouteImport } from './routes/brand-authority_.site-focus'
 import { Route as BrandAuthorityPageAgeRouteImport } from './routes/brand-authority_.page-age'
 import { Route as BrandAuthorityDomainAgeRouteImport } from './routes/brand-authority_.domain-age'
 import { Route as TechnicalHealthCwvOpportunitiesRouteImport } from './routes/technical-health.cwv.opportunities'
@@ -63,6 +64,11 @@ const TechnicalHealthCwvRoute = TechnicalHealthCwvRouteImport.update({
   path: '/cwv',
   getParentRoute: () => TechnicalHealthRoute,
 } as any)
+const BrandAuthoritySiteFocusRoute = BrandAuthoritySiteFocusRouteImport.update({
+  id: '/brand-authority_/site-focus',
+  path: '/brand-authority/site-focus',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrandAuthorityPageAgeRoute = BrandAuthorityPageAgeRouteImport.update({
   id: '/brand-authority_/page-age',
   path: '/brand-authority/page-age',
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/technical-health': typeof TechnicalHealthRouteWithChildren
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
+  '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health/': typeof TechnicalHealthIndexRoute
   '/brand-authority/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
+  '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health': typeof TechnicalHealthIndexRoute
   '/brand-authority/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/technical-health': typeof TechnicalHealthRouteWithChildren
   '/brand-authority_/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority_/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
+  '/brand-authority_/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health/': typeof TechnicalHealthIndexRoute
   '/brand-authority_/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/technical-health'
     | '/brand-authority/domain-age'
     | '/brand-authority/page-age'
+    | '/brand-authority/site-focus'
     | '/technical-health/cwv'
     | '/technical-health/'
     | '/brand-authority/page-age/outliers'
@@ -162,6 +172,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/brand-authority/domain-age'
     | '/brand-authority/page-age'
+    | '/brand-authority/site-focus'
     | '/technical-health/cwv'
     | '/technical-health'
     | '/brand-authority/page-age/outliers'
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/technical-health'
     | '/brand-authority_/domain-age'
     | '/brand-authority_/page-age'
+    | '/brand-authority_/site-focus'
     | '/technical-health/cwv'
     | '/technical-health/'
     | '/brand-authority_/page-age/outliers'
@@ -193,6 +205,7 @@ export interface RootRouteChildren {
   TechnicalHealthRoute: typeof TechnicalHealthRouteWithChildren
   BrandAuthorityDomainAgeRoute: typeof BrandAuthorityDomainAgeRoute
   BrandAuthorityPageAgeRoute: typeof BrandAuthorityPageAgeRouteWithChildren
+  BrandAuthoritySiteFocusRoute: typeof BrandAuthoritySiteFocusRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -252,6 +265,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/technical-health/cwv'
       preLoaderRoute: typeof TechnicalHealthCwvRouteImport
       parentRoute: typeof TechnicalHealthRoute
+    }
+    '/brand-authority_/site-focus': {
+      id: '/brand-authority_/site-focus'
+      path: '/brand-authority/site-focus'
+      fullPath: '/brand-authority/site-focus'
+      preLoaderRoute: typeof BrandAuthoritySiteFocusRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/brand-authority_/page-age': {
       id: '/brand-authority_/page-age'
@@ -340,6 +360,7 @@ const rootRouteChildren: RootRouteChildren = {
   TechnicalHealthRoute: TechnicalHealthRouteWithChildren,
   BrandAuthorityDomainAgeRoute: BrandAuthorityDomainAgeRoute,
   BrandAuthorityPageAgeRoute: BrandAuthorityPageAgeRouteWithChildren,
+  BrandAuthoritySiteFocusRoute: BrandAuthoritySiteFocusRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
