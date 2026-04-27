@@ -498,6 +498,34 @@ function FieldBlock({ label, children }: { label: string; children: ReactNode })
   return <label className="block space-y-2"><span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{label}</span>{children}</label>;
 }
 
+function AuditDatePicker() {
+  const [date, setDate] = useState<Date | undefined>(new Date(2026, 3, 28));
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn("h-9 w-full justify-start text-left font-normal", !date && "text-muted-foreground")}
+        >
+          <CalendarClock className="h-4 w-4" />
+          {date ? format(date, "PPP") : <span>Select first run</span>}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          disabled={(calendarDate) => calendarDate < new Date(new Date().setHours(0, 0, 0, 0))}
+          initialFocus
+          className={cn("p-3 pointer-events-auto")}
+        />
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 function ChoiceCard({ active = false, icon, title, detail }: { active?: boolean; icon: ReactNode; title: string; detail: string }) {
   return <button type="button" className={`min-h-[116px] rounded-xl border p-4 text-left transition-colors ${active ? "border-primary/35 bg-primary/10" : "border-border bg-card hover:bg-surface/60"}`}><span className={`inline-flex h-9 w-9 items-center justify-center rounded-md border ${active ? "border-primary/25 text-primary" : "border-border text-muted-foreground"}`}>{icon}</span><span className="mt-4 block font-semibold text-foreground">{title}</span><span className="mt-1 block text-sm leading-relaxed text-muted-foreground">{detail}</span></button>;
 }
