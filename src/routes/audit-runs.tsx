@@ -256,7 +256,7 @@ function AuditRunsPage() {
 }
 
 function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange: (step: number) => void }) {
-  const steps = ["Basics", "Mode", "Entry points", "Scope rules", "Behaviour", "Limits", "Discovery", "Page types"];
+  const steps = ["Basics", "Mode", "Entry points", "Scope rules", "Behaviour", "Limits", "Page types"];
   const isFinalStep = step === steps.length;
 
   return (
@@ -312,8 +312,7 @@ function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange:
             {step === 4 && <ScopeRulesStep />}
             {step === 5 && <BehaviourStep />}
             {step === 6 && <LimitsStep />}
-            {step === 7 && <DiscoveryStep />}
-            {step === 8 && <PageTypeMappingStep />}
+            {step === 7 && <PageTypeMappingStep />}
           </div>
           <div className="flex items-center justify-between border-t border-border p-6">
             <Button variant="outline" disabled={step === 1} onClick={() => onStepChange(Math.max(1, step - 1))}>
@@ -446,15 +445,6 @@ function LimitsStep() {
         <TimeThrottleSettings mode={throttleWindow} />
       </div>
       <AuditPreview title="Performance control" items={["URL caps prevent runaway crawls", "Depth limits keep discovery commercially relevant", "Throttling protects production infrastructure", "Time-based rules are ready for enterprise scheduling"]} />
-    </div>
-  );
-}
-
-function DiscoveryStep() {
-  return (
-    <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
-      <div className="grid gap-3"><CheckRow label="Start URL" detail="Crawl links from the configured entry page" checked /><CheckRow label="Sitemaps" detail="Use selected detected and custom sitemap sources" checked /><ToggleRow label="Discover new sitemaps automatically" detail="Keep sitemap inventory fresh between runs" checked /></div>
-      <div className="grid gap-3 sm:grid-cols-2"><SignalCard label="Sources" value="2" detail="Start URL + sitemaps" /><SignalCard label="Expected URLs" value="50K" detail="Capped by limits" /><SignalCard label="New sitemap alerts" value="On" detail="Future alert slot" /><SignalCard label="Discovery bias" value="Value" detail="High-value pages first" /></div>
     </div>
   );
 }
