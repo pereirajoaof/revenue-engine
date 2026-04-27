@@ -324,61 +324,75 @@ function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange:
   );
 }
 
-function ScopeStep() {
+function ProjectBasicsStep() {
   return (
     <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
       <div className="space-y-4">
-        <FieldBlock label="Audit name"><Input defaultValue="Core Revenue Pages" /></FieldBlock>
-        <FieldBlock label="Primary domain"><Input defaultValue="https://www.acme.com" /></FieldBlock>
-        <FieldBlock label="Crawl scope">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <ChoiceCard active icon={<Target className="h-4 w-4" />} title="Revenue pages" detail="Product, category, lead-gen, checkout support" />
-            <ChoiceCard icon={<Search className="h-4 w-4" />} title="Whole site" detail="All discoverable indexable URLs" />
-          </div>
-        </FieldBlock>
-        <FieldBlock label="Include paths"><Input defaultValue="/product/*, /category/*, /guides/*" /></FieldBlock>
-        <FieldBlock label="Exclude paths"><Input defaultValue="/account/*, /cart, /search*" /></FieldBlock>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FieldBlock label="Project name"><Input defaultValue="Core Revenue Pages" /></FieldBlock>
+          <FieldBlock label="Industry"><Input defaultValue="Retail ecommerce" /></FieldBlock>
+        </div>
+        <FieldBlock label="Root domain"><Input defaultValue="acme.com" /></FieldBlock>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <ToggleRow label="Crawl subdomains" detail="Include shop, support, and locale hosts" checked />
+          <ToggleRow label="Crawl HTTP + HTTPS" detail="Catch protocol conflicts and redirects" checked />
+        </div>
       </div>
-      <AuditPreview title="Scope estimate" items={["18.4K URLs expected", "Revenue templates prioritised", "Canonical and indexability checks enabled", "JavaScript rendering on key paths"]} />
+      <AuditPreview title="Project identity" items={["Benchmarking will use the selected industry", "Root domain controls host-level discovery", "Subdomain scope is explicit before crawl starts", "Protocol checks expose migration and redirect risk"]} />
     </div>
   );
 }
 
-function RevenueLinkStep() {
+function CrawlModeStep() {
   return (
     <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
-      <ChoiceCard active icon={<ShieldCheck className="h-4 w-4" />} title="Connect to Revenue & Opportunities" detail="This will become the green-ticket audit that feeds the commercial dashboard." />
+      <div className="space-y-3">
+        <ChoiceCard icon={<CameraIcon />} title="One-time snapshot" detail="Run once for migration checks, releases, or technical baselines" />
+        <ChoiceCard active icon={<CalendarClock className="h-4 w-4" />} title="Scheduled audit" detail="Weekly or monthly diagnostics for stable sections" />
+        <ChoiceCard icon={<Zap className="h-4 w-4" />} title="Always-on crawl" detail="Continuous low-frequency monitoring of revenue-critical surfaces" />
+        <ToggleRow label="Prioritise high-value pages" detail="Revenue pages and top-traffic URLs crawl first" checked />
+      </div>
       <div className="grid gap-3 sm:grid-cols-2">
         <SignalCard label="Mapped ORP" value="£1.8M" detail="Pages monitored" />
         <SignalCard label="Risk weighting" value="High" detail="Issues affect money pages first" />
         <SignalCard label="Priority model" value="Impact × severity" detail="Ready for scoring" />
-        <SignalCard label="Future output" value="Revenue gap" detail="Reserved for audit impact" />
+        <SignalCard label="Green ticket" value="On" detail="Feeds Revenue & Opportunities" />
       </div>
     </div>
   );
 }
 
-function CrawlRulesStep() {
+function EntryPointsStep() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      <ChoiceCard active icon={<CheckCircle2 className="h-4 w-4" />} title="Indexability" detail="Robots, canonicals, noindex, status codes" />
-      <ChoiceCard active icon={<Sparkles className="h-4 w-4" />} title="Rendering" detail="JS-rendered content and template parity" />
-      <ChoiceCard active icon={<AlertTriangle className="h-4 w-4" />} title="Technical risk" detail="Redirect chains, broken links, duplicate patterns" />
-      <ChoiceCard icon={<SlidersHorizontal className="h-4 w-4" />} title="Advanced limits" detail="Depth, URL caps, parameters, crawl speed" />
+    <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="space-y-4">
+        <FieldBlock label="Start URL"><Input defaultValue="https://www.acme.com/" /></FieldBlock>
+        <FieldBlock label="Detected sitemaps">
+          <div className="space-y-2">
+            <CheckRow label="/sitemap.xml" detail="42,680 URLs" checked />
+            <CheckRow label="/product-sitemap.xml" detail="12,400 URLs" checked />
+            <CheckRow label="/blog-sitemap.xml" detail="860 URLs" />
+          </div>
+        </FieldBlock>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <ChoiceCard active icon={<Bot className="h-4 w-4" />} title="Auto-detect" detail="Read robots.txt and sitemap index files" />
+          <ChoiceCard icon={<Upload className="h-4 w-4" />} title="Upload sitemap" detail="XML, TXT, or GZIP source file" />
+        </div>
+        <FieldBlock label="Custom sitemap URL"><Input placeholder="https://www.acme.com/custom-sitemap.xml" /></FieldBlock>
+      </div>
+      <AuditPreview title="Entry strategy" items={["Start URL anchors HTML discovery", "Detected sitemaps can be selected or removed", "Custom sitemap supports special inventories", "New sitemap discovery stays enabled"]} />
     </div>
   );
 }
 
-function ScheduleStep() {
+function ScopeRulesStep() {
   return (
     <div className="grid gap-5 lg:grid-cols-[1fr_0.9fr]">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <ChoiceCard active icon={<Zap className="h-4 w-4" />} title="Always-on" detail="Continuously monitors revenue-critical templates" />
-        <ChoiceCard icon={<CalendarClock className="h-4 w-4" />} title="Weekly" detail="Scheduled crawl every Monday" />
-        <ChoiceCard icon={<Clock3 className="h-4 w-4" />} title="Monthly" detail="Useful for stable surfaces" />
-        <ChoiceCard icon={<Play className="h-4 w-4" />} title="Manual" detail="Run only when requested" />
+      <div className="space-y-5">
+        <RuleBuilder title="Include rules" rules={["Path contains /product/", "Path contains /category/", "Regex ^/routes/[a-z0-9-]+"]} />
+        <RuleBuilder title="Exclude rules" rules={["Path contains /account/", "Exact match /cart", "Regex /search\\?.*"]} />
       </div>
-      <AuditPreview title="Ready to create" items={["Green ticket will mark this as revenue-linked", "First crawl starts immediately", "Details page opens after setup", "Trend and alerts slots remain reserved"]} />
+      <AuditPreview title="Garbage prevention" items={["Rules support path contains, exact match, and regex", "Revenue templates stay inside scope", "Internal search and account areas are excluded", "Advanced rules remain visible but controlled"]} />
     </div>
   );
 }
