@@ -59,7 +59,9 @@ export function DashboardNav() {
   const isDomainAgeRoute = path === "/brand-authority/domain-age";
   const isPageAgeRoute = path.startsWith("/brand-authority/page-age");
   const isSiteFocusRoute = path === "/brand-authority/site-focus";
-  const isAuditRunsRoute = path === "/audit-runs";
+  const isAuditRunsRoute = path.startsWith("/audit-runs");
+  const isAuditRunDetailRoute = path.startsWith("/audit-runs/");
+  const auditRunId = isAuditRunDetailRoute ? path.split("/")[2] : "core-commerce";
   const activeDriver = isTechRoute
     ? "technical-health"
     : isBrandRoute
