@@ -91,7 +91,13 @@ function AccountSettingsRoute() {
             <SettingsGroup title="Workspace" items={WORKSPACE_ITEMS} active={activeSection} onSelect={setActiveSection} />
           </aside>
 
-          {activeSection === "security" ? <SecuritySettings /> : <AccountProfile />}
+          {activeSection === "security" ? (
+            <SecuritySettings />
+          ) : activeSection === "notifications" ? (
+            <NotificationsSettings />
+          ) : (
+            <AccountProfile />
+          )}
         </main>
       </div>
     </div>
@@ -126,14 +132,14 @@ function AccountProfile() {
 
         <div className="space-y-5 px-6 py-6">
           <Field label="Email">
-            <Input value="jane@acme.com" readOnly autoComplete="email" />
+            <Input value="jane@acme.com" readOnly autoComplete="email" data-lpignore="true" />
           </Field>
           <div className="grid gap-5 sm:grid-cols-2">
             <Field label="First name">
-              <Input defaultValue="Jane" autoComplete="given-name" />
+              <Input defaultValue="Jane" autoComplete="given-name" data-lpignore="true" />
             </Field>
             <Field label="Last name">
-              <Input defaultValue="Smith" autoComplete="family-name" />
+              <Input defaultValue="Smith" autoComplete="family-name" data-lpignore="true" />
             </Field>
           </div>
           <Field label="Job function">
