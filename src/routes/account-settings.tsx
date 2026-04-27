@@ -425,6 +425,15 @@ function StatusRow({ label, status, muted = false }: { label: string; status: st
   );
 }
 
+function StatusBadge({ status }: { status: string }) {
+  const isActive = status === "Active";
+  return (
+    <span className={`rounded-sm px-2 py-1 text-xs font-semibold ${isActive ? "bg-primary/15 text-primary" : "bg-destructive/15 text-destructive"}`}>
+      {status}
+    </span>
+  );
+}
+
 function SessionRow({ device, location, current = false }: { device: string; location: string; current?: boolean }) {
   return (
     <div className="flex flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
