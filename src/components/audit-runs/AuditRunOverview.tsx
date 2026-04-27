@@ -44,12 +44,26 @@ const HEALTH_TREND = [
   { crawl: "Latest", score: 91, inventory: 92, discovery: 86, indexability: 84, distribution: 82 },
 ];
 
-const ERROR_TRENDS = [
-  { name: "Broken internal links", latest: 18, data: [{ crawl: "C-5", value: 42 }, { crawl: "C-4", value: 36 }, { crawl: "C-3", value: 31 }, { crawl: "C-2", value: 24 }, { crawl: "Latest", value: 18 }] },
-  { name: "Canonical conflicts", latest: 11, data: [{ crawl: "C-5", value: 23 }, { crawl: "C-4", value: 20 }, { crawl: "C-3", value: 19 }, { crawl: "C-2", value: 15 }, { crawl: "Latest", value: 11 }] },
-  { name: "Noindex on money pages", latest: 7, data: [{ crawl: "C-5", value: 15 }, { crawl: "C-4", value: 13 }, { crawl: "C-3", value: 10 }, { crawl: "C-2", value: 9 }, { crawl: "Latest", value: 7 }] },
-  { name: "Redirect chain depth", latest: 6, data: [{ crawl: "C-5", value: 18 }, { crawl: "C-4", value: 16 }, { crawl: "C-3", value: 12 }, { crawl: "C-2", value: 9 }, { crawl: "Latest", value: 6 }] },
-  { name: "Missing structured data", latest: 24, data: [{ crawl: "C-5", value: 61 }, { crawl: "C-4", value: 54 }, { crawl: "C-3", value: 43 }, { crawl: "C-2", value: 35 }, { crawl: "Latest", value: 24 }] },
+export const MAIN_HEALTH_ISSUES = [
+  { id: "broken-internal-links", name: "Broken internal links", latest: 18, impact: "£42k", data: [{ crawl: "C-5", value: 42 }, { crawl: "C-4", value: 36 }, { crawl: "C-3", value: 31 }, { crawl: "C-2", value: 24 }, { crawl: "Latest", value: 18 }] },
+  { id: "canonical-conflicts", name: "Canonical conflicts", latest: 11, impact: "£31k", data: [{ crawl: "C-5", value: 23 }, { crawl: "C-4", value: 20 }, { crawl: "C-3", value: 19 }, { crawl: "C-2", value: 15 }, { crawl: "Latest", value: 11 }] },
+  { id: "noindex-money-pages", name: "Noindex on money pages", latest: 7, impact: "£67k", data: [{ crawl: "C-5", value: 15 }, { crawl: "C-4", value: 13 }, { crawl: "C-3", value: 10 }, { crawl: "C-2", value: 9 }, { crawl: "Latest", value: 7 }] },
+  { id: "redirect-chain-depth", name: "Redirect chain depth", latest: 6, impact: "£24k", data: [{ crawl: "C-5", value: 18 }, { crawl: "C-4", value: 16 }, { crawl: "C-3", value: 12 }, { crawl: "C-2", value: 9 }, { crawl: "Latest", value: 6 }] },
+  { id: "missing-structured-data", name: "Missing structured data", latest: 24, impact: "£18k", data: [{ crawl: "C-5", value: 61 }, { crawl: "C-4", value: 54 }, { crawl: "C-3", value: 43 }, { crawl: "C-2", value: 35 }, { crawl: "Latest", value: 24 }] },
+];
+
+export const MAIN_HEALTH_ISSUE_URLS = [
+  { issueId: "broken-internal-links", url: "https://www.busbud.com/en/about/careers", status: "404", organicTraffic: 0, depth: 0, inlinks: 0, firstFound: "Latest" },
+  { issueId: "broken-internal-links", url: "https://www.busbud.com/en/about/refund-policy", status: "404", organicTraffic: 0, depth: 0, inlinks: 0, firstFound: "Latest" },
+  { issueId: "broken-internal-links", url: "https://www.busbud.com/en/routes/london-paris", status: "404", organicTraffic: 184, depth: 2, inlinks: 12, firstFound: "C-2" },
+  { issueId: "canonical-conflicts", url: "https://www.busbud.com/en/bus-routes/madrid-barcelona", status: "200", organicTraffic: 920, depth: 2, inlinks: 43, firstFound: "C-3" },
+  { issueId: "canonical-conflicts", url: "https://www.busbud.com/en/city/rome", status: "200", organicTraffic: 612, depth: 3, inlinks: 31, firstFound: "C-4" },
+  { issueId: "noindex-money-pages", url: "https://www.busbud.com/en/bus-tickets/new-york-boston", status: "200", organicTraffic: 1480, depth: 2, inlinks: 58, firstFound: "C-2" },
+  { issueId: "noindex-money-pages", url: "https://www.busbud.com/en/train/london-manchester", status: "200", organicTraffic: 870, depth: 2, inlinks: 49, firstFound: "Latest" },
+  { issueId: "redirect-chain-depth", url: "https://www.busbud.com/en/operator/flixbus", status: "301 → 301 → 200", organicTraffic: 740, depth: 3, inlinks: 36, firstFound: "C-4" },
+  { issueId: "redirect-chain-depth", url: "https://www.busbud.com/en/stops/victoria-coach-station", status: "302 → 301 → 200", organicTraffic: 388, depth: 4, inlinks: 18, firstFound: "Latest" },
+  { issueId: "missing-structured-data", url: "https://www.busbud.com/en/bus-company/alsa", status: "200", organicTraffic: 520, depth: 3, inlinks: 24, firstFound: "C-2" },
+  { issueId: "missing-structured-data", url: "https://www.busbud.com/en/blog/best-bus-routes-europe", status: "200", organicTraffic: 318, depth: 4, inlinks: 11, firstFound: "Latest" },
 ];
 
 const FUNNEL_SEGMENTS = [
@@ -109,7 +123,7 @@ export function AuditRunOverview({ runId }: { runId: string }) {
             </div>
             <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
               <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Main health issues</p>
-              <div className="mt-3 space-y-2">{ERROR_TRENDS.map((error) => <ErrorTrendCard key={error.name} {...error} />)}</div>
+              <div className="mt-3 space-y-2">{MAIN_HEALTH_ISSUES.map((error) => <ErrorTrendCard key={error.name} runId={run.id} {...error} />)}</div>
             </div>
           </section>
 
