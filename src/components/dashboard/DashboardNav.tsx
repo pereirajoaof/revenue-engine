@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import {
   LayoutDashboard,
@@ -68,7 +68,15 @@ export function DashboardNav() {
       ? search?.driver
       : undefined;
   const isRevenueParentActive = path === "/dashboard" || isTechRoute || isBrandRoute;
-  const [driversOpen, setDriversOpen] = useState(true);
+  const [driversOpen, setDriversOpen] = useState(!isAuditRunsRoute);
+  const [auditRunsOpen, setAuditRunsOpen] = useState(isAuditRunsRoute);
+
+  useEffect(() => {
+    if (isAuditRunsRoute) {
+      setDriversOpen(false);
+      setAuditRunsOpen(true);
+    }
+  }, [isAuditRunsRoute]);
 
   const handleLogout = () => {
     navigate({ to: "/" });
@@ -212,12 +220,27 @@ export function DashboardNav() {
           )}
         </div>
 
-        <NavItem
-          to="/audit-runs"
-          icon={<Bot className="w-4 h-4" />}
-          label="Audit Runs"
-          active={isAuditRunsRoute}
-        />
+        <div
+          className={`w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-sm transition-colors ${
+            isAuditRunsRoute
+              ? "bg-surface text-foreground border border-border"
+              : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
+          }`}
+        >
+          <Link to="/audit-runs" className="flex min-w-0 flex-1 items-center gap-2.5 font-medium">
+            <Bot className="w-4 h-4 shrink-0" />
+            <span className="truncate">Audit Runs</span>
+          </Link>
+          <button
+            type="button"
+            onClick={() => setAuditRunsOpen((v) => !v)}
+            aria-label={auditRunsOpen ? "Collapse audit runs" : "Expand audit runs"}
+            aria-expanded={auditRunsOpen}
+            className="p-0.5 rounded text-muted-foreground hover:text-foreground hover:bg-surface focus:outline-none focus:ring-2 focus:ring-ring"
+          >
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${auditRunsOpen ? "" : "-rotate-90"}`} />
+          </button>
+        </div>
         <NavItem icon={<Search className="w-4 h-4" />} label="Keyword Demand" />
         <NavItem icon={<Bell className="w-4 h-4" />} label="Alerts" />
         <NavItem
