@@ -61,6 +61,7 @@ type HealthRange = "Any" | "80–100" | "50–79" | "0–49";
 type AuditRun = {
   id: string;
   name: string;
+  connectionState: "revenue-linked" | "standard" | "stopped";
   status: AuditStatus;
   healthScore: number;
   lastRun: string;
@@ -74,13 +75,13 @@ type AuditRun = {
 };
 
 const AUDIT_RUNS: AuditRun[] = [
-  { id: "core-commerce", name: "Core Revenue Pages", status: "Completed", healthScore: 91, lastRun: "Today · 08:42", nextRun: "Tomorrow · 08:00", frequency: "Always-on", urlsCrawled: 18432, revenueImpact: "£1.8M monitored", trend: 4, alerts: 2, scope: "Product, category, checkout support" },
-  { id: "international", name: "International Expansion", status: "Running", healthScore: 74, lastRun: "Running now", nextRun: "Continuous", frequency: "Always-on", urlsCrawled: 68240, revenueImpact: "£920K monitored", trend: -6, alerts: 11, scope: "UK, US, EU locale directories" },
-  { id: "content-hubs", name: "Editorial Hubs", status: "Completed", healthScore: 67, lastRun: "Yesterday · 21:16", nextRun: "Mon · 06:00", frequency: "Weekly", urlsCrawled: 12805, revenueImpact: "£410K monitored", trend: -3, alerts: 7, scope: "Guides, comparisons, intent hubs" },
-  { id: "templates", name: "Template QA Sweep", status: "Idle", healthScore: 83, lastRun: "Apr 24 · 04:12", nextRun: "Manual", frequency: "Manual", urlsCrawled: 4390, revenueImpact: "£260K monitored", trend: 1, alerts: 0, scope: "Route templates and indexable variants" },
-  { id: "migration", name: "Post-Migration Guardrail", status: "Failed", healthScore: 38, lastRun: "Apr 23 · 01:04", nextRun: "Paused", frequency: "Weekly", urlsCrawled: 94512, revenueImpact: "£2.4M monitored", trend: -18, alerts: 29, scope: "Redirects, canonicals, indexability" },
-  { id: "marketplace", name: "Marketplace Supply Pages", status: "Completed", healthScore: 79, lastRun: "Apr 22 · 13:30", nextRun: "May 1 · 07:00", frequency: "Monthly", urlsCrawled: 27650, revenueImpact: "£740K monitored", trend: 8, alerts: 5, scope: "Location and provider landing pages" },
-  { id: "brand", name: "Brand & Support Surface", status: "Idle", healthScore: 88, lastRun: "Apr 18 · 10:00", nextRun: "May 18 · 10:00", frequency: "Monthly", urlsCrawled: 3240, revenueImpact: "£130K monitored", trend: 0, alerts: 1, scope: "Help, policies, branded search paths" },
+  { id: "core-commerce", name: "Core Revenue Pages", connectionState: "revenue-linked", status: "Completed", healthScore: 91, lastRun: "Today · 08:42", nextRun: "Tomorrow · 08:00", frequency: "Always-on", urlsCrawled: 18432, revenueImpact: "£1.8M monitored", trend: 4, alerts: 2, scope: "Product, category, checkout support" },
+  { id: "international", name: "International Expansion", connectionState: "standard", status: "Running", healthScore: 74, lastRun: "Running now", nextRun: "Continuous", frequency: "Always-on", urlsCrawled: 68240, revenueImpact: "£920K monitored", trend: -6, alerts: 11, scope: "UK, US, EU locale directories" },
+  { id: "content-hubs", name: "Editorial Hubs", connectionState: "standard", status: "Completed", healthScore: 67, lastRun: "Yesterday · 21:16", nextRun: "Mon · 06:00", frequency: "Weekly", urlsCrawled: 12805, revenueImpact: "£410K monitored", trend: -3, alerts: 7, scope: "Guides, comparisons, intent hubs" },
+  { id: "templates", name: "Template QA Sweep", connectionState: "standard", status: "Idle", healthScore: 83, lastRun: "Apr 24 · 04:12", nextRun: "Manual", frequency: "Manual", urlsCrawled: 4390, revenueImpact: "£260K monitored", trend: 1, alerts: 0, scope: "Route templates and indexable variants" },
+  { id: "migration", name: "Post-Migration Guardrail", connectionState: "stopped", status: "Failed", healthScore: 38, lastRun: "Apr 23 · 01:04", nextRun: "Paused", frequency: "Weekly", urlsCrawled: 94512, revenueImpact: "£2.4M monitored", trend: -18, alerts: 29, scope: "Redirects, canonicals, indexability" },
+  { id: "marketplace", name: "Marketplace Supply Pages", connectionState: "standard", status: "Completed", healthScore: 79, lastRun: "Apr 22 · 13:30", nextRun: "May 1 · 07:00", frequency: "Monthly", urlsCrawled: 27650, revenueImpact: "£740K monitored", trend: 8, alerts: 5, scope: "Location and provider landing pages" },
+  { id: "brand", name: "Brand & Support Surface", connectionState: "standard", status: "Idle", healthScore: 88, lastRun: "Apr 18 · 10:00", nextRun: "May 18 · 10:00", frequency: "Monthly", urlsCrawled: 3240, revenueImpact: "£130K monitored", trend: 0, alerts: 1, scope: "Help, policies, branded search paths" },
 ];
 
 const STATUS_OPTIONS: Array<"All" | AuditStatus> = ["All", "Idle", "Running", "Completed", "Failed"];
