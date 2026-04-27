@@ -350,11 +350,31 @@ function ProjectBasicsStep() {
 
 function CrawlModeStep() {
   return (
-    <div className="max-w-2xl space-y-3">
-      <ChoiceCard icon={<Camera className="h-4 w-4" />} title="One-time snapshot" detail="Run once for migration checks, releases, or technical baselines" />
-      <ChoiceCard active icon={<CalendarClock className="h-4 w-4" />} title="Scheduled audit" detail="Weekly or monthly diagnostics for stable sections" />
-      <ChoiceCard icon={<Zap className="h-4 w-4" />} title="Always-on crawl" detail="Continuous low-frequency monitoring of revenue-critical surfaces" />
-      <ToggleRow label="Prioritise high-value pages" detail="Revenue pages and top-traffic URLs crawl first" checked />
+    <div className="space-y-5">
+      <div className="grid gap-3 lg:grid-cols-3">
+        <ChoiceCard icon={<Camera className="h-4 w-4" />} title="One-time snapshot" detail="Run once for migration checks, releases, or technical baselines" />
+        <ChoiceCard active icon={<CalendarClock className="h-4 w-4" />} title="Scheduled audit" detail="Weekly or monthly diagnostics for stable sections" />
+        <ChoiceCard icon={<Zap className="h-4 w-4" />} title="Always-on crawl" detail="Continuous low-frequency monitoring of revenue-critical surfaces" />
+      </div>
+      <div className="rounded-xl border border-border bg-card p-5">
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-md border border-primary/25 bg-primary/10 text-primary">
+            <CalendarClock className="h-4 w-4" />
+          </span>
+          <div>
+            <p className="font-semibold text-foreground">Schedule settings</p>
+            <p className="text-sm text-muted-foreground">Choose the cadence and run window for scheduled audits.</p>
+          </div>
+        </div>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          <FieldBlock label="Frequency"><select defaultValue="Weekly" className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"><option>Weekly</option><option>Monthly</option></select></FieldBlock>
+          <FieldBlock label="Run day"><select defaultValue="Monday" className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></FieldBlock>
+          <FieldBlock label="Run time"><Input type="time" defaultValue="06:00" /></FieldBlock>
+          <FieldBlock label="Timezone"><select defaultValue="Europe/London" className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"><option>Europe/London</option><option>Europe/Paris</option><option>America/New_York</option><option>America/Los_Angeles</option></select></FieldBlock>
+          <FieldBlock label="First run"><AuditDatePicker /></FieldBlock>
+          <ToggleRow label="Prioritise high-value pages" detail="Revenue pages and top-traffic URLs crawl first" checked />
+        </div>
+      </div>
     </div>
   );
 }
