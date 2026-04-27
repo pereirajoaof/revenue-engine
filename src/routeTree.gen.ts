@@ -21,7 +21,7 @@ import { Route as TechnicalHealthCwvRouteImport } from './routes/technical-healt
 import { Route as BrandAuthoritySiteFocusRouteImport } from './routes/brand-authority_.site-focus'
 import { Route as BrandAuthorityPageAgeRouteImport } from './routes/brand-authority_.page-age'
 import { Route as BrandAuthorityDomainAgeRouteImport } from './routes/brand-authority_.domain-age'
-import { Route as AuditRunsRunIdRouteImport } from './routes/audit-runs.$runId'
+import { Route as AuditRunsRunIdRouteImport } from './routes/audit-runs_.$runId'
 import { Route as TechnicalHealthCwvOpportunitiesRouteImport } from './routes/technical-health.cwv.opportunities'
 import { Route as TechnicalHealthCwvDeepDiveRouteImport } from './routes/technical-health.cwv.deep-dive'
 import { Route as BrandAuthorityPageAgeOutliersRouteImport } from './routes/brand-authority_.page-age.outliers'
@@ -87,9 +87,9 @@ const BrandAuthorityDomainAgeRoute = BrandAuthorityDomainAgeRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuditRunsRunIdRoute = AuditRunsRunIdRouteImport.update({
-  id: '/$runId',
-  path: '/$runId',
-  getParentRoute: () => AuditRunsRoute,
+  id: '/audit-runs_/$runId',
+  path: '/audit-runs/$runId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const TechnicalHealthCwvOpportunitiesRoute =
   TechnicalHealthCwvOpportunitiesRouteImport.update({
@@ -112,7 +112,7 @@ const BrandAuthorityPageAgeOutliersRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/audit-runs': typeof AuditRunsRouteWithChildren
+  '/audit-runs': typeof AuditRunsRoute
   '/brand-authority': typeof BrandAuthorityRoute
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
@@ -130,7 +130,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/audit-runs': typeof AuditRunsRouteWithChildren
+  '/audit-runs': typeof AuditRunsRoute
   '/brand-authority': typeof BrandAuthorityRoute
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
@@ -148,13 +148,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/audit-runs': typeof AuditRunsRouteWithChildren
+  '/audit-runs': typeof AuditRunsRoute
   '/brand-authority': typeof BrandAuthorityRoute
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
-  '/audit-runs/$runId': typeof AuditRunsRunIdRoute
+  '/audit-runs_/$runId': typeof AuditRunsRunIdRoute
   '/brand-authority_/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority_/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
   '/brand-authority_/site-focus': typeof BrandAuthoritySiteFocusRoute
@@ -209,7 +209,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/settings'
     | '/technical-health'
-    | '/audit-runs/$runId'
+    | '/audit-runs_/$runId'
     | '/brand-authority_/domain-age'
     | '/brand-authority_/page-age'
     | '/brand-authority_/site-focus'
@@ -222,12 +222,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuditRunsRoute: typeof AuditRunsRouteWithChildren
+  AuditRunsRoute: typeof AuditRunsRoute
   BrandAuthorityRoute: typeof BrandAuthorityRoute
   DashboardRoute: typeof DashboardRoute
   OnboardingRoute: typeof OnboardingRoute
   SettingsRoute: typeof SettingsRoute
   TechnicalHealthRoute: typeof TechnicalHealthRouteWithChildren
+  AuditRunsRunIdRoute: typeof AuditRunsRunIdRoute
   BrandAuthorityDomainAgeRoute: typeof BrandAuthorityDomainAgeRoute
   BrandAuthorityPageAgeRoute: typeof BrandAuthorityPageAgeRouteWithChildren
   BrandAuthoritySiteFocusRoute: typeof BrandAuthoritySiteFocusRoute
@@ -319,12 +320,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrandAuthorityDomainAgeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/audit-runs/$runId': {
-      id: '/audit-runs/$runId'
-      path: '/$runId'
+    '/audit-runs_/$runId': {
+      id: '/audit-runs_/$runId'
+      path: '/audit-runs/$runId'
       fullPath: '/audit-runs/$runId'
       preLoaderRoute: typeof AuditRunsRunIdRouteImport
-      parentRoute: typeof AuditRunsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/technical-health/cwv/opportunities': {
       id: '/technical-health/cwv/opportunities'
@@ -349,18 +350,6 @@ declare module '@tanstack/react-router' {
     }
   }
 }
-
-interface AuditRunsRouteChildren {
-  AuditRunsRunIdRoute: typeof AuditRunsRunIdRoute
-}
-
-const AuditRunsRouteChildren: AuditRunsRouteChildren = {
-  AuditRunsRunIdRoute: AuditRunsRunIdRoute,
-}
-
-const AuditRunsRouteWithChildren = AuditRunsRoute._addFileChildren(
-  AuditRunsRouteChildren,
-)
 
 interface TechnicalHealthCwvRouteChildren {
   TechnicalHealthCwvDeepDiveRoute: typeof TechnicalHealthCwvDeepDiveRoute
@@ -404,12 +393,13 @@ const BrandAuthorityPageAgeRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuditRunsRoute: AuditRunsRouteWithChildren,
+  AuditRunsRoute: AuditRunsRoute,
   BrandAuthorityRoute: BrandAuthorityRoute,
   DashboardRoute: DashboardRoute,
   OnboardingRoute: OnboardingRoute,
   SettingsRoute: SettingsRoute,
   TechnicalHealthRoute: TechnicalHealthRouteWithChildren,
+  AuditRunsRunIdRoute: AuditRunsRunIdRoute,
   BrandAuthorityDomainAgeRoute: BrandAuthorityDomainAgeRoute,
   BrandAuthorityPageAgeRoute: BrandAuthorityPageAgeRouteWithChildren,
   BrandAuthoritySiteFocusRoute: BrandAuthoritySiteFocusRoute,
