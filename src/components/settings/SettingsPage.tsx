@@ -146,6 +146,15 @@ export function SettingsPage({ dirty, markDirty }: Props) {
           </SectionCard>
 
           <SectionCard
+            id="section-members"
+            icon={<Users className="w-4 h-4" />}
+            title="Members"
+            description="Manage project users, roles, and access status."
+          >
+            <MembersSection />
+          </SectionCard>
+
+          <SectionCard
             id="section-recalc"
             icon={<RefreshCw className="w-4 h-4" />}
             title="Recalculation"
