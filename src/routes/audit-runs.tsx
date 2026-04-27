@@ -43,7 +43,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const Route = createFileRoute("/audit-runs")({
   component: AuditRunsPage,
@@ -137,8 +136,7 @@ function AuditRunsPage() {
   const criticalAlerts = AUDIT_RUNS.reduce((sum, run) => sum + run.alerts, 0);
 
   return (
-    <TooltipProvider>
-      <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
         <DashboardNav />
         <div className="lg:pl-56">
           <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur">
@@ -239,8 +237,7 @@ function AuditRunsPage() {
             </section>
           </main>
         </div>
-      </div>
-    </TooltipProvider>
+    </div>
   );
 }
 
@@ -435,16 +432,7 @@ function AuditConnectionMarker({ state }: { state: AuditRun["connectionState"] }
       : "border-chart-3/25 bg-chart-3/10 text-chart-3";
   const Icon = isStopped ? XCircle : ShieldCheck;
 
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border ${className}`} aria-label={label}>
-          <Icon className="h-4 w-4" />
-        </div>
-      </TooltipTrigger>
-      <TooltipContent>{label}</TooltipContent>
-    </Tooltip>
-  );
+  return <div className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border ${className}`} aria-label={label} title={label}><Icon className="h-4 w-4" /></div>;
 }
 
 function AuditActions() {
@@ -490,20 +478,15 @@ function HealthScore({ score }: { score: number }) {
   const tone = score >= 80 ? "text-primary" : score >= 50 ? "text-chart-3" : "text-destructive";
   const bar = score >= 80 ? "bg-primary" : score >= 50 ? "bg-chart-3" : "bg-destructive";
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div className="w-[120px]">
-          <div className="flex items-baseline gap-2">
-            <span className={`font-mono text-2xl font-bold tabular-nums ${tone}`}>{score}</span>
-            <span className="font-mono text-[10px] text-muted-foreground">/100</span>
-          </div>
-          <div className="mt-1 h-1.5 rounded-full bg-surface">
-            <div className={`h-full rounded-full ${bar}`} style={{ width: `${score}%` }} />
-          </div>
-        </div>
-      </TooltipTrigger>
-      <TooltipContent>Composite score based on crawlability, indexability, and technical signals</TooltipContent>
-    </Tooltip>
+    <div className="w-[120px]" title="Composite score based on crawlability, indexability, and technical signals">
+      <div className="flex items-baseline gap-2">
+        <span className={`font-mono text-2xl font-bold tabular-nums ${tone}`}>{score}</span>
+        <span className="font-mono text-[10px] text-muted-foreground">/100</span>
+      </div>
+      <div className="mt-1 h-1.5 rounded-full bg-surface">
+        <div className={`h-full rounded-full ${bar}`} style={{ width: `${score}%` }} />
+      </div>
+    </div>
   );
 }
 
