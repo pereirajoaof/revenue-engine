@@ -5,6 +5,7 @@ import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
+  BarChart3,
   Bot,
   Camera,
   CalendarClock,
@@ -34,6 +35,19 @@ import {
   XCircle,
   Zap,
 } from "lucide-react";
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
@@ -126,6 +140,7 @@ function AuditRunsPage() {
   const [page, setPage] = useState(1);
   const [createAuditOpen, setCreateAuditOpen] = useState(false);
   const [createAuditStep, setCreateAuditStep] = useState(1);
+  const [selectedRun, setSelectedRun] = useState<AuditRun | null>(null);
   const pageSize = 5;
 
   const filteredRuns = useMemo(() => {
@@ -148,6 +163,10 @@ function AuditRunsPage() {
   const averageHealth = Math.round(AUDIT_RUNS.reduce((sum, run) => sum + run.healthScore, 0) / AUDIT_RUNS.length);
   const monitoredUrls = AUDIT_RUNS.reduce((sum, run) => sum + run.urlsCrawled, 0);
   const criticalAlerts = AUDIT_RUNS.reduce((sum, run) => sum + run.alerts, 0);
+
+  if (selectedRun) {
+    return <AuditRunDetailPage run={selectedRun} onBack={() => setSelectedRun(null)} />;
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -227,7 +246,7 @@ function AuditRunsPage() {
                   </thead>
                   <tbody>
                     {visibleRuns.map((run) => (
-                      <AuditRow key={run.id} run={run} />
+                      <AuditRow key={run.id} run={run} onOpen={() => setSelectedRun(run)} />
                     ))}
                   </tbody>
                 </table>
