@@ -269,6 +269,35 @@ function SecuritySettings() {
   );
 }
 
+function NotificationsSettings() {
+  return (
+    <section className="px-6 py-8 lg:px-8">
+      <div className="mb-7 flex items-center gap-3">
+        <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open account settings menu">
+          <Menu className="h-4 w-4" />
+        </Button>
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">My notifications</h2>
+          <p className="mt-1 text-sm text-muted-foreground">Choose which email updates you want from OrganicOS.</p>
+        </div>
+      </div>
+
+      <div className="max-w-4xl rounded-lg border border-border bg-card">
+        <div className="border-b border-border px-6 py-5">
+          <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            Choose which email updates you want from us: product updates, weekly SEO content, and workspace activity alerts.
+          </p>
+        </div>
+        <div className="divide-y divide-border px-6">
+          <NotificationRow label="Product updates" description="Feature releases, improvements, and platform announcements." enabled />
+          <NotificationRow label="Weekly newsletter" description="SEO strategy notes, benchmarks, and OrganicOS product news." />
+          <NotificationRow label="Audit run alerts" description="Crawl completions, failed runs, and critical technical-health changes." enabled />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function SettingsGroup({ title, items, active, onSelect }: { title: string; items: SettingsItem[]; active: SectionKey; onSelect: (section: SectionKey) => void }) {
   return (
     <div className="mb-6">
@@ -325,6 +354,28 @@ function SessionRow({ device, location, current = false }: { device: string; loc
         </div>
       </div>
       {current ? <span className="text-xs font-medium text-primary">Current session</span> : <Button variant="ghost" size="sm">Sign out</Button>}
+    </div>
+  );
+}
+
+function NotificationRow({ label, description, enabled = false }: { label: string; description: string; enabled?: boolean }) {
+  return (
+    <div className="flex flex-col gap-3 py-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="min-w-0">
+        <p className="text-sm font-semibold">{label}</p>
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{description}</p>
+      </div>
+      <button
+        type="button"
+        aria-pressed={enabled}
+        className={`relative h-7 w-12 shrink-0 rounded-full border transition-colors ${
+          enabled ? "border-primary bg-primary" : "border-border bg-muted"
+        }`}
+      >
+        <span
+          className={`absolute top-1 h-5 w-5 rounded-full bg-card shadow-sm transition-transform ${enabled ? "left-6" : "left-1"}`}
+        />
+      </button>
     </div>
   );
 }
