@@ -10,9 +10,12 @@ import {
   Link2,
   LockKeyhole,
   Menu,
+  MoreHorizontal,
   MonitorCheck,
   Plug,
+  Plus,
   Save,
+  Search,
   ShieldCheck,
   ShieldPlus,
   Smartphone,
@@ -95,6 +98,8 @@ function AccountSettingsRoute() {
             <SecuritySettings />
           ) : activeSection === "notifications" ? (
             <NotificationsSettings />
+          ) : activeSection === "members" ? (
+            <MembersSettings />
           ) : (
             <AccountProfile />
           )}
