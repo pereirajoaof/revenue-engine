@@ -576,9 +576,111 @@ function AuditPreview({ title, items }: { title: string; items: string[] }) {
   return <div className="rounded-xl border border-border bg-surface/55 p-5"><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{title}</p><div className="mt-5 space-y-3">{items.map((item) => <div key={item} className="flex items-start gap-3 text-sm"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /><span className="text-muted-foreground">{item}</span></div>)}</div></div>;
 }
 
-function AuditRow({ run }: { run: AuditRun }) {
+const HEALTH_TREND = [
+  { crawl: "C-5", score: 78, inventory: 82, discovery: 74, indexability: 69, distribution: 71, errors: 44 },
+  { crawl: "C-4", score: 81, inventory: 84, discovery: 77, indexability: 72, distribution: 73, errors: 39 },
+  { crawl: "C-3", score: 79, inventory: 83, discovery: 76, indexability: 75, distribution: 74, errors: 35 },
+  { crawl: "C-2", score: 86, inventory: 88, discovery: 81, indexability: 80, distribution: 79, errors: 28 },
+  { crawl: "Latest", score: 91, inventory: 92, discovery: 86, indexability: 84, distribution: 82, errors: 22 },
+];
+
+const ERROR_TRENDS = [
+  { name: "Broken internal links", latest: 18, data: [{ crawl: "C-5", value: 42 }, { crawl: "C-4", value: 36 }, { crawl: "C-3", value: 31 }, { crawl: "C-2", value: 24 }, { crawl: "Latest", value: 18 }] },
+  { name: "Canonical conflicts", latest: 11, data: [{ crawl: "C-5", value: 23 }, { crawl: "C-4", value: 20 }, { crawl: "C-3", value: 19 }, { crawl: "C-2", value: 15 }, { crawl: "Latest", value: 11 }] },
+  { name: "Noindex on money pages", latest: 7, data: [{ crawl: "C-5", value: 15 }, { crawl: "C-4", value: 13 }, { crawl: "C-3", value: 10 }, { crawl: "C-2", value: 9 }, { crawl: "Latest", value: 7 }] },
+];
+
+const FUNNEL_SEGMENTS = [
+  { name: "Inventory", total: 18432, left: 1264 },
+  { name: "Discovery", total: 17168, left: 902 },
+  { name: "Indexability", total: 16266, left: 714 },
+  { name: "Distribution", total: 15552, left: 438 },
+];
+
+const ISSUE_ROWS = [
+  { issue: "Internal 404 links", crawled: 18432, changed: 128, added: 18, new: 7, removed: 22, missing: 4 },
+  { issue: "Canonical mismatch", crawled: 18432, changed: 94, added: 11, new: 5, removed: 17, missing: 2 },
+  { issue: "Duplicate title", crawled: 18432, changed: 221, added: 37, new: 14, removed: 45, missing: 8 },
+  { issue: "Missing meta description", crawled: 18432, changed: 176, added: 29, new: 10, removed: 31, missing: 6 },
+];
+
+const STATUS_DISTRIBUTION = [{ code: "2xx", urls: 15120 }, { code: "3xx", urls: 2088 }, { code: "4xx", urls: 918 }, { code: "5xx", urls: 306 }];
+const DEPTH_STATUS = [{ depth: "0", "2xx": 1, "3xx": 0, "4xx": 0, "5xx": 0 }, { depth: "1", "2xx": 286, "3xx": 31, "4xx": 12, "5xx": 4 }, { depth: "2", "2xx": 2480, "3xx": 304, "4xx": 88, "5xx": 19 }, { depth: "3", "2xx": 6210, "3xx": 902, "4xx": 281, "5xx": 84 }, { depth: "4+", "2xx": 6143, "3xx": 851, "4xx": 537, "5xx": 199 }];
+
+function AuditRunDetailPage({ run, onBack }: { run: AuditRun; onBack: () => void }) {
   return (
-    <tr className="group cursor-pointer border-b border-border transition-colors hover:bg-surface/45" onClick={() => undefined}>
+    <div className="min-h-screen bg-background text-foreground">
+      <DashboardNav />
+      <div className="lg:pl-56">
+        <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur">
+          <div className="space-y-5 px-6 py-5 lg:px-8">
+            <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+              <div className="flex items-start gap-3">
+                <Button variant="ghost" size="icon" onClick={onBack} aria-label="Back to audit runs"><ArrowLeft className="h-4 w-4" /></Button>
+                <div>
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Project / Run</p>
+                  <h1 className="mt-1 text-2xl font-bold tracking-tight">OrganicOS / {run.name}</h1>
+                  <p className="mt-1 text-sm text-muted-foreground">{formatNumber(run.urlsCrawled)} URLs crawled · {run.lastRun}</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <FilterSelect label="Crawl" value="Latest crawl" options={["Latest crawl", "Apr 25 crawl", "Apr 18 crawl", "Apr 11 crawl"]} onChange={() => undefined} />
+                <FilterSelect label="Page type" value="All page types" options={["All page types", "Route pages", "Blog", "Category", "Product"]} onChange={() => undefined} />
+                <Button><Plus className="h-4 w-4" /> New crawl</Button>
+                <Button variant="outline" size="icon" aria-label="Crawl settings"><Settings2 className="h-4 w-4" /></Button>
+                <ThemeToggle />
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main className="space-y-6 px-6 py-6 lg:px-8">
+          <section className="grid gap-4 xl:grid-cols-[1.25fr_0.75fr]">
+            <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+              <div className="flex items-center justify-between gap-4">
+                <div><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Overview</p><h2 className="mt-1 text-lg font-semibold">Health score over time</h2></div>
+                <HealthScore score={run.healthScore} />
+              </div>
+              <div className="mt-5 h-[280px]"><ResponsiveContainer width="100%" height="100%"><AreaChart data={HEALTH_TREND}><CartesianGrid stroke="var(--border)" vertical={false} /><XAxis dataKey="crawl" stroke="var(--muted-foreground)" fontSize={11} /><YAxis stroke="var(--muted-foreground)" fontSize={11} domain={[0, 100]} /><Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)" }} /><Area type="monotone" dataKey="score" stroke="var(--primary)" fill="var(--primary)" fillOpacity={0.12} strokeWidth={2} /></AreaChart></ResponsiveContainer></div>
+            </div>
+            <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+              <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Main health score errors</p>
+              <div className="mt-4 space-y-4">{ERROR_TRENDS.map((error) => <ErrorTrendCard key={error.name} {...error} />)}</div>
+            </div>
+          </section>
+
+          <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <ScoreMiniCard title="Inventory" value={92} change="+4.8%" dataKey="inventory" />
+            <ScoreMiniCard title="Discovery" value={86} change="+6.1%" dataKey="discovery" />
+            <ScoreMiniCard title="Indexability" value={84} change="+3.4%" dataKey="indexability" />
+            <ScoreMiniCard title="Distribution" value={82} change="+2.9%" dataKey="distribution" />
+          </section>
+
+          <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
+            <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">URL cascade</p>
+            <h2 className="mt-1 text-lg font-semibold">Crawled URLs left out by segment</h2>
+            <div className="mt-5 grid gap-3 lg:grid-cols-4">{FUNNEL_SEGMENTS.map((segment, index) => <FunnelSegment key={segment.name} segment={segment} index={index} />)}</div>
+          </section>
+
+          <section className="grid gap-4 xl:grid-cols-3">
+            <IssueSummaryCard />
+            <ChartCard title="Errors" subtitle="URLs with and without errors"><ResponsiveContainer width="100%" height="220"><BarChart data={[{ name: "With errors", urls: 2118 }, { name: "Without errors", urls: 16314 }]}><CartesianGrid stroke="var(--border)" vertical={false} /><XAxis dataKey="name" stroke="var(--muted-foreground)" fontSize={11} /><YAxis stroke="var(--muted-foreground)" fontSize={11} /><Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)" }} /><Bar dataKey="urls" fill="var(--primary)" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></ChartCard>
+            <ChartCard title="HTTP status code" subtitle="Distribution of URLs by response class"><ResponsiveContainer width="100%" height="220"><BarChart data={STATUS_DISTRIBUTION}><CartesianGrid stroke="var(--border)" vertical={false} /><XAxis dataKey="code" stroke="var(--muted-foreground)" fontSize={11} /><YAxis stroke="var(--muted-foreground)" fontSize={11} /><Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)" }} /><Bar dataKey="urls" fill="var(--chart-3)" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></ChartCard>
+          </section>
+
+          <section className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+            <IssuesTable />
+            <ChartCard title="HTTP status codes by depth level" subtitle="Response mix across crawl depth"><ResponsiveContainer width="100%" height="330"><BarChart data={DEPTH_STATUS}><CartesianGrid stroke="var(--border)" vertical={false} /><XAxis dataKey="depth" stroke="var(--muted-foreground)" fontSize={11} /><YAxis stroke="var(--muted-foreground)" fontSize={11} /><Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)" }} /><Bar dataKey="2xx" stackId="a" fill="var(--primary)" /><Bar dataKey="3xx" stackId="a" fill="var(--chart-3)" /><Bar dataKey="4xx" stackId="a" fill="var(--destructive)" opacity={0.75} /><Bar dataKey="5xx" stackId="a" fill="var(--destructive)" /></BarChart></ResponsiveContainer></ChartCard>
+          </section>
+        </main>
+      </div>
+    </div>
+  );
+}
+
+function AuditRow({ run, onOpen }: { run: AuditRun; onOpen: () => void }) {
+  return (
+    <tr className="group cursor-pointer border-b border-border transition-colors hover:bg-surface/45" onClick={onOpen}>
       <td className="px-5 py-4">
         <div className="flex items-start gap-3">
           <AuditConnectionMarker state={run.connectionState} />
