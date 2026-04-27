@@ -186,6 +186,18 @@ function UrlDetailDialog({ row, issue, onOpenChange }: { row: AffectedUrl | null
   );
 }
 
+function ModalMetric({ label, value, tone = "neutral" }: { label: string; value: string; tone?: "danger" | "neutral" }) {
+  return <div className="min-w-20 rounded-lg border border-border bg-surface/45 px-3 py-2"><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{label}</p><p className={`mt-1 font-mono text-xl font-bold ${tone === "danger" ? "text-destructive" : "text-foreground"}`}>{value}</p></div>;
+}
+
+function DetailSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return <section className="border-b border-border py-5 last:border-0"><h3 className="mb-4 text-base font-semibold">{title}</h3><div className="space-y-3">{children}</div></section>;
+}
+
+function DetailRow({ label, value, emphasis = false, badge = false }: { label: string; value: string; emphasis?: boolean; badge?: boolean }) {
+  return <div className="grid gap-2 text-sm sm:grid-cols-[180px_1fr]"><dt className="font-medium text-muted-foreground sm:text-right">{label}</dt><dd className={emphasis ? "break-all font-medium text-primary" : "break-all text-foreground"}>{badge ? <span className="rounded-md bg-destructive/10 px-2 py-1 font-mono text-xs font-bold text-destructive">{value}</span> : value}</dd></div>;
+}
+
 function Metric({ label, value, tone }: { label: string; value: string; tone: "good" | "danger" }) {
   return <div className="rounded-lg border border-border bg-surface/45 px-4 py-3"><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{label}</p><p className={`mt-1 font-mono text-xl font-bold ${tone === "good" ? "text-primary" : "text-destructive"}`}>{value}</p></div>;
 }
