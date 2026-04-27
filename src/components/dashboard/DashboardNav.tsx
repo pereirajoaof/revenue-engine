@@ -304,9 +304,11 @@ export function DashboardNav() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2">
-              <UserCog className="w-4 h-4" />
-              <span className="text-xs">Account settings</span>
+            <DropdownMenuItem asChild className="gap-2">
+              <Link to="/account-settings">
+                <UserCog className="w-4 h-4" />
+                <span className="text-xs">Account settings</span>
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleLogout} className="gap-2 text-destructive focus:text-destructive">
               <LogOut className="w-4 h-4" />
