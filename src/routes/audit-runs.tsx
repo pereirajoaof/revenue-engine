@@ -4,6 +4,7 @@ import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
+  Bot,
   CalendarClock,
   CheckCircle2,
   ChevronLeft,
@@ -11,6 +12,12 @@ import {
   Circle,
   Clock3,
   Copy,
+  FileCode2,
+  Gauge,
+  Globe2,
+  Layers3,
+  Link2,
+  Map,
   MoreHorizontal,
   Play,
   Plus,
@@ -21,6 +28,7 @@ import {
   Sparkles,
   Target,
   Trash2,
+  Upload,
   XCircle,
   Zap,
 } from "lucide-react";
@@ -28,6 +36,7 @@ import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import {
   Dialog,
   DialogContent,
