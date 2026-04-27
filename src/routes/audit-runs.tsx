@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import {
   AlertTriangle,
+  ArrowLeft,
+  ArrowRight,
   CalendarClock,
   CheckCircle2,
   ChevronLeft,
@@ -16,13 +18,24 @@ import {
   Settings2,
   ShieldCheck,
   SlidersHorizontal,
+  Sparkles,
+  Target,
   Trash2,
   XCircle,
+  Zap,
 } from "lucide-react";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,7 +43,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const Route = createFileRoute("/audit-runs")({
   component: AuditRunsPage,
@@ -98,6 +110,8 @@ function AuditRunsPage() {
   const [dateRange, setDateRange] = useState<DateRange>("Any");
   const [urlRange, setUrlRange] = useState<UrlRange>("Any");
   const [page, setPage] = useState(1);
+  const [createAuditOpen, setCreateAuditOpen] = useState(false);
+  const [createAuditStep, setCreateAuditStep] = useState(1);
   const pageSize = 5;
 
   const filteredRuns = useMemo(() => {
@@ -122,8 +136,7 @@ function AuditRunsPage() {
   const criticalAlerts = AUDIT_RUNS.reduce((sum, run) => sum + run.alerts, 0);
 
   return (
-    <TooltipProvider>
-      <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
         <DashboardNav />
         <div className="lg:pl-56">
           <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur">
@@ -134,9 +147,20 @@ function AuditRunsPage() {
                 <p className="mt-1 max-w-2xl text-sm text-muted-foreground">Control website snapshots that feed technical health, prioritisation, and revenue opportunity.</p>
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-                  <Plus className="h-4 w-4" /> Create New Audit
-                </Button>
+                <Dialog
+                  open={createAuditOpen}
+                  onOpenChange={(open) => {
+                    setCreateAuditOpen(open);
+                    if (!open) setCreateAuditStep(1);
+                  }}
+                >
+                  <DialogTrigger asChild>
+                    <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                      <Plus className="h-4 w-4" /> Create New Audit
+                    </Button>
+                  </DialogTrigger>
+                  <CreateAuditDialog step={createAuditStep} onStepChange={setCreateAuditStep} />
+                </Dialog>
                 <ThemeToggle />
               </div>
             </div>
@@ -213,9 +237,153 @@ function AuditRunsPage() {
             </section>
           </main>
         </div>
-      </div>
-    </TooltipProvider>
+    </div>
   );
+}
+
+function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange: (step: number) => void }) {
+  const steps = ["Scope", "Revenue link", "Crawl rules", "Schedule"];
+  const isFinalStep = step === steps.length;
+
+  return (
+    <DialogContent className="max-h-[88vh] max-w-5xl overflow-y-auto border-border bg-background p-0 shadow-2xl">
+      <div className="grid min-h-[680px] lg:grid-cols-[280px_1fr]">
+        <aside className="border-b border-border bg-surface/55 p-6 lg:border-b-0 lg:border-r">
+          <div className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-primary/25 bg-primary/10 text-primary shadow-[0_0_24px_var(--glow)]">
+            <Zap className="h-5 w-5" />
+          </div>
+          <DialogHeader className="mt-6 text-left">
+            <DialogTitle className="text-2xl font-bold tracking-tight">Create New Audit</DialogTitle>
+            <DialogDescription>
+              Configure a technical crawl that can feed health scoring, prioritisation, and revenue opportunity.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-8 space-y-3">
+            {steps.map((label, index) => {
+              const itemStep = index + 1;
+              const active = itemStep === step;
+              const complete = itemStep < step;
+              return (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => onStepChange(itemStep)}
+                  className={`flex w-full items-center gap-3 rounded-md border px-3 py-3 text-left transition-colors ${
+                    active
+                      ? "border-primary/30 bg-primary/10 text-foreground"
+                      : complete
+                        ? "border-border bg-background text-foreground"
+                        : "border-transparent text-muted-foreground hover:bg-background"
+                  }`}
+                >
+                  <span className={`flex h-7 w-7 items-center justify-center rounded-md border font-mono text-xs ${active || complete ? "border-primary/25 text-primary" : "border-border"}`}>
+                    {complete ? <CheckCircle2 className="h-3.5 w-3.5" /> : itemStep}
+                  </span>
+                  <span className="text-sm font-medium">{label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </aside>
+
+        <div className="flex flex-col">
+          <div className="border-b border-border p-6">
+            <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Step {step} of {steps.length}</p>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight">{steps[step - 1]}</h2>
+          </div>
+          <div className="flex-1 p-6">
+            {step === 1 && <ScopeStep />}
+            {step === 2 && <RevenueLinkStep />}
+            {step === 3 && <CrawlRulesStep />}
+            {step === 4 && <ScheduleStep />}
+          </div>
+          <div className="flex items-center justify-between border-t border-border p-6">
+            <Button variant="outline" disabled={step === 1} onClick={() => onStepChange(Math.max(1, step - 1))}>
+              <ArrowLeft className="h-4 w-4" /> Back
+            </Button>
+            <Button onClick={() => onStepChange(isFinalStep ? 1 : Math.min(steps.length, step + 1))}>
+              {isFinalStep ? "Create audit" : "Continue"} {!isFinalStep && <ArrowRight className="h-4 w-4" />}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </DialogContent>
+  );
+}
+
+function ScopeStep() {
+  return (
+    <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
+      <div className="space-y-4">
+        <FieldBlock label="Audit name"><Input defaultValue="Core Revenue Pages" /></FieldBlock>
+        <FieldBlock label="Primary domain"><Input defaultValue="https://www.acme.com" /></FieldBlock>
+        <FieldBlock label="Crawl scope">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <ChoiceCard active icon={<Target className="h-4 w-4" />} title="Revenue pages" detail="Product, category, lead-gen, checkout support" />
+            <ChoiceCard icon={<Search className="h-4 w-4" />} title="Whole site" detail="All discoverable indexable URLs" />
+          </div>
+        </FieldBlock>
+        <FieldBlock label="Include paths"><Input defaultValue="/product/*, /category/*, /guides/*" /></FieldBlock>
+        <FieldBlock label="Exclude paths"><Input defaultValue="/account/*, /cart, /search*" /></FieldBlock>
+      </div>
+      <AuditPreview title="Scope estimate" items={["18.4K URLs expected", "Revenue templates prioritised", "Canonical and indexability checks enabled", "JavaScript rendering on key paths"]} />
+    </div>
+  );
+}
+
+function RevenueLinkStep() {
+  return (
+    <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+      <ChoiceCard active icon={<ShieldCheck className="h-4 w-4" />} title="Connect to Revenue & Opportunities" detail="This will become the green-ticket audit that feeds the commercial dashboard." />
+      <div className="grid gap-3 sm:grid-cols-2">
+        <SignalCard label="Mapped ORP" value="£1.8M" detail="Pages monitored" />
+        <SignalCard label="Risk weighting" value="High" detail="Issues affect money pages first" />
+        <SignalCard label="Priority model" value="Impact × severity" detail="Ready for scoring" />
+        <SignalCard label="Future output" value="Revenue gap" detail="Reserved for audit impact" />
+      </div>
+    </div>
+  );
+}
+
+function CrawlRulesStep() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <ChoiceCard active icon={<CheckCircle2 className="h-4 w-4" />} title="Indexability" detail="Robots, canonicals, noindex, status codes" />
+      <ChoiceCard active icon={<Sparkles className="h-4 w-4" />} title="Rendering" detail="JS-rendered content and template parity" />
+      <ChoiceCard active icon={<AlertTriangle className="h-4 w-4" />} title="Technical risk" detail="Redirect chains, broken links, duplicate patterns" />
+      <ChoiceCard icon={<SlidersHorizontal className="h-4 w-4" />} title="Advanced limits" detail="Depth, URL caps, parameters, crawl speed" />
+    </div>
+  );
+}
+
+function ScheduleStep() {
+  return (
+    <div className="grid gap-5 lg:grid-cols-[1fr_0.9fr]">
+      <div className="grid gap-3 sm:grid-cols-2">
+        <ChoiceCard active icon={<Zap className="h-4 w-4" />} title="Always-on" detail="Continuously monitors revenue-critical templates" />
+        <ChoiceCard icon={<CalendarClock className="h-4 w-4" />} title="Weekly" detail="Scheduled crawl every Monday" />
+        <ChoiceCard icon={<Clock3 className="h-4 w-4" />} title="Monthly" detail="Useful for stable surfaces" />
+        <ChoiceCard icon={<Play className="h-4 w-4" />} title="Manual" detail="Run only when requested" />
+      </div>
+      <AuditPreview title="Ready to create" items={["Green ticket will mark this as revenue-linked", "First crawl starts immediately", "Details page opens after setup", "Trend and alerts slots remain reserved"]} />
+    </div>
+  );
+}
+
+function FieldBlock({ label, children }: { label: string; children: ReactNode }) {
+  return <label className="block space-y-2"><span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{label}</span>{children}</label>;
+}
+
+function ChoiceCard({ active = false, icon, title, detail }: { active?: boolean; icon: ReactNode; title: string; detail: string }) {
+  return <button type="button" className={`min-h-[116px] rounded-xl border p-4 text-left transition-colors ${active ? "border-primary/35 bg-primary/10" : "border-border bg-card hover:bg-surface/60"}`}><span className={`inline-flex h-9 w-9 items-center justify-center rounded-md border ${active ? "border-primary/25 text-primary" : "border-border text-muted-foreground"}`}>{icon}</span><span className="mt-4 block font-semibold text-foreground">{title}</span><span className="mt-1 block text-sm leading-relaxed text-muted-foreground">{detail}</span></button>;
+}
+
+function SignalCard({ label, value, detail }: { label: string; value: string; detail: string }) {
+  return <div className="rounded-xl border border-border bg-card p-5"><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{label}</p><p className="mt-3 font-mono text-3xl font-bold text-primary">{value}</p><p className="mt-2 text-sm text-muted-foreground">{detail}</p></div>;
+}
+
+function AuditPreview({ title, items }: { title: string; items: string[] }) {
+  return <div className="rounded-xl border border-border bg-surface/55 p-5"><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{title}</p><div className="mt-5 space-y-3">{items.map((item) => <div key={item} className="flex items-start gap-3 text-sm"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /><span className="text-muted-foreground">{item}</span></div>)}</div></div>;
 }
 
 function AuditRow({ run }: { run: AuditRun }) {
@@ -264,16 +432,7 @@ function AuditConnectionMarker({ state }: { state: AuditRun["connectionState"] }
       : "border-chart-3/25 bg-chart-3/10 text-chart-3";
   const Icon = isStopped ? XCircle : ShieldCheck;
 
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border ${className}`} aria-label={label}>
-          <Icon className="h-4 w-4" />
-        </div>
-      </TooltipTrigger>
-      <TooltipContent>{label}</TooltipContent>
-    </Tooltip>
-  );
+  return <div className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border ${className}`} aria-label={label} title={label}><Icon className="h-4 w-4" /></div>;
 }
 
 function AuditActions() {
@@ -319,20 +478,15 @@ function HealthScore({ score }: { score: number }) {
   const tone = score >= 80 ? "text-primary" : score >= 50 ? "text-chart-3" : "text-destructive";
   const bar = score >= 80 ? "bg-primary" : score >= 50 ? "bg-chart-3" : "bg-destructive";
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <div className="w-[120px]">
-          <div className="flex items-baseline gap-2">
-            <span className={`font-mono text-2xl font-bold tabular-nums ${tone}`}>{score}</span>
-            <span className="font-mono text-[10px] text-muted-foreground">/100</span>
-          </div>
-          <div className="mt-1 h-1.5 rounded-full bg-surface">
-            <div className={`h-full rounded-full ${bar}`} style={{ width: `${score}%` }} />
-          </div>
-        </div>
-      </TooltipTrigger>
-      <TooltipContent>Composite score based on crawlability, indexability, and technical signals</TooltipContent>
-    </Tooltip>
+    <div className="w-[120px]" title="Composite score based on crawlability, indexability, and technical signals">
+      <div className="flex items-baseline gap-2">
+        <span className={`font-mono text-2xl font-bold tabular-nums ${tone}`}>{score}</span>
+        <span className="font-mono text-[10px] text-muted-foreground">/100</span>
+      </div>
+      <div className="mt-1 h-1.5 rounded-full bg-surface">
+        <div className={`h-full rounded-full ${bar}`} style={{ width: `${score}%` }} />
+      </div>
+    </div>
   );
 }
 
