@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { format } from "date-fns";
 import { useMemo, useState, type ReactNode } from "react";
 import {
   AlertTriangle,
@@ -36,8 +37,11 @@ import {
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -346,11 +350,31 @@ function ProjectBasicsStep() {
 
 function CrawlModeStep() {
   return (
-    <div className="max-w-2xl space-y-3">
-      <ChoiceCard icon={<Camera className="h-4 w-4" />} title="One-time snapshot" detail="Run once for migration checks, releases, or technical baselines" />
-      <ChoiceCard active icon={<CalendarClock className="h-4 w-4" />} title="Scheduled audit" detail="Weekly or monthly diagnostics for stable sections" />
-      <ChoiceCard icon={<Zap className="h-4 w-4" />} title="Always-on crawl" detail="Continuous low-frequency monitoring of revenue-critical surfaces" />
-      <ToggleRow label="Prioritise high-value pages" detail="Revenue pages and top-traffic URLs crawl first" checked />
+    <div className="space-y-5">
+      <div className="grid gap-3 lg:grid-cols-3">
+        <ChoiceCard icon={<Camera className="h-4 w-4" />} title="One-time snapshot" detail="Run once for migration checks, releases, or technical baselines" />
+        <ChoiceCard active icon={<CalendarClock className="h-4 w-4" />} title="Scheduled audit" detail="Weekly or monthly diagnostics for stable sections" />
+        <ChoiceCard icon={<Zap className="h-4 w-4" />} title="Always-on crawl" detail="Continuous low-frequency monitoring of revenue-critical surfaces" />
+      </div>
+      <div className="rounded-xl border border-border bg-card p-5">
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-md border border-primary/25 bg-primary/10 text-primary">
+            <CalendarClock className="h-4 w-4" />
+          </span>
+          <div>
+            <p className="font-semibold text-foreground">Schedule settings</p>
+            <p className="text-sm text-muted-foreground">Choose the cadence and run window for scheduled audits.</p>
+          </div>
+        </div>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          <FieldBlock label="Frequency"><select defaultValue="Weekly" className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"><option>Weekly</option><option>Monthly</option></select></FieldBlock>
+          <FieldBlock label="Run day"><select defaultValue="Monday" className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option></select></FieldBlock>
+          <FieldBlock label="Run time"><Input type="time" defaultValue="06:00" /></FieldBlock>
+          <FieldBlock label="Timezone"><select defaultValue="Europe/London" className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"><option>Europe/London</option><option>Europe/Paris</option><option>America/New_York</option><option>America/Los_Angeles</option></select></FieldBlock>
+          <FieldBlock label="First run"><AuditDatePicker /></FieldBlock>
+          <ToggleRow label="Prioritise high-value pages" detail="Revenue pages and top-traffic URLs crawl first" checked />
+        </div>
+      </div>
     </div>
   );
 }
@@ -472,6 +496,34 @@ function MappingRow({ pattern, pageType, revenue }: { pattern: string; pageType:
 
 function FieldBlock({ label, children }: { label: string; children: ReactNode }) {
   return <label className="block space-y-2"><span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{label}</span>{children}</label>;
+}
+
+function AuditDatePicker() {
+  const [date, setDate] = useState<Date | undefined>(new Date(2026, 3, 28));
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn("h-9 w-full justify-start text-left font-normal", !date && "text-muted-foreground")}
+        >
+          <CalendarClock className="h-4 w-4" />
+          {date ? format(date, "PPP") : <span>Select first run</span>}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          disabled={(calendarDate) => calendarDate < new Date(new Date().setHours(0, 0, 0, 0))}
+          initialFocus
+          className={cn("p-3 pointer-events-auto")}
+        />
+      </PopoverContent>
+    </Popover>
+  );
 }
 
 function ChoiceCard({ active = false, icon, title, detail }: { active?: boolean; icon: ReactNode; title: string; detail: string }) {
