@@ -70,8 +70,8 @@ export function DashboardNav() {
       ? search?.driver
       : undefined;
   const isRevenueParentActive = path === "/dashboard" || isTechRoute || isBrandRoute;
-  const [driversOpen, setDriversOpen] = useState(!isAuditRunsRoute);
-  const [auditRunsOpen, setAuditRunsOpen] = useState(isAuditRunsRoute);
+  const [driversOpen, setDriversOpen] = useState(false);
+  const [auditRunsOpen, setAuditRunsOpen] = useState(false);
 
   useEffect(() => {
     if (isAuditRunsRoute) {
