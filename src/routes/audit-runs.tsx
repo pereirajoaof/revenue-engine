@@ -449,15 +449,6 @@ function LimitsStep() {
   );
 }
 
-function DiscoveryStep() {
-  return (
-    <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
-      <div className="grid gap-3"><CheckRow label="Start URL" detail="Crawl links from the configured entry page" checked /><CheckRow label="Sitemaps" detail="Use selected detected and custom sitemap sources" checked /><ToggleRow label="Discover new sitemaps automatically" detail="Keep sitemap inventory fresh between runs" checked /></div>
-      <div className="grid gap-3 sm:grid-cols-2"><SignalCard label="Sources" value="2" detail="Start URL + sitemaps" /><SignalCard label="Expected URLs" value="50K" detail="Capped by limits" /><SignalCard label="New sitemap alerts" value="On" detail="Future alert slot" /><SignalCard label="Discovery bias" value="Value" detail="High-value pages first" /></div>
-    </div>
-  );
-}
-
 function PageTypeMappingStep() {
   return (
     <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
