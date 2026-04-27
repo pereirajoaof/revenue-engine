@@ -256,7 +256,7 @@ function AuditRunsPage() {
 }
 
 function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange: (step: number) => void }) {
-  const steps = ["Basics", "Mode", "Entry points", "Scope rules", "Behaviour", "Limits", "Discovery", "Page types"];
+  const steps = ["Basics", "Mode", "Entry points", "Scope rules", "Behaviour", "Limits", "Page types"];
   const isFinalStep = step === steps.length;
 
   return (
@@ -312,8 +312,7 @@ function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange:
             {step === 4 && <ScopeRulesStep />}
             {step === 5 && <BehaviourStep />}
             {step === 6 && <LimitsStep />}
-            {step === 7 && <DiscoveryStep />}
-            {step === 8 && <PageTypeMappingStep />}
+            {step === 7 && <PageTypeMappingStep />}
           </div>
           <div className="flex items-center justify-between border-t border-border p-6">
             <Button variant="outline" disabled={step === 1} onClick={() => onStepChange(Math.max(1, step - 1))}>
