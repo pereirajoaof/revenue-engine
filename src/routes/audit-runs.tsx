@@ -4,6 +4,8 @@ import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
+  Bot,
+  Camera,
   CalendarClock,
   CheckCircle2,
   ChevronLeft,
@@ -11,6 +13,12 @@ import {
   Circle,
   Clock3,
   Copy,
+  FileCode2,
+  Gauge,
+  Globe2,
+  Layers3,
+  Link2,
+  Map,
   MoreHorizontal,
   Play,
   Plus,
@@ -21,6 +29,7 @@ import {
   Sparkles,
   Target,
   Trash2,
+  Upload,
   XCircle,
   Zap,
 } from "lucide-react";
@@ -28,6 +37,7 @@ import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import {
   Dialog,
   DialogContent,
@@ -242,12 +252,12 @@ function AuditRunsPage() {
 }
 
 function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange: (step: number) => void }) {
-  const steps = ["Scope", "Revenue link", "Crawl rules", "Schedule"];
+  const steps = ["Basics", "Mode", "Entry points", "Scope rules", "Behaviour", "Limits", "Discovery", "Page types"];
   const isFinalStep = step === steps.length;
 
   return (
     <DialogContent className="max-h-[88vh] max-w-5xl overflow-y-auto border-border bg-background p-0 shadow-2xl">
-      <div className="grid min-h-[680px] lg:grid-cols-[280px_1fr]">
+      <div className="grid min-h-[720px] lg:grid-cols-[300px_1fr]">
         <aside className="border-b border-border bg-surface/55 p-6 lg:border-b-0 lg:border-r">
           <div className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-primary/25 bg-primary/10 text-primary shadow-[0_0_24px_var(--glow)]">
             <Zap className="h-5 w-5" />
@@ -258,7 +268,7 @@ function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange:
               Configure a technical crawl that can feed health scoring, prioritisation, and revenue opportunity.
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-8 space-y-3">
+          <div className="mt-8 space-y-2">
             {steps.map((label, index) => {
               const itemStep = index + 1;
               const active = itemStep === step;
@@ -292,10 +302,14 @@ function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange:
             <h2 className="mt-2 text-3xl font-bold tracking-tight">{steps[step - 1]}</h2>
           </div>
           <div className="flex-1 p-6">
-            {step === 1 && <ScopeStep />}
-            {step === 2 && <RevenueLinkStep />}
-            {step === 3 && <CrawlRulesStep />}
-            {step === 4 && <ScheduleStep />}
+            {step === 1 && <ProjectBasicsStep />}
+            {step === 2 && <CrawlModeStep />}
+            {step === 3 && <EntryPointsStep />}
+            {step === 4 && <ScopeRulesStep />}
+            {step === 5 && <BehaviourStep />}
+            {step === 6 && <LimitsStep />}
+            {step === 7 && <DiscoveryStep />}
+            {step === 8 && <PageTypeMappingStep />}
           </div>
           <div className="flex items-center justify-between border-t border-border p-6">
             <Button variant="outline" disabled={step === 1} onClick={() => onStepChange(Math.max(1, step - 1))}>
@@ -311,63 +325,157 @@ function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange:
   );
 }
 
-function ScopeStep() {
+function ProjectBasicsStep() {
   return (
     <div className="grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
       <div className="space-y-4">
-        <FieldBlock label="Audit name"><Input defaultValue="Core Revenue Pages" /></FieldBlock>
-        <FieldBlock label="Primary domain"><Input defaultValue="https://www.acme.com" /></FieldBlock>
-        <FieldBlock label="Crawl scope">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <ChoiceCard active icon={<Target className="h-4 w-4" />} title="Revenue pages" detail="Product, category, lead-gen, checkout support" />
-            <ChoiceCard icon={<Search className="h-4 w-4" />} title="Whole site" detail="All discoverable indexable URLs" />
-          </div>
-        </FieldBlock>
-        <FieldBlock label="Include paths"><Input defaultValue="/product/*, /category/*, /guides/*" /></FieldBlock>
-        <FieldBlock label="Exclude paths"><Input defaultValue="/account/*, /cart, /search*" /></FieldBlock>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FieldBlock label="Project name"><Input defaultValue="Core Revenue Pages" /></FieldBlock>
+          <FieldBlock label="Industry"><Input defaultValue="Retail ecommerce" /></FieldBlock>
+        </div>
+        <FieldBlock label="Root domain"><Input defaultValue="acme.com" /></FieldBlock>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <ToggleRow label="Crawl subdomains" detail="Include shop, support, and locale hosts" checked />
+          <ToggleRow label="Crawl HTTP + HTTPS" detail="Catch protocol conflicts and redirects" checked />
+        </div>
       </div>
-      <AuditPreview title="Scope estimate" items={["18.4K URLs expected", "Revenue templates prioritised", "Canonical and indexability checks enabled", "JavaScript rendering on key paths"]} />
+      <AuditPreview title="Project identity" items={["Benchmarking will use the selected industry", "Root domain controls host-level discovery", "Subdomain scope is explicit before crawl starts", "Protocol checks expose migration and redirect risk"]} />
     </div>
   );
 }
 
-function RevenueLinkStep() {
+function CrawlModeStep() {
   return (
     <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
-      <ChoiceCard active icon={<ShieldCheck className="h-4 w-4" />} title="Connect to Revenue & Opportunities" detail="This will become the green-ticket audit that feeds the commercial dashboard." />
+      <div className="space-y-3">
+        <ChoiceCard icon={<Camera className="h-4 w-4" />} title="One-time snapshot" detail="Run once for migration checks, releases, or technical baselines" />
+        <ChoiceCard active icon={<CalendarClock className="h-4 w-4" />} title="Scheduled audit" detail="Weekly or monthly diagnostics for stable sections" />
+        <ChoiceCard icon={<Zap className="h-4 w-4" />} title="Always-on crawl" detail="Continuous low-frequency monitoring of revenue-critical surfaces" />
+        <ToggleRow label="Prioritise high-value pages" detail="Revenue pages and top-traffic URLs crawl first" checked />
+      </div>
       <div className="grid gap-3 sm:grid-cols-2">
         <SignalCard label="Mapped ORP" value="£1.8M" detail="Pages monitored" />
         <SignalCard label="Risk weighting" value="High" detail="Issues affect money pages first" />
         <SignalCard label="Priority model" value="Impact × severity" detail="Ready for scoring" />
-        <SignalCard label="Future output" value="Revenue gap" detail="Reserved for audit impact" />
+        <SignalCard label="Green ticket" value="On" detail="Feeds Revenue & Opportunities" />
       </div>
     </div>
   );
 }
 
-function CrawlRulesStep() {
+function EntryPointsStep() {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      <ChoiceCard active icon={<CheckCircle2 className="h-4 w-4" />} title="Indexability" detail="Robots, canonicals, noindex, status codes" />
-      <ChoiceCard active icon={<Sparkles className="h-4 w-4" />} title="Rendering" detail="JS-rendered content and template parity" />
-      <ChoiceCard active icon={<AlertTriangle className="h-4 w-4" />} title="Technical risk" detail="Redirect chains, broken links, duplicate patterns" />
-      <ChoiceCard icon={<SlidersHorizontal className="h-4 w-4" />} title="Advanced limits" detail="Depth, URL caps, parameters, crawl speed" />
+    <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="space-y-4">
+        <FieldBlock label="Start URL"><Input defaultValue="https://www.acme.com/" /></FieldBlock>
+        <FieldBlock label="Detected sitemaps">
+          <div className="space-y-2">
+            <CheckRow label="/sitemap.xml" detail="42,680 URLs" checked />
+            <CheckRow label="/product-sitemap.xml" detail="12,400 URLs" checked />
+            <CheckRow label="/blog-sitemap.xml" detail="860 URLs" />
+          </div>
+        </FieldBlock>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <ChoiceCard active icon={<Bot className="h-4 w-4" />} title="Auto-detect" detail="Read robots.txt and sitemap index files" />
+          <ChoiceCard icon={<Upload className="h-4 w-4" />} title="Upload sitemap" detail="XML, TXT, or GZIP source file" />
+        </div>
+        <FieldBlock label="Custom sitemap URL"><Input placeholder="https://www.acme.com/custom-sitemap.xml" /></FieldBlock>
+      </div>
+      <AuditPreview title="Entry strategy" items={["Start URL anchors HTML discovery", "Detected sitemaps can be selected or removed", "Custom sitemap supports special inventories", "New sitemap discovery stays enabled"]} />
     </div>
   );
 }
 
-function ScheduleStep() {
+function ScopeRulesStep() {
   return (
     <div className="grid gap-5 lg:grid-cols-[1fr_0.9fr]">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <ChoiceCard active icon={<Zap className="h-4 w-4" />} title="Always-on" detail="Continuously monitors revenue-critical templates" />
-        <ChoiceCard icon={<CalendarClock className="h-4 w-4" />} title="Weekly" detail="Scheduled crawl every Monday" />
-        <ChoiceCard icon={<Clock3 className="h-4 w-4" />} title="Monthly" detail="Useful for stable surfaces" />
-        <ChoiceCard icon={<Play className="h-4 w-4" />} title="Manual" detail="Run only when requested" />
+      <div className="space-y-5">
+        <RuleBuilder title="Include rules" rules={["Path contains /product/", "Path contains /category/", "Regex ^/routes/[a-z0-9-]+"]} />
+        <RuleBuilder title="Exclude rules" rules={["Path contains /account/", "Exact match /cart", "Regex /search\\?.*"]} />
       </div>
-      <AuditPreview title="Ready to create" items={["Green ticket will mark this as revenue-linked", "First crawl starts immediately", "Details page opens after setup", "Trend and alerts slots remain reserved"]} />
+      <AuditPreview title="Garbage prevention" items={["Rules support path contains, exact match, and regex", "Revenue templates stay inside scope", "Internal search and account areas are excluded", "Advanced rules remain visible but controlled"]} />
     </div>
   );
+}
+
+function BehaviourStep() {
+  return (
+    <div className="grid gap-5 lg:grid-cols-[1fr_0.9fr]">
+      <div className="space-y-5">
+        <FieldBlock label="JavaScript rendering">
+          <div className="grid gap-3 sm:grid-cols-2"><ChoiceCard icon={<Zap className="h-4 w-4" />} title="Off" detail="Fast crawl for static HTML and known templates" /><ChoiceCard active icon={<Sparkles className="h-4 w-4" />} title="On" detail="Headless rendering for modern pages and parity checks" /></div>
+        </FieldBlock>
+        <FieldBlock label="User agent"><select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"><option>Googlebot Smartphone</option><option>Googlebot Desktop</option><option>Custom UA</option></select></FieldBlock>
+        <div className="grid gap-3 sm:grid-cols-2"><ToggleRow label="Respect robots.txt" detail="Default safe crawler behaviour" checked /><ToggleRow label="Follow redirects" detail="Trace chains and final destinations" checked /><ToggleRow label="Follow pagination" detail="Discover paginated inventory" checked /><ToggleRow label="Follow hreflang" detail="Validate international alternates" checked /><ToggleRow label="Follow nofollow links" detail="Advanced discovery mode" /><ToggleRow label="Ignore robots.txt" detail="Advanced warning state" /></div>
+      </div>
+      <AuditPreview title="Crawler behaviour" items={["Googlebot Smartphone is the default identity", "Robots handling is safe by default", "Redirect, pagination, and hreflang discovery are enabled", "Nofollow discovery remains off unless explicitly enabled"]} />
+    </div>
+  );
+}
+
+function LimitsStep() {
+  return (
+    <div className="grid gap-5 lg:grid-cols-[1fr_0.9fr]">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <FieldBlock label="Max URLs"><Input defaultValue="50000" /></FieldBlock>
+        <FieldBlock label="Max crawl depth"><Input defaultValue="6" /></FieldBlock>
+        <FieldBlock label="Requests / second"><Input defaultValue="8" /></FieldBlock>
+        <FieldBlock label="Concurrent threads"><Input defaultValue="4" /></FieldBlock>
+        <ChoiceCard active icon={<Gauge className="h-4 w-4" />} title="Peak hours slow" detail="Reduce pressure during trading hours" />
+        <ChoiceCard icon={<Zap className="h-4 w-4" />} title="Off-peak faster" detail="Increase throughput when demand is lower" />
+      </div>
+      <AuditPreview title="Performance control" items={["URL caps prevent runaway crawls", "Depth limits keep discovery commercially relevant", "Throttling protects production infrastructure", "Time-based rules are ready for enterprise scheduling"]} />
+    </div>
+  );
+}
+
+function DiscoveryStep() {
+  return (
+    <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+      <div className="grid gap-3"><CheckRow label="Start URL" detail="Crawl links from the configured entry page" checked /><CheckRow label="Sitemaps" detail="Use selected detected and custom sitemap sources" checked /><ToggleRow label="Discover new sitemaps automatically" detail="Keep sitemap inventory fresh between runs" checked /></div>
+      <div className="grid gap-3 sm:grid-cols-2"><SignalCard label="Sources" value="2" detail="Start URL + sitemaps" /><SignalCard label="Expected URLs" value="50K" detail="Capped by limits" /><SignalCard label="New sitemap alerts" value="On" detail="Future alert slot" /><SignalCard label="Discovery bias" value="Value" detail="High-value pages first" /></div>
+    </div>
+  );
+}
+
+function PageTypeMappingStep() {
+  return (
+    <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="space-y-3">
+        <MappingRow pattern="/routes/" pageType="Route pages" revenue="£520K ORP" />
+        <MappingRow pattern="/product/" pageType="Product pages" revenue="£840K ORP" />
+        <MappingRow pattern="/category/" pageType="Category pages" revenue="£390K ORP" />
+        <MappingRow pattern="/blog/" pageType="Blog" revenue="£140K ORP" />
+      </div>
+      <AuditPreview title="OrganicOS integration" items={["URL patterns map technical issues to page types", "Page types connect crawl findings to the revenue model", "This audit can become the green-ticket dashboard source", "Future output: Technical Health → Revenue Opportunity"]} />
+    </div>
+  );
+}
+
+function ToggleRow({ label, detail, checked = false }: { label: string; detail: string; checked?: boolean }) {
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-xl border border-border bg-card p-4">
+      <span><span className="block text-sm font-semibold text-foreground">{label}</span><span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{detail}</span></span>
+      <Switch defaultChecked={checked} />
+    </div>
+  );
+}
+
+function CheckRow({ label, detail, checked = false }: { label: string; detail: string; checked?: boolean }) {
+  return (
+    <label className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
+      <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${checked ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}>{checked && <CheckCircle2 className="h-3.5 w-3.5" />}</span>
+      <span><span className="block text-sm font-semibold text-foreground">{label}</span><span className="mt-1 block text-xs text-muted-foreground">{detail}</span></span>
+    </label>
+  );
+}
+
+function RuleBuilder({ title, rules }: { title: string; rules: string[] }) {
+  return <div className="rounded-xl border border-border bg-card p-4"><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{title}</p><div className="mt-3 space-y-2">{rules.map((rule) => <div key={rule} className="flex items-center gap-2 rounded-md border border-border bg-surface/55 px-3 py-2 text-sm text-muted-foreground"><FileCode2 className="h-3.5 w-3.5 text-primary" />{rule}</div>)}</div><Button variant="outline" size="sm" className="mt-3"><Plus className="h-3.5 w-3.5" /> Add rule</Button></div>;
+}
+
+function MappingRow({ pattern, pageType, revenue }: { pattern: string; pageType: string; revenue: string }) {
+  return <div className="grid gap-3 rounded-xl border border-border bg-card p-4 sm:grid-cols-[1fr_1fr_auto] sm:items-center"><span className="font-mono text-sm text-foreground">{pattern}</span><span className="inline-flex items-center gap-2 text-sm text-muted-foreground"><Layers3 className="h-4 w-4 text-primary" />{pageType}</span><span className="font-mono text-xs text-primary">{revenue}</span></div>;
 }
 
 function FieldBlock({ label, children }: { label: string; children: ReactNode }) {
