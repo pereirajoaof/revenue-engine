@@ -346,19 +346,11 @@ function ProjectBasicsStep() {
 
 function CrawlModeStep() {
   return (
-    <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
-      <div className="space-y-3">
-        <ChoiceCard icon={<Camera className="h-4 w-4" />} title="One-time snapshot" detail="Run once for migration checks, releases, or technical baselines" />
-        <ChoiceCard active icon={<CalendarClock className="h-4 w-4" />} title="Scheduled audit" detail="Weekly or monthly diagnostics for stable sections" />
-        <ChoiceCard icon={<Zap className="h-4 w-4" />} title="Always-on crawl" detail="Continuous low-frequency monitoring of revenue-critical surfaces" />
-        <ToggleRow label="Prioritise high-value pages" detail="Revenue pages and top-traffic URLs crawl first" checked />
-      </div>
-      <div className="grid gap-3 sm:grid-cols-2">
-        <SignalCard label="Mapped ORP" value="£1.8M" detail="Pages monitored" />
-        <SignalCard label="Risk weighting" value="High" detail="Issues affect money pages first" />
-        <SignalCard label="Priority model" value="Impact × severity" detail="Ready for scoring" />
-        <SignalCard label="Green ticket" value="On" detail="Feeds Revenue & Opportunities" />
-      </div>
+    <div className="max-w-2xl space-y-3">
+      <ChoiceCard icon={<Camera className="h-4 w-4" />} title="One-time snapshot" detail="Run once for migration checks, releases, or technical baselines" />
+      <ChoiceCard active icon={<CalendarClock className="h-4 w-4" />} title="Scheduled audit" detail="Weekly or monthly diagnostics for stable sections" />
+      <ChoiceCard icon={<Zap className="h-4 w-4" />} title="Always-on crawl" detail="Continuous low-frequency monitoring of revenue-critical surfaces" />
+      <ToggleRow label="Prioritise high-value pages" detail="Revenue pages and top-traffic URLs crawl first" checked />
     </div>
   );
 }
