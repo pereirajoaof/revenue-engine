@@ -223,9 +223,7 @@ function AuditRow({ run }: { run: AuditRun }) {
     <tr className="group cursor-pointer border-b border-border transition-colors hover:bg-surface/45" onClick={() => undefined}>
       <td className="px-5 py-4">
         <div className="flex items-start gap-3">
-          <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background">
-            <ShieldCheck className="h-4 w-4 text-primary" />
-          </div>
+          <AuditConnectionMarker state={run.connectionState} />
           <div className="min-w-0">
             <p className="font-medium text-foreground">{run.name}</p>
             <p className="mt-1 max-w-[260px] truncate text-xs text-muted-foreground">{run.scope}</p>
@@ -248,6 +246,33 @@ function AuditRow({ run }: { run: AuditRun }) {
         <AuditActions />
       </td>
     </tr>
+  );
+}
+
+function AuditConnectionMarker({ state }: { state: AuditRun["connectionState"] }) {
+  const isRevenueLinked = state === "revenue-linked";
+  const isStopped = state === "stopped";
+  const label = isRevenueLinked
+    ? "Connected to Revenue & Opportunities"
+    : isStopped
+      ? "Stopped and will not run again"
+      : "Audit configuration";
+  const className = isRevenueLinked
+    ? "border-primary/25 bg-primary/10 text-primary shadow-[0_0_18px_var(--glow)]"
+    : isStopped
+      ? "border-destructive/25 bg-destructive/10 text-destructive"
+      : "border-chart-3/25 bg-chart-3/10 text-chart-3";
+  const Icon = isStopped ? XCircle : ShieldCheck;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border ${className}`} aria-label={label}>
+          <Icon className="h-4 w-4" />
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>{label}</TooltipContent>
+    </Tooltip>
   );
 }
 
