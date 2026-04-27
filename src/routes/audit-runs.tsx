@@ -531,6 +531,30 @@ function AuditDatePicker() {
   );
 }
 
+function TimeThrottleSettings({ mode }: { mode: "peak" | "offPeak" }) {
+  const isPeak = mode === "peak";
+
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <div className="flex items-center gap-3">
+        <span className={`flex h-9 w-9 items-center justify-center rounded-md border ${isPeak ? "border-primary/25 bg-primary/10 text-primary" : "border-border bg-surface/55 text-muted-foreground"}`}>
+          {isPeak ? <Gauge className="h-4 w-4" /> : <Zap className="h-4 w-4" />}
+        </span>
+        <div>
+          <p className="font-semibold text-foreground">{isPeak ? "Peak hours values" : "Off-peak hours values"}</p>
+          <p className="text-sm text-muted-foreground">Set the active window and crawler speed for this throttle profile.</p>
+        </div>
+      </div>
+      <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        <FieldBlock label="From"><Input type="time" defaultValue={isPeak ? "09:00" : "20:00"} /></FieldBlock>
+        <FieldBlock label="To"><Input type="time" defaultValue={isPeak ? "18:00" : "06:00"} /></FieldBlock>
+        <FieldBlock label="Requests / second"><Input type="number" min="1" defaultValue={isPeak ? "3" : "12"} /></FieldBlock>
+        <FieldBlock label="Concurrent threads"><Input type="number" min="1" defaultValue={isPeak ? "2" : "6"} /></FieldBlock>
+      </div>
+    </div>
+  );
+}
+
 function ChoiceCard({ active = false, icon, title, detail, onClick }: { active?: boolean; icon: ReactNode; title: string; detail: string; onClick?: () => void }) {
   return <button type="button" onClick={onClick} className={`min-h-[116px] rounded-xl border p-4 text-left transition-colors ${active ? "border-primary/35 bg-primary/10" : "border-border bg-card hover:bg-surface/60"}`}><span className={`inline-flex h-9 w-9 items-center justify-center rounded-md border ${active ? "border-primary/25 text-primary" : "border-border text-muted-foreground"}`}>{icon}</span><span className="mt-4 block font-semibold text-foreground">{title}</span><span className="mt-1 block text-sm leading-relaxed text-muted-foreground">{detail}</span></button>;
 }
