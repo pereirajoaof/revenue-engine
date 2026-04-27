@@ -251,12 +251,12 @@ function AuditRunsPage() {
 }
 
 function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange: (step: number) => void }) {
-  const steps = ["Scope", "Revenue link", "Crawl rules", "Schedule"];
+  const steps = ["Basics", "Mode", "Entry points", "Scope rules", "Behaviour", "Limits", "Discovery", "Page types"];
   const isFinalStep = step === steps.length;
 
   return (
     <DialogContent className="max-h-[88vh] max-w-5xl overflow-y-auto border-border bg-background p-0 shadow-2xl">
-      <div className="grid min-h-[680px] lg:grid-cols-[280px_1fr]">
+      <div className="grid min-h-[720px] lg:grid-cols-[300px_1fr]">
         <aside className="border-b border-border bg-surface/55 p-6 lg:border-b-0 lg:border-r">
           <div className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-primary/25 bg-primary/10 text-primary shadow-[0_0_24px_var(--glow)]">
             <Zap className="h-5 w-5" />
@@ -267,7 +267,7 @@ function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange:
               Configure a technical crawl that can feed health scoring, prioritisation, and revenue opportunity.
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-8 space-y-3">
+          <div className="mt-8 space-y-2">
             {steps.map((label, index) => {
               const itemStep = index + 1;
               const active = itemStep === step;
@@ -301,10 +301,14 @@ function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange:
             <h2 className="mt-2 text-3xl font-bold tracking-tight">{steps[step - 1]}</h2>
           </div>
           <div className="flex-1 p-6">
-            {step === 1 && <ScopeStep />}
-            {step === 2 && <RevenueLinkStep />}
-            {step === 3 && <CrawlRulesStep />}
-            {step === 4 && <ScheduleStep />}
+            {step === 1 && <ProjectBasicsStep />}
+            {step === 2 && <CrawlModeStep />}
+            {step === 3 && <EntryPointsStep />}
+            {step === 4 && <ScopeRulesStep />}
+            {step === 5 && <BehaviourStep />}
+            {step === 6 && <LimitsStep />}
+            {step === 7 && <DiscoveryStep />}
+            {step === 8 && <PageTypeMappingStep />}
           </div>
           <div className="flex items-center justify-between border-t border-border p-6">
             <Button variant="outline" disabled={step === 1} onClick={() => onStepChange(Math.max(1, step - 1))}>
