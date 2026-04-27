@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Plus, Settings2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, ExternalLink, Plus, Settings2 } from "lucide-react";
 import {
   Area,
   AreaChart,
@@ -167,8 +167,8 @@ function FilterSelect({ label, value, options }: { label: string; value: string;
   );
 }
 
-function ErrorTrendCard({ name, latest, data }: { name: string; latest: number; data: Array<{ crawl: string; value: number }> }) {
-  return <div className="rounded-lg border border-border bg-surface/45 px-3 py-2"><div className="flex items-center justify-between gap-3"><span className="text-xs font-medium text-foreground">{name}</span><span className="font-mono text-xs font-bold text-destructive">{latest}</span></div><div className="mt-2 h-9"><ResponsiveContainer width="100%" height="100%"><LineChart data={data}><Line type="monotone" dataKey="value" stroke="var(--destructive)" strokeWidth={2} dot={false} /></LineChart></ResponsiveContainer></div></div>;
+function ErrorTrendCard({ id, runId, name, latest, data }: { id: string; runId: string; name: string; latest: number; data: Array<{ crawl: string; value: number }> }) {
+  return <Link to="/audit-runs/$runId/issues/$issueId" params={{ runId, issueId: id }} className="block rounded-lg border border-border bg-surface/45 px-3 py-2 transition-colors hover:border-primary/30 hover:bg-surface focus:outline-none focus:ring-2 focus:ring-ring"><div className="flex items-center justify-between gap-3"><span className="text-xs font-medium text-foreground">{name}</span><span className="inline-flex items-center gap-1 font-mono text-xs font-bold text-destructive">{latest}<ExternalLink className="h-3 w-3 text-muted-foreground" /></span></div><div className="mt-2 h-9"><ResponsiveContainer width="100%" height="100%"><LineChart data={data}><Line type="monotone" dataKey="value" stroke="var(--destructive)" strokeWidth={2} dot={false} /></LineChart></ResponsiveContainer></div></Link>;
 }
 
 function ScoreMiniCard({ title, value, change, dataKey }: { title: string; value: number; change: string; dataKey: "inventory" | "discovery" | "indexability" | "distribution" }) {
