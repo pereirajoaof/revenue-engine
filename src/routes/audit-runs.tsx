@@ -398,6 +398,60 @@ function ScopeRulesStep() {
   );
 }
 
+function BehaviourStep() {
+  return (
+    <div className="grid gap-5 lg:grid-cols-[1fr_0.9fr]">
+      <div className="space-y-5">
+        <FieldBlock label="JavaScript rendering">
+          <div className="grid gap-3 sm:grid-cols-2"><ChoiceCard icon={<Zap className="h-4 w-4" />} title="Off" detail="Fast crawl for static HTML and known templates" /><ChoiceCard active icon={<Sparkles className="h-4 w-4" />} title="On" detail="Headless rendering for modern pages and parity checks" /></div>
+        </FieldBlock>
+        <FieldBlock label="User agent"><select className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"><option>Googlebot Smartphone</option><option>Googlebot Desktop</option><option>Custom UA</option></select></FieldBlock>
+        <div className="grid gap-3 sm:grid-cols-2"><ToggleRow label="Respect robots.txt" detail="Default safe crawler behaviour" checked /><ToggleRow label="Follow redirects" detail="Trace chains and final destinations" checked /><ToggleRow label="Follow pagination" detail="Discover paginated inventory" checked /><ToggleRow label="Follow hreflang" detail="Validate international alternates" checked /><ToggleRow label="Follow nofollow links" detail="Advanced discovery mode" /><ToggleRow label="Ignore robots.txt" detail="Advanced warning state" /></div>
+      </div>
+      <AuditPreview title="Crawler behaviour" items={["Googlebot Smartphone is the default identity", "Robots handling is safe by default", "Redirect, pagination, and hreflang discovery are enabled", "Nofollow discovery remains off unless explicitly enabled"]} />
+    </div>
+  );
+}
+
+function LimitsStep() {
+  return (
+    <div className="grid gap-5 lg:grid-cols-[1fr_0.9fr]">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <FieldBlock label="Max URLs"><Input defaultValue="50000" /></FieldBlock>
+        <FieldBlock label="Max crawl depth"><Input defaultValue="6" /></FieldBlock>
+        <FieldBlock label="Requests / second"><Input defaultValue="8" /></FieldBlock>
+        <FieldBlock label="Concurrent threads"><Input defaultValue="4" /></FieldBlock>
+        <ChoiceCard active icon={<Gauge className="h-4 w-4" />} title="Peak hours slow" detail="Reduce pressure during trading hours" />
+        <ChoiceCard icon={<Zap className="h-4 w-4" />} title="Off-peak faster" detail="Increase throughput when demand is lower" />
+      </div>
+      <AuditPreview title="Performance control" items={["URL caps prevent runaway crawls", "Depth limits keep discovery commercially relevant", "Throttling protects production infrastructure", "Time-based rules are ready for enterprise scheduling"]} />
+    </div>
+  );
+}
+
+function DiscoveryStep() {
+  return (
+    <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+      <div className="grid gap-3"><CheckRow label="Start URL" detail="Crawl links from the configured entry page" checked /><CheckRow label="Sitemaps" detail="Use selected detected and custom sitemap sources" checked /><ToggleRow label="Discover new sitemaps automatically" detail="Keep sitemap inventory fresh between runs" checked /></div>
+      <div className="grid gap-3 sm:grid-cols-2"><SignalCard label="Sources" value="2" detail="Start URL + sitemaps" /><SignalCard label="Expected URLs" value="50K" detail="Capped by limits" /><SignalCard label="New sitemap alerts" value="On" detail="Future alert slot" /><SignalCard label="Discovery bias" value="Value" detail="High-value pages first" /></div>
+    </div>
+  );
+}
+
+function PageTypeMappingStep() {
+  return (
+    <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+      <div className="space-y-3">
+        <MappingRow pattern="/routes/" pageType="Route pages" revenue="£520K ORP" />
+        <MappingRow pattern="/product/" pageType="Product pages" revenue="£840K ORP" />
+        <MappingRow pattern="/category/" pageType="Category pages" revenue="£390K ORP" />
+        <MappingRow pattern="/blog/" pageType="Blog" revenue="£140K ORP" />
+      </div>
+      <AuditPreview title="OrganicOS integration" items={["URL patterns map technical issues to page types", "Page types connect crawl findings to the revenue model", "This audit can become the green-ticket dashboard source", "Future output: Technical Health → Revenue Opportunity"]} />
+    </div>
+  );
+}
+
 function FieldBlock({ label, children }: { label: string; children: ReactNode }) {
   return <label className="block space-y-2"><span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{label}</span>{children}</label>;
 }
