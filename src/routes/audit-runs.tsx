@@ -316,7 +316,7 @@ function TimeCell({ value, icon }: { value: string; icon: React.ReactNode }) {
 
 function FrequencyBadge({ frequency }: { frequency: Frequency }) {
   const highlighted = frequency === "Always-on";
-  return <span className={`rounded-md border px-2.5 py-1 text-xs font-medium ${highlighted ? "border-primary/25 bg-primary/10 text-primary" : "border-border bg-surface text-muted-foreground"}`}>{frequency}</span>;
+  return <span className={`inline-flex whitespace-nowrap rounded-md border px-2.5 py-1 text-xs font-medium ${highlighted ? "border-primary/25 bg-primary/10 text-primary" : "border-border bg-surface text-muted-foreground"}`}>{frequency}</span>;
 }
 
 function ControlKpi({ label, value, detail, tone }: { label: string; value: string; detail: string; tone: "primary" | "warning" | "danger" | "neutral" }) {
