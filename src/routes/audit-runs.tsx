@@ -111,6 +111,8 @@ function AuditRunsPage() {
   const [dateRange, setDateRange] = useState<DateRange>("Any");
   const [urlRange, setUrlRange] = useState<UrlRange>("Any");
   const [page, setPage] = useState(1);
+  const [createAuditOpen, setCreateAuditOpen] = useState(false);
+  const [createAuditStep, setCreateAuditStep] = useState(1);
   const pageSize = 5;
 
   const filteredRuns = useMemo(() => {
@@ -147,9 +149,20 @@ function AuditRunsPage() {
                 <p className="mt-1 max-w-2xl text-sm text-muted-foreground">Control website snapshots that feed technical health, prioritisation, and revenue opportunity.</p>
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-                  <Plus className="h-4 w-4" /> Create New Audit
-                </Button>
+                <Dialog
+                  open={createAuditOpen}
+                  onOpenChange={(open) => {
+                    setCreateAuditOpen(open);
+                    if (!open) setCreateAuditStep(1);
+                  }}
+                >
+                  <DialogTrigger asChild>
+                    <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                      <Plus className="h-4 w-4" /> Create New Audit
+                    </Button>
+                  </DialogTrigger>
+                  <CreateAuditDialog step={createAuditStep} onStepChange={setCreateAuditStep} />
+                </Dialog>
                 <ThemeToggle />
               </div>
             </div>
