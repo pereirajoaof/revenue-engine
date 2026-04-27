@@ -452,6 +452,32 @@ function PageTypeMappingStep() {
   );
 }
 
+function ToggleRow({ label, detail, checked = false }: { label: string; detail: string; checked?: boolean }) {
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-xl border border-border bg-card p-4">
+      <span><span className="block text-sm font-semibold text-foreground">{label}</span><span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{detail}</span></span>
+      <Switch defaultChecked={checked} />
+    </div>
+  );
+}
+
+function CheckRow({ label, detail, checked = false }: { label: string; detail: string; checked?: boolean }) {
+  return (
+    <label className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
+      <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${checked ? "border-primary bg-primary text-primary-foreground" : "border-border"}`}>{checked && <CheckCircle2 className="h-3.5 w-3.5" />}</span>
+      <span><span className="block text-sm font-semibold text-foreground">{label}</span><span className="mt-1 block text-xs text-muted-foreground">{detail}</span></span>
+    </label>
+  );
+}
+
+function RuleBuilder({ title, rules }: { title: string; rules: string[] }) {
+  return <div className="rounded-xl border border-border bg-card p-4"><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{title}</p><div className="mt-3 space-y-2">{rules.map((rule) => <div key={rule} className="flex items-center gap-2 rounded-md border border-border bg-surface/55 px-3 py-2 text-sm text-muted-foreground"><FileCode2 className="h-3.5 w-3.5 text-primary" />{rule}</div>)}</div><Button variant="outline" size="sm" className="mt-3"><Plus className="h-3.5 w-3.5" /> Add rule</Button></div>;
+}
+
+function MappingRow({ pattern, pageType, revenue }: { pattern: string; pageType: string; revenue: string }) {
+  return <div className="grid gap-3 rounded-xl border border-border bg-card p-4 sm:grid-cols-[1fr_1fr_auto] sm:items-center"><span className="font-mono text-sm text-foreground">{pattern}</span><span className="inline-flex items-center gap-2 text-sm text-muted-foreground"><Layers3 className="h-4 w-4 text-primary" />{pageType}</span><span className="font-mono text-xs text-primary">{revenue}</span></div>;
+}
+
 function FieldBlock({ label, children }: { label: string; children: ReactNode }) {
   return <label className="block space-y-2"><span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{label}</span>{children}</label>;
 }
