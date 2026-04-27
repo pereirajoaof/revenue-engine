@@ -7,6 +7,7 @@ import {
   Gauge,
   RefreshCw,
   AlertTriangle,
+  Users,
 } from "lucide-react";
 import { useState } from "react";
 import { SectionCard } from "./SectionCard";
@@ -16,6 +17,7 @@ import { PageTypesSection } from "./sections/PageTypesSection";
 import { BrandKeywordsSection } from "./sections/BrandKeywordsSection";
 import { MarketsSection } from "./sections/MarketsSection";
 import { CwvSection } from "./sections/CwvSection";
+import { MembersSection } from "./sections/MembersSection";
 import { RecalculationSection } from "./sections/RecalculationSection";
 import { DangerZoneSection } from "./sections/DangerZoneSection";
 
@@ -26,6 +28,7 @@ const NAV = [
   { id: "brand", label: "Brand Keywords", icon: Tag },
   { id: "markets", label: "Markets", icon: Globe2 },
   { id: "cwv", label: "CWV", icon: Gauge },
+  { id: "members", label: "Members", icon: Users },
   { id: "recalc", label: "Recalculation", icon: RefreshCw },
   { id: "danger", label: "Danger Zone", icon: AlertTriangle },
 ] as const;
@@ -140,6 +143,15 @@ export function SettingsPage({ dirty, markDirty }: Props) {
             description="Controls which Chrome UX Report device data is fetched for Core Web Vitals."
           >
             <CwvSection onDirty={() => markDirty("cwv")} />
+          </SectionCard>
+
+          <SectionCard
+            id="section-members"
+            icon={<Users className="w-4 h-4" />}
+            title="Members"
+            description="Manage project users, roles, and access status."
+          >
+            <MembersSection />
           </SectionCard>
 
           <SectionCard
