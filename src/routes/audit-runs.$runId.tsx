@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AuditRunOverview } from "@/components/audit-runs/AuditRunOverview";
 
-export const Route = createFileRoute("/audit-runs/")({
+export const Route = createFileRoute("/audit-runs/$runId")({
   component: AuditRunOverviewRoute,
   head: () => ({
     meta: [
