@@ -14,6 +14,7 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BrandAuthorityRouteImport } from './routes/brand-authority'
+import { Route as AuditRunsRouteImport } from './routes/audit-runs'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TechnicalHealthIndexRouteImport } from './routes/technical-health.index'
 import { Route as TechnicalHealthCwvRouteImport } from './routes/technical-health.cwv'
@@ -47,6 +48,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const BrandAuthorityRoute = BrandAuthorityRouteImport.update({
   id: '/brand-authority',
   path: '/brand-authority',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditRunsRoute = AuditRunsRouteImport.update({
+  id: '/audit-runs',
+  path: '/audit-runs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -100,6 +106,7 @@ const BrandAuthorityPageAgeOutliersRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/audit-runs': typeof AuditRunsRoute
   '/brand-authority': typeof BrandAuthorityRoute
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/audit-runs': typeof AuditRunsRoute
   '/brand-authority': typeof BrandAuthorityRoute
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
@@ -132,6 +140,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/audit-runs': typeof AuditRunsRoute
   '/brand-authority': typeof BrandAuthorityRoute
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/audit-runs'
     | '/brand-authority'
     | '/dashboard'
     | '/onboarding'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/audit-runs'
     | '/brand-authority'
     | '/dashboard'
     | '/onboarding'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/audit-runs'
     | '/brand-authority'
     | '/dashboard'
     | '/onboarding'
@@ -198,6 +210,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuditRunsRoute: typeof AuditRunsRoute
   BrandAuthorityRoute: typeof BrandAuthorityRoute
   DashboardRoute: typeof DashboardRoute
   OnboardingRoute: typeof OnboardingRoute
@@ -243,6 +256,13 @@ declare module '@tanstack/react-router' {
       path: '/brand-authority'
       fullPath: '/brand-authority'
       preLoaderRoute: typeof BrandAuthorityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit-runs': {
+      id: '/audit-runs'
+      path: '/audit-runs'
+      fullPath: '/audit-runs'
+      preLoaderRoute: typeof AuditRunsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -353,6 +373,7 @@ const BrandAuthorityPageAgeRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuditRunsRoute: AuditRunsRoute,
   BrandAuthorityRoute: BrandAuthorityRoute,
   DashboardRoute: DashboardRoute,
   OnboardingRoute: OnboardingRoute,

@@ -5,6 +5,7 @@ import {
   Search,
   Bell,
   Settings,
+  Bot,
   ChevronUp,
   ChevronDown,
   LogOut,
@@ -58,6 +59,7 @@ export function DashboardNav() {
   const isDomainAgeRoute = path === "/brand-authority/domain-age";
   const isPageAgeRoute = path.startsWith("/brand-authority/page-age");
   const isSiteFocusRoute = path === "/brand-authority/site-focus";
+  const isAuditRunsRoute = path === "/audit-runs";
   const activeDriver = isTechRoute
     ? "technical-health"
     : isBrandRoute
@@ -210,6 +212,12 @@ export function DashboardNav() {
           )}
         </div>
 
+        <NavItem
+          to="/audit-runs"
+          icon={<Bot className="w-4 h-4" />}
+          label="Audit Runs"
+          active={isAuditRunsRoute}
+        />
         <NavItem icon={<Search className="w-4 h-4" />} label="Keyword Demand" />
         <NavItem icon={<Bell className="w-4 h-4" />} label="Alerts" />
         <NavItem
@@ -283,7 +291,7 @@ function NavItem({
   icon: React.ReactNode;
   label: string;
   active?: boolean;
-  to?: "/dashboard" | "/settings";
+  to?: "/dashboard" | "/settings" | "/audit-runs";
 }) {
   const className = `w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-sm transition-colors ${
     active
