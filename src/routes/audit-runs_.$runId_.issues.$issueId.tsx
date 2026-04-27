@@ -1,10 +1,14 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Filter, Search } from "lucide-react";
+import { ArrowLeft, Filter, FileText, Search } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { MAIN_HEALTH_ISSUES, MAIN_HEALTH_ISSUE_URLS } from "@/components/audit-runs/AuditRunOverview";
+
+type AffectedUrl = (typeof MAIN_HEALTH_ISSUE_URLS)[number];
 
 export const Route = createFileRoute("/audit-runs_/$runId_/issues/$issueId")({
   component: AuditRunIssueRoute,
@@ -22,6 +26,7 @@ function AuditRunIssueRoute() {
   const { runId, issueId } = Route.useParams();
   const issue = MAIN_HEALTH_ISSUES.find((item) => item.id === issueId) ?? MAIN_HEALTH_ISSUES[0];
   const rows = MAIN_HEALTH_ISSUE_URLS.filter((row) => row.issueId === issue.id);
+  const [selectedUrl, setSelectedUrl] = useState<AffectedUrl | null>(null);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -99,8 +104,12 @@ function AuditRunIssueRoute() {
                 </thead>
                 <tbody>
                   {rows.map((row) => (
-                    <tr key={row.url} className="border-b border-border last:border-0">
-                      <td className="max-w-[420px] px-4 py-4 font-medium text-primary"><span className="line-clamp-2 break-all">{row.url}</span></td>
+                    <tr key={row.url} className="border-b border-border transition-colors last:border-0 hover:bg-surface/35">
+                      <td className="max-w-[420px] px-4 py-4 font-medium text-primary">
+                        <button type="button" onClick={() => setSelectedUrl(row)} className="line-clamp-2 break-all text-left underline-offset-4 hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background">
+                          {row.url}
+                        </button>
+                      </td>
                       <td className="px-4 py-4 text-right font-mono tabular-nums">{formatNumber(row.organicTraffic)}</td>
                       <td className="px-4 py-4"><span className="rounded-md bg-destructive/10 px-2 py-1 font-mono text-xs font-bold text-destructive">{row.status}</span></td>
                       <td className="px-4 py-4 text-right font-mono">{row.depth}</td>
@@ -112,9 +121,68 @@ function AuditRunIssueRoute() {
               </table>
             </div>
           </section>
+          <UrlDetailDialog row={selectedUrl} issue={issue} onOpenChange={(open) => !open && setSelectedUrl(null)} />
         </main>
       </div>
     </div>
+  );
+}
+
+function UrlDetailDialog({ row, issue, onOpenChange }: { row: AffectedUrl | null; issue: (typeof MAIN_HEALTH_ISSUES)[number]; onOpenChange: (open: boolean) => void }) {
+  return (
+    <Dialog open={Boolean(row)} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[86vh] max-w-5xl gap-0 overflow-hidden p-0">
+        {row && (
+          <div className="grid min-h-[560px] md:grid-cols-[250px_1fr]">
+            <aside className="border-b border-border bg-surface/40 p-4 md:border-b-0 md:border-r">
+              <DialogHeader className="text-left">
+                <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-background text-primary">
+                  <FileText className="h-5 w-5" />
+                </div>
+                <DialogTitle className="text-base">URL details</DialogTitle>
+                <DialogDescription className="break-all text-xs">{row.url}</DialogDescription>
+              </DialogHeader>
+              <div className="mt-6 space-y-1 text-sm">
+                <div className="rounded-md bg-background px-3 py-2 font-medium text-foreground">Overview</div>
+                <div className="flex items-center justify-between px-3 py-2 text-muted-foreground"><span>Issue</span><span className="rounded-full bg-destructive px-2 py-0.5 text-xs font-bold text-destructive-foreground">1</span></div>
+                <div className="flex items-center justify-between px-3 py-2 text-muted-foreground"><span>Inlinks</span><span className="font-mono">{row.inlinks}</span></div>
+              </div>
+            </aside>
+
+            <div className="overflow-y-auto p-6">
+              <div className="flex flex-col gap-4 border-b border-border pb-5 lg:flex-row lg:items-start lg:justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-muted-foreground">{row.status.includes("404") ? "404 Not found" : `HTTP ${row.status}`}</p>
+                  <h2 className="mt-1 break-all text-lg font-semibold text-primary">{row.url}</h2>
+                </div>
+                <div className="grid grid-cols-3 gap-3 text-center">
+                  <ModalMetric label="Errors" value="1" tone="danger" />
+                  <ModalMetric label="Traffic" value={formatNumber(row.organicTraffic)} />
+                  <ModalMetric label="Inlinks" value={formatNumber(row.inlinks)} />
+                </div>
+              </div>
+
+              <DetailSection title="URL info">
+                <DetailRow label="Issue" value={issue.name} />
+                <DetailRow label="Full URL" value={row.url} emphasis />
+                <DetailRow label="HTTP status code" value={row.status} badge={row.status.includes("4") || row.status.includes("5")} />
+                <DetailRow label="First found at" value={row.firstFound} />
+                <DetailRow label="Depth" value={row.depth.toString()} />
+                <DetailRow label="No. of inlinks" value={formatNumber(row.inlinks)} />
+                <DetailRow label="Organic traffic" value={formatNumber(row.organicTraffic)} />
+                <DetailRow label="Revenue exposure" value={issue.impact} />
+              </DetailSection>
+
+              <DetailSection title="Issue context">
+                <DetailRow label="Latest affected URLs" value={formatNumber(issue.latest)} />
+                <DetailRow label="Current crawl" value="Latest crawl" />
+                <DetailRow label="Run" value="Core Revenue Pages" />
+              </DetailSection>
+            </div>
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }
 
