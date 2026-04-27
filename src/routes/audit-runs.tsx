@@ -678,6 +678,75 @@ function AuditRunDetailPage({ run, onBack }: { run: AuditRun; onBack: () => void
   );
 }
 
+function ErrorTrendCard({ name, latest, data }: { name: string; latest: number; data: Array<{ crawl: string; value: number }> }) {
+  return (
+    <div className="rounded-lg border border-border bg-surface/45 p-3">
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-sm font-medium text-foreground">{name}</span>
+        <span className="font-mono text-sm font-bold text-destructive">{latest}</span>
+      </div>
+      <div className="mt-3 h-14"><ResponsiveContainer width="100%" height="100%"><LineChart data={data}><Line type="monotone" dataKey="value" stroke="var(--destructive)" strokeWidth={2} dot={false} /></LineChart></ResponsiveContainer></div>
+    </div>
+  );
+}
+
+function ScoreMiniCard({ title, value, change, dataKey }: { title: string; value: number; change: string; dataKey: "inventory" | "discovery" | "indexability" | "distribution" }) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+      <div className="flex items-start justify-between gap-3">
+        <div><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{title}</p><p className="mt-2 font-mono text-3xl font-bold text-foreground">{value}</p></div>
+        <span className="rounded-md border border-primary/25 bg-primary/10 px-2 py-1 font-mono text-xs text-primary">{change}</span>
+      </div>
+      <div className="mt-4 h-20"><ResponsiveContainer width="100%" height="100%"><LineChart data={HEALTH_TREND}><Line type="monotone" dataKey={dataKey} stroke="var(--primary)" strokeWidth={2} dot={false} /></LineChart></ResponsiveContainer></div>
+    </div>
+  );
+}
+
+function FunnelSegment({ segment, index }: { segment: { name: string; total: number; left: number }; index: number }) {
+  const retained = Math.round(((segment.total - segment.left) / segment.total) * 100);
+  return (
+    <div className="relative rounded-xl border border-border bg-surface/45 p-4">
+      {index < FUNNEL_SEGMENTS.length - 1 && <ArrowRight className="absolute -right-5 top-1/2 z-10 hidden h-5 w-5 -translate-y-1/2 text-muted-foreground lg:block" />}
+      <p className="font-semibold text-foreground">{segment.name}</p>
+      <p className="mt-3 font-mono text-3xl font-bold text-primary">{formatNumber(segment.total)}</p>
+      <div className="mt-4 h-2 rounded-full bg-background"><div className="h-full rounded-full bg-primary" style={{ width: `${retained}%` }} /></div>
+      <p className="mt-3 text-xs text-muted-foreground">{formatNumber(segment.left)} left out · {retained}% retained</p>
+    </div>
+  );
+}
+
+function IssueSummaryCard() {
+  return (
+    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+      <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Issues</p>
+      <h2 className="mt-1 text-lg font-semibold">Issue totals</h2>
+      <div className="mt-5 grid gap-3">
+        <IssueCount label="Errors" value="214" tone="danger" />
+        <IssueCount label="Warnings" value="1,482" tone="warning" />
+        <IssueCount label="Notices" value="3,906" tone="neutral" />
+      </div>
+    </div>
+  );
+}
+
+function IssueCount({ label, value, tone }: { label: string; value: string; tone: "danger" | "warning" | "neutral" }) {
+  const toneClass = tone === "danger" ? "text-destructive" : tone === "warning" ? "text-chart-3" : "text-muted-foreground";
+  return <div className="flex items-center justify-between rounded-lg border border-border bg-surface/45 px-4 py-3"><span className="text-sm text-muted-foreground">{label}</span><span className={`font-mono text-2xl font-bold ${toneClass}`}>{value}</span></div>;
+}
+
+function ChartCard({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
+  return <div className="rounded-xl border border-border bg-card p-5 shadow-sm"><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{title}</p><h2 className="mt-1 text-lg font-semibold">{subtitle}</h2><div className="mt-4">{children}</div></div>;
+}
+
+function IssuesTable() {
+  return (
+    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+      <div className="border-b border-border p-5"><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Issue movement</p><h2 className="mt-1 text-lg font-semibold">Issues by crawl change</h2></div>
+      <div className="overflow-x-auto"><table className="w-full min-w-[760px] text-sm"><thead><tr className="border-b border-border bg-surface/40 text-left text-[10px] font-mono uppercase tracking-wider text-muted-foreground"><th className="px-4 py-3">Issues</th><th className="px-4 py-3 text-right">Crawled</th><th className="px-4 py-3 text-right">Changed</th><th className="px-4 py-3 text-right">Added</th><th className="px-4 py-3 text-right">New</th><th className="px-4 py-3 text-right">Removed</th><th className="px-4 py-3 text-right">Missing</th></tr></thead><tbody>{ISSUE_ROWS.map((row) => <tr key={row.issue} className="border-b border-border last:border-0"><td className="px-4 py-3 font-medium text-foreground">{row.issue}</td><td className="px-4 py-3 text-right font-mono">{formatNumber(row.crawled)}</td><td className="px-4 py-3 text-right font-mono">{row.changed}</td><td className="px-4 py-3 text-right font-mono">{row.added}</td><td className="px-4 py-3 text-right font-mono text-destructive">{row.new}</td><td className="px-4 py-3 text-right font-mono text-primary">{row.removed}</td><td className="px-4 py-3 text-right font-mono">{row.missing}</td></tr>)}</tbody></table></div>
+    </div>
+  );
+}
+
 function AuditRow({ run, onOpen }: { run: AuditRun; onOpen: () => void }) {
   return (
     <tr className="group cursor-pointer border-b border-border transition-colors hover:bg-surface/45" onClick={onOpen}>
