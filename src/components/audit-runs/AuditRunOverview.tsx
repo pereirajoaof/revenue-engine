@@ -108,7 +108,7 @@ export function AuditRunOverview({ runId }: { runId: string }) {
               <div className="mt-5 h-[280px]"><ResponsiveContainer width="100%" height="100%"><AreaChart data={HEALTH_TREND}><CartesianGrid stroke="var(--border)" vertical={false} /><XAxis dataKey="crawl" stroke="var(--muted-foreground)" fontSize={11} /><YAxis stroke="var(--muted-foreground)" fontSize={11} domain={[0, 100]} /><Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)" }} /><Area type="monotone" dataKey="score" stroke="var(--primary)" fill="var(--primary)" fillOpacity={0.12} strokeWidth={2} /></AreaChart></ResponsiveContainer></div>
             </div>
             <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
-              <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Main health score errors</p>
+              <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Main health issues</p>
               <div className="mt-3 space-y-2">{ERROR_TRENDS.map((error) => <ErrorTrendCard key={error.name} {...error} />)}</div>
             </div>
           </section>
@@ -122,7 +122,7 @@ export function AuditRunOverview({ runId }: { runId: string }) {
 
           <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
             <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">URL cascade</p>
-            <h2 className="mt-1 text-lg font-semibold">Crawled URLs left out by segment</h2>
+            <h2 className="mt-1 text-lg font-semibold">Passed vs dropped URLs by segment</h2>
             <div className="mt-5 grid gap-3 lg:grid-cols-4">{FUNNEL_SEGMENTS.map((segment, index) => <FunnelSegment key={segment.name} segment={segment} index={index} />)}</div>
           </section>
 
