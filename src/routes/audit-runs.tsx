@@ -430,15 +430,20 @@ function BehaviourStep() {
 }
 
 function LimitsStep() {
+  const [throttleWindow, setThrottleWindow] = useState<"peak" | "offPeak">("peak");
+
   return (
     <div className="grid gap-5 lg:grid-cols-[1fr_0.9fr]">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <FieldBlock label="Max URLs"><Input defaultValue="50000" /></FieldBlock>
-        <FieldBlock label="Max crawl depth"><Input defaultValue="6" /></FieldBlock>
-        <FieldBlock label="Requests / second"><Input defaultValue="8" /></FieldBlock>
-        <FieldBlock label="Concurrent threads"><Input defaultValue="4" /></FieldBlock>
-        <ChoiceCard active icon={<Gauge className="h-4 w-4" />} title="Peak hours slow" detail="Reduce pressure during trading hours" />
-        <ChoiceCard icon={<Zap className="h-4 w-4" />} title="Off-peak faster" detail="Increase throughput when demand is lower" />
+      <div className="space-y-4">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FieldBlock label="Max URLs"><Input defaultValue="50000" /></FieldBlock>
+          <FieldBlock label="Max crawl depth"><Input defaultValue="6" /></FieldBlock>
+          <FieldBlock label="Requests / second"><Input defaultValue="8" /></FieldBlock>
+          <FieldBlock label="Concurrent threads"><Input defaultValue="4" /></FieldBlock>
+          <ChoiceCard active={throttleWindow === "peak"} onClick={() => setThrottleWindow("peak")} icon={<Gauge className="h-4 w-4" />} title="Peak hours slow" detail="Reduce pressure during trading hours" />
+          <ChoiceCard active={throttleWindow === "offPeak"} onClick={() => setThrottleWindow("offPeak")} icon={<Zap className="h-4 w-4" />} title="Off-peak faster" detail="Increase throughput when demand is lower" />
+        </div>
+        <TimeThrottleSettings mode={throttleWindow} />
       </div>
       <AuditPreview title="Performance control" items={["URL caps prevent runaway crawls", "Depth limits keep discovery commercially relevant", "Throttling protects production infrastructure", "Time-based rules are ready for enterprise scheduling"]} />
     </div>
@@ -526,8 +531,32 @@ function AuditDatePicker() {
   );
 }
 
-function ChoiceCard({ active = false, icon, title, detail }: { active?: boolean; icon: ReactNode; title: string; detail: string }) {
-  return <button type="button" className={`min-h-[116px] rounded-xl border p-4 text-left transition-colors ${active ? "border-primary/35 bg-primary/10" : "border-border bg-card hover:bg-surface/60"}`}><span className={`inline-flex h-9 w-9 items-center justify-center rounded-md border ${active ? "border-primary/25 text-primary" : "border-border text-muted-foreground"}`}>{icon}</span><span className="mt-4 block font-semibold text-foreground">{title}</span><span className="mt-1 block text-sm leading-relaxed text-muted-foreground">{detail}</span></button>;
+function TimeThrottleSettings({ mode }: { mode: "peak" | "offPeak" }) {
+  const isPeak = mode === "peak";
+
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <div className="flex items-center gap-3">
+        <span className={`flex h-9 w-9 items-center justify-center rounded-md border ${isPeak ? "border-primary/25 bg-primary/10 text-primary" : "border-border bg-surface/55 text-muted-foreground"}`}>
+          {isPeak ? <Gauge className="h-4 w-4" /> : <Zap className="h-4 w-4" />}
+        </span>
+        <div>
+          <p className="font-semibold text-foreground">{isPeak ? "Peak hours values" : "Off-peak hours values"}</p>
+          <p className="text-sm text-muted-foreground">Set the active window and crawler speed for this throttle profile.</p>
+        </div>
+      </div>
+      <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        <FieldBlock label="From"><Input type="time" defaultValue={isPeak ? "09:00" : "20:00"} /></FieldBlock>
+        <FieldBlock label="To"><Input type="time" defaultValue={isPeak ? "18:00" : "06:00"} /></FieldBlock>
+        <FieldBlock label="Requests / second"><Input type="number" min="1" defaultValue={isPeak ? "3" : "12"} /></FieldBlock>
+        <FieldBlock label="Concurrent threads"><Input type="number" min="1" defaultValue={isPeak ? "2" : "6"} /></FieldBlock>
+      </div>
+    </div>
+  );
+}
+
+function ChoiceCard({ active = false, icon, title, detail, onClick }: { active?: boolean; icon: ReactNode; title: string; detail: string; onClick?: () => void }) {
+  return <button type="button" onClick={onClick} className={`min-h-[116px] rounded-xl border p-4 text-left transition-colors ${active ? "border-primary/35 bg-primary/10" : "border-border bg-card hover:bg-surface/60"}`}><span className={`inline-flex h-9 w-9 items-center justify-center rounded-md border ${active ? "border-primary/25 text-primary" : "border-border text-muted-foreground"}`}>{icon}</span><span className="mt-4 block font-semibold text-foreground">{title}</span><span className="mt-1 block text-sm leading-relaxed text-muted-foreground">{detail}</span></button>;
 }
 
 function SignalCard({ label, value, detail }: { label: string; value: string; detail: string }) {
