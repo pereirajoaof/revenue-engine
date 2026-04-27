@@ -108,7 +108,7 @@ export function AuditRunOverview({ runId }: { runId: string }) {
               <div className="mt-5 h-[280px]"><ResponsiveContainer width="100%" height="100%"><AreaChart data={HEALTH_TREND}><CartesianGrid stroke="var(--border)" vertical={false} /><XAxis dataKey="crawl" stroke="var(--muted-foreground)" fontSize={11} /><YAxis stroke="var(--muted-foreground)" fontSize={11} domain={[0, 100]} /><Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)" }} /><Area type="monotone" dataKey="score" stroke="var(--primary)" fill="var(--primary)" fillOpacity={0.12} strokeWidth={2} /></AreaChart></ResponsiveContainer></div>
             </div>
             <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
-              <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Main health score errors</p>
+              <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Main health issues</p>
               <div className="mt-3 space-y-2">{ERROR_TRENDS.map((error) => <ErrorTrendCard key={error.name} {...error} />)}</div>
             </div>
           </section>
@@ -122,7 +122,7 @@ export function AuditRunOverview({ runId }: { runId: string }) {
 
           <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
             <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">URL cascade</p>
-            <h2 className="mt-1 text-lg font-semibold">Crawled URLs left out by segment</h2>
+            <h2 className="mt-1 text-lg font-semibold">Passed vs dropped URLs by segment</h2>
             <div className="mt-5 grid gap-3 lg:grid-cols-4">{FUNNEL_SEGMENTS.map((segment, index) => <FunnelSegment key={segment.name} segment={segment} index={index} />)}</div>
           </section>
 
@@ -163,7 +163,8 @@ function ScoreMiniCard({ title, value, change, dataKey }: { title: string; value
 
 function FunnelSegment({ segment, index }: { segment: { name: string; total: number; left: number }; index: number }) {
   const retained = Math.round(((segment.total - segment.left) / segment.total) * 100);
-  return <div className="relative rounded-xl border border-border bg-surface/45 p-4">{index < FUNNEL_SEGMENTS.length - 1 && <ArrowRight className="absolute -right-5 top-1/2 z-10 hidden h-5 w-5 -translate-y-1/2 text-muted-foreground lg:block" />}<p className="font-semibold text-foreground">{segment.name}</p><p className="mt-3 font-mono text-3xl font-bold text-primary">{formatNumber(segment.total)}</p><div className="mt-4 h-2 rounded-full bg-background"><div className="h-full rounded-full bg-primary" style={{ width: `${retained}%` }} /></div><p className="mt-3 text-xs text-muted-foreground">{formatNumber(segment.left)} left out · {retained}% retained</p></div>;
+  const passed = segment.total - segment.left;
+  return <div className="relative overflow-hidden rounded-xl border border-border bg-surface/45 p-4">{index < FUNNEL_SEGMENTS.length - 1 && <ArrowRight className="absolute -right-5 top-1/2 z-10 hidden h-5 w-5 -translate-y-1/2 text-muted-foreground lg:block" />}<div className="flex items-start justify-between gap-3"><div><p className="font-semibold text-foreground">{segment.name}</p><p className="mt-1 text-xs text-muted-foreground">{retained}% continue</p></div><span className="rounded-md border border-primary/20 bg-primary/10 px-2 py-1 font-mono text-xs text-primary">{formatNumber(segment.total)}</span></div><div className="mt-4 grid overflow-hidden rounded-lg border border-border bg-background" style={{ gridTemplateColumns: `minmax(88px, ${Math.max(retained, 42)}fr) minmax(86px, ${Math.max(100 - retained, 28)}fr)` }}><div className="bg-primary/15 px-3 py-3"><p className="text-[10px] font-mono uppercase tracking-wider text-primary">Passed</p><p className="mt-1 font-mono text-lg font-bold text-primary">{formatNumber(passed)}</p></div><div className="border-l border-border bg-destructive/10 px-3 py-3 text-right"><p className="text-[10px] font-mono uppercase tracking-wider text-destructive">Dropped</p><p className="mt-1 font-mono text-lg font-bold text-destructive">{formatNumber(segment.left)}</p></div></div><div className="mt-3 h-1.5 rounded-full bg-destructive/20"><div className="h-full rounded-full bg-primary" style={{ width: `${retained}%` }} /></div></div>;
 }
 
 function IssueSummaryCard() {
