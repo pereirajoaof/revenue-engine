@@ -49,7 +49,6 @@ const ME_ITEMS: SettingsItem[] = [
 
 const WORKSPACE_ITEMS: SettingsItem[] = [
   { key: "workspace", label: "Workspace settings", icon: Building2 },
-  { key: "members", label: "Members", icon: Users },
   { key: "integrations", label: "Integrations", icon: Link2 },
   { key: "api", label: "API keys", icon: KeyRound },
   { key: "billing", label: "Billing", icon: CreditCard },
