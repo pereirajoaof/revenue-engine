@@ -6,7 +6,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { MAIN_HEALTH_ISSUES, MAIN_HEALTH_ISSUE_URLS } from "@/components/audit-runs/AuditRunOverview";
 
-export const Route = createFileRoute("/audit-runs_/$runId/issues/$issueId")({
+export const Route = createFileRoute("/audit-runs_/$runId_/issues/$issueId")({
   component: AuditRunIssueRoute,
   head: () => ({
     meta: [
