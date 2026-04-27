@@ -56,6 +56,17 @@ const WORKSPACE_ITEMS: SettingsItem[] = [
   { key: "apps", label: "Connected apps", icon: Plug },
 ];
 
+const TEAM_MEMBERS = [
+  { email: "benoit@busbud.com", name: "Benoit Lemoine", status: "Active", auth: "Basic", role: "Viewer" },
+  { email: "growth@busbud.com", name: "-", status: "Active", auth: "Basic", role: "Admin" },
+  { email: "bruno@buson.com.br", name: "Bruno Silva", status: "Active", auth: "Basic", role: "Admin" },
+  { email: "chris@deepcrawl.com", name: "Chris Spann", status: "Active", auth: "Basic", role: "Admin" },
+  { email: "support@buson.com.br", name: "-", status: "Email unconfirmed", auth: "Basic", role: "Viewer" },
+  { email: "james.leisy@lumar.io", name: "James Leisy", status: "Active", auth: "Basic", role: "Admin" },
+  { email: "joao.pereira@busbud.com", name: "Joao Filipe Pereira", status: "Active", auth: "Basic", role: "Admin" },
+  { email: "joshua.eden@deepcrawl.com", name: "Joshua Eden", status: "Active", auth: "Basic", role: "Admin" },
+];
+
 function AccountSettingsRoute() {
   const [activeSection, setActiveSection] = useState<SectionKey>("account");
   const activeLabel = [...ME_ITEMS, ...WORKSPACE_ITEMS].find((item) => item.key === activeSection)?.label ?? "My account";
