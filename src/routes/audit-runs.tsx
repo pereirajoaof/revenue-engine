@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { useMemo, useState, type ReactNode } from "react";
 import {
@@ -140,7 +140,7 @@ function AuditRunsPage() {
   const [page, setPage] = useState(1);
   const [createAuditOpen, setCreateAuditOpen] = useState(false);
   const [createAuditStep, setCreateAuditStep] = useState(1);
-  const [selectedRun, setSelectedRun] = useState<AuditRun | null>(null);
+  const navigate = useNavigate();
   const pageSize = 5;
 
   const filteredRuns = useMemo(() => {
@@ -163,10 +163,6 @@ function AuditRunsPage() {
   const averageHealth = Math.round(AUDIT_RUNS.reduce((sum, run) => sum + run.healthScore, 0) / AUDIT_RUNS.length);
   const monitoredUrls = AUDIT_RUNS.reduce((sum, run) => sum + run.urlsCrawled, 0);
   const criticalAlerts = AUDIT_RUNS.reduce((sum, run) => sum + run.alerts, 0);
-
-  if (selectedRun) {
-    return <AuditRunDetailPage run={selectedRun} onBack={() => setSelectedRun(null)} />;
-  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -246,7 +242,7 @@ function AuditRunsPage() {
                   </thead>
                   <tbody>
                     {visibleRuns.map((run) => (
-                      <AuditRow key={run.id} run={run} onOpen={() => setSelectedRun(run)} />
+                      <AuditRow key={run.id} run={run} onOpen={() => navigate({ to: "/audit-runs/$runId", params: { runId: run.id } })} />
                     ))}
                   </tbody>
                 </table>
