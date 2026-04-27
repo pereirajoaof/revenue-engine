@@ -430,15 +430,20 @@ function BehaviourStep() {
 }
 
 function LimitsStep() {
+  const [throttleWindow, setThrottleWindow] = useState<"peak" | "offPeak">("peak");
+
   return (
     <div className="grid gap-5 lg:grid-cols-[1fr_0.9fr]">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <FieldBlock label="Max URLs"><Input defaultValue="50000" /></FieldBlock>
-        <FieldBlock label="Max crawl depth"><Input defaultValue="6" /></FieldBlock>
-        <FieldBlock label="Requests / second"><Input defaultValue="8" /></FieldBlock>
-        <FieldBlock label="Concurrent threads"><Input defaultValue="4" /></FieldBlock>
-        <ChoiceCard active icon={<Gauge className="h-4 w-4" />} title="Peak hours slow" detail="Reduce pressure during trading hours" />
-        <ChoiceCard icon={<Zap className="h-4 w-4" />} title="Off-peak faster" detail="Increase throughput when demand is lower" />
+      <div className="space-y-4">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FieldBlock label="Max URLs"><Input defaultValue="50000" /></FieldBlock>
+          <FieldBlock label="Max crawl depth"><Input defaultValue="6" /></FieldBlock>
+          <FieldBlock label="Requests / second"><Input defaultValue="8" /></FieldBlock>
+          <FieldBlock label="Concurrent threads"><Input defaultValue="4" /></FieldBlock>
+          <ChoiceCard active={throttleWindow === "peak"} onClick={() => setThrottleWindow("peak")} icon={<Gauge className="h-4 w-4" />} title="Peak hours slow" detail="Reduce pressure during trading hours" />
+          <ChoiceCard active={throttleWindow === "offPeak"} onClick={() => setThrottleWindow("offPeak")} icon={<Zap className="h-4 w-4" />} title="Off-peak faster" detail="Increase throughput when demand is lower" />
+        </div>
+        <TimeThrottleSettings mode={throttleWindow} />
       </div>
       <AuditPreview title="Performance control" items={["URL caps prevent runaway crawls", "Depth limits keep discovery commercially relevant", "Throttling protects production infrastructure", "Time-based rules are ready for enterprise scheduling"]} />
     </div>
