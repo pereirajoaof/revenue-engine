@@ -48,6 +48,8 @@ const ERROR_TRENDS = [
   { name: "Broken internal links", latest: 18, data: [{ crawl: "C-5", value: 42 }, { crawl: "C-4", value: 36 }, { crawl: "C-3", value: 31 }, { crawl: "C-2", value: 24 }, { crawl: "Latest", value: 18 }] },
   { name: "Canonical conflicts", latest: 11, data: [{ crawl: "C-5", value: 23 }, { crawl: "C-4", value: 20 }, { crawl: "C-3", value: 19 }, { crawl: "C-2", value: 15 }, { crawl: "Latest", value: 11 }] },
   { name: "Noindex on money pages", latest: 7, data: [{ crawl: "C-5", value: 15 }, { crawl: "C-4", value: 13 }, { crawl: "C-3", value: 10 }, { crawl: "C-2", value: 9 }, { crawl: "Latest", value: 7 }] },
+  { name: "Redirect chain depth", latest: 6, data: [{ crawl: "C-5", value: 18 }, { crawl: "C-4", value: 16 }, { crawl: "C-3", value: 12 }, { crawl: "C-2", value: 9 }, { crawl: "Latest", value: 6 }] },
+  { name: "Missing structured data", latest: 24, data: [{ crawl: "C-5", value: 61 }, { crawl: "C-4", value: 54 }, { crawl: "C-3", value: 43 }, { crawl: "C-2", value: 35 }, { crawl: "Latest", value: 24 }] },
 ];
 
 const FUNNEL_SEGMENTS = [
@@ -105,17 +107,17 @@ export function AuditRunOverview({ runId }: { runId: string }) {
               </div>
               <div className="mt-5 h-[280px]"><ResponsiveContainer width="100%" height="100%"><AreaChart data={HEALTH_TREND}><CartesianGrid stroke="var(--border)" vertical={false} /><XAxis dataKey="crawl" stroke="var(--muted-foreground)" fontSize={11} /><YAxis stroke="var(--muted-foreground)" fontSize={11} domain={[0, 100]} /><Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)" }} /><Area type="monotone" dataKey="score" stroke="var(--primary)" fill="var(--primary)" fillOpacity={0.12} strokeWidth={2} /></AreaChart></ResponsiveContainer></div>
             </div>
-            <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+            <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
               <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Main health score errors</p>
-              <div className="mt-4 space-y-4">{ERROR_TRENDS.map((error) => <ErrorTrendCard key={error.name} {...error} />)}</div>
+              <div className="mt-3 space-y-2">{ERROR_TRENDS.map((error) => <ErrorTrendCard key={error.name} {...error} />)}</div>
             </div>
           </section>
 
           <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <ScoreMiniCard title="Inventory" value={92} change="+4.8%" dataKey="inventory" />
-            <ScoreMiniCard title="Discovery" value={86} change="+6.1%" dataKey="discovery" />
-            <ScoreMiniCard title="Indexability" value={84} change="+3.4%" dataKey="indexability" />
-            <ScoreMiniCard title="Distribution" value={82} change="+2.9%" dataKey="distribution" />
+            <ScoreMiniCard title="Inventory score" value={92} change="+4.8%" dataKey="inventory" />
+            <ScoreMiniCard title="Discovery score" value={86} change="+6.1%" dataKey="discovery" />
+            <ScoreMiniCard title="Indexability score" value={84} change="+3.4%" dataKey="indexability" />
+            <ScoreMiniCard title="Distribution score" value={82} change="+2.9%" dataKey="distribution" />
           </section>
 
           <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
@@ -152,11 +154,11 @@ function FilterSelect({ label, value, options }: { label: string; value: string;
 }
 
 function ErrorTrendCard({ name, latest, data }: { name: string; latest: number; data: Array<{ crawl: string; value: number }> }) {
-  return <div className="rounded-lg border border-border bg-surface/45 p-3"><div className="flex items-center justify-between gap-3"><span className="text-sm font-medium text-foreground">{name}</span><span className="font-mono text-sm font-bold text-destructive">{latest}</span></div><div className="mt-3 h-14"><ResponsiveContainer width="100%" height="100%"><LineChart data={data}><Line type="monotone" dataKey="value" stroke="var(--destructive)" strokeWidth={2} dot={false} /></LineChart></ResponsiveContainer></div></div>;
+  return <div className="rounded-lg border border-border bg-surface/45 px-3 py-2"><div className="flex items-center justify-between gap-3"><span className="text-xs font-medium text-foreground">{name}</span><span className="font-mono text-xs font-bold text-destructive">{latest}</span></div><div className="mt-2 h-9"><ResponsiveContainer width="100%" height="100%"><LineChart data={data}><Line type="monotone" dataKey="value" stroke="var(--destructive)" strokeWidth={2} dot={false} /></LineChart></ResponsiveContainer></div></div>;
 }
 
 function ScoreMiniCard({ title, value, change, dataKey }: { title: string; value: number; change: string; dataKey: "inventory" | "discovery" | "indexability" | "distribution" }) {
-  return <div className="rounded-xl border border-border bg-card p-5 shadow-sm"><div className="flex items-start justify-between gap-3"><div><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{title}</p><p className="mt-2 font-mono text-3xl font-bold text-foreground">{value}</p></div><span className="rounded-md border border-primary/25 bg-primary/10 px-2 py-1 font-mono text-xs text-primary">{change}</span></div><div className="mt-4 h-20"><ResponsiveContainer width="100%" height="100%"><LineChart data={HEALTH_TREND}><Line type="monotone" dataKey={dataKey} stroke="var(--primary)" strokeWidth={2} dot={false} /></LineChart></ResponsiveContainer></div></div>;
+  return <div className="rounded-xl border border-border bg-card p-5 shadow-sm"><div className="flex items-start justify-between gap-3"><div><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{title}</p><p className="mt-2 font-mono text-3xl font-bold text-foreground">{value}<span className="ml-1 text-sm text-muted-foreground">/100</span></p></div><span className="rounded-md border border-primary/25 bg-primary/10 px-2 py-1 font-mono text-xs text-primary">{change}</span></div><div className="mt-4 h-20"><ResponsiveContainer width="100%" height="100%"><LineChart data={HEALTH_TREND}><Line type="monotone" dataKey={dataKey} stroke="var(--primary)" strokeWidth={2} dot={false} /></LineChart></ResponsiveContainer></div></div>;
 }
 
 function FunnelSegment({ segment, index }: { segment: { name: string; total: number; left: number }; index: number }) {
