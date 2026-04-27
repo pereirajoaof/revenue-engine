@@ -59,7 +59,9 @@ export function DashboardNav() {
   const isDomainAgeRoute = path === "/brand-authority/domain-age";
   const isPageAgeRoute = path.startsWith("/brand-authority/page-age");
   const isSiteFocusRoute = path === "/brand-authority/site-focus";
-  const isAuditRunsRoute = path === "/audit-runs";
+  const isAuditRunsRoute = path.startsWith("/audit-runs");
+  const isAuditRunDetailRoute = path.startsWith("/audit-runs/");
+  const auditRunId = isAuditRunDetailRoute ? path.split("/")[2] : "core-commerce";
   const activeDriver = isTechRoute
     ? "technical-health"
     : isBrandRoute
@@ -241,6 +243,22 @@ export function DashboardNav() {
             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${auditRunsOpen ? "" : "-rotate-90"}`} />
           </button>
         </div>
+        {auditRunsOpen && (
+          <div className="ml-3 border-l border-border pl-3 pt-1">
+            <Link
+              to="/audit-runs/$runId"
+              params={{ runId: auditRunId }}
+              className={`flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                isAuditRunDetailRoute
+                  ? "border border-primary/20 bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
+              }`}
+            >
+              <Gauge className="h-3 w-3 shrink-0" />
+              <span className="truncate">Overview</span>
+            </Link>
+          </div>
+        )}
         <NavItem icon={<Search className="w-4 h-4" />} label="Keyword Demand" />
         <NavItem icon={<Bell className="w-4 h-4" />} label="Alerts" />
         <NavItem
