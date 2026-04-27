@@ -5,6 +5,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Bot,
+  Camera,
   CalendarClock,
   CheckCircle2,
   ChevronLeft,
@@ -347,7 +348,7 @@ function CrawlModeStep() {
   return (
     <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
       <div className="space-y-3">
-        <ChoiceCard icon={<CameraIcon />} title="One-time snapshot" detail="Run once for migration checks, releases, or technical baselines" />
+        <ChoiceCard icon={<Camera className="h-4 w-4" />} title="One-time snapshot" detail="Run once for migration checks, releases, or technical baselines" />
         <ChoiceCard active icon={<CalendarClock className="h-4 w-4" />} title="Scheduled audit" detail="Weekly or monthly diagnostics for stable sections" />
         <ChoiceCard icon={<Zap className="h-4 w-4" />} title="Always-on crawl" detail="Continuous low-frequency monitoring of revenue-critical surfaces" />
         <ToggleRow label="Prioritise high-value pages" detail="Revenue pages and top-traffic URLs crawl first" checked />
