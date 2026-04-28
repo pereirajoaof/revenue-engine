@@ -680,7 +680,7 @@ function AuditRunDetailPage({ run, onBack }: { run: AuditRun; onBack: () => void
               <div className="flex flex-wrap items-center gap-2">
                 <FilterSelect label="Crawl" value="Latest crawl" options={["Latest crawl", "Apr 25 crawl", "Apr 18 crawl", "Apr 11 crawl"]} onChange={() => undefined} />
                 <FilterSelect label="Page type" value="All page types" options={["All page types", "Route pages", "Blog", "Category", "Product"]} onChange={() => undefined} />
-                <Button><Plus className="h-4 w-4" /> New crawl</Button>
+                <Button><Play className="h-4 w-4" /> Run Again</Button>
                 <Button variant="outline" size="icon" aria-label="Crawl settings"><Settings2 className="h-4 w-4" /></Button>
                 <ThemeToggle />
               </div>

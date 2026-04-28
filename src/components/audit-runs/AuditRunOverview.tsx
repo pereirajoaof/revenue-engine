@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Plus, Settings2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Play, Settings2 } from "lucide-react";
 import {
   Area,
   AreaChart,
@@ -104,7 +104,7 @@ export function AuditRunOverview({ runId }: { runId: string }) {
               <div className="flex flex-wrap items-end gap-2">
                 <FilterSelect label="Crawl" value="Latest crawl" options={["Latest crawl", "Apr 25 crawl", "Apr 18 crawl", "Apr 11 crawl"]} />
                 <FilterSelect label="Page type" value="All page types" options={["All page types", "Route pages", "Blog", "Category", "Product"]} />
-                <Button><Plus className="h-4 w-4" /> New crawl</Button>
+                <Button><Play className="h-4 w-4" /> Run Again</Button>
                 <Button variant="outline" size="icon" asChild aria-label="Crawl settings">
                   <Link to="/audit-runs/$runId/settings" params={{ runId: run.id }}>
                     <Settings2 className="h-4 w-4" />
