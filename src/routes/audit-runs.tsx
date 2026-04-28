@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { useMemo, useState, type ReactNode } from "react";
 import {
@@ -826,7 +826,7 @@ function AuditRow({ run, onOpen }: { run: AuditRun; onOpen: () => void }) {
         </div>
       </td>
       <td className="px-5 py-4 text-right" onClick={(event) => event.stopPropagation()}>
-        <AuditActions />
+        <AuditActions runId={run.id} />
       </td>
     </tr>
   );
@@ -850,7 +850,7 @@ function AuditConnectionMarker({ state }: { state: AuditRun["connectionState"] }
   return <div className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border ${className}`} aria-label={label} title={label}><Icon className="h-4 w-4" /></div>;
 }
 
-function AuditActions() {
+function AuditActions({ runId }: { runId: string }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -863,7 +863,11 @@ function AuditActions() {
         <DropdownMenuItem><Clock3 className="h-4 w-4" /> View run history</DropdownMenuItem>
         <DropdownMenuItem><CalendarClock className="h-4 w-4" /> Edit schedule</DropdownMenuItem>
         <DropdownMenuItem><XCircle className="h-4 w-4" /> Remove schedule</DropdownMenuItem>
-        <DropdownMenuItem><Settings2 className="h-4 w-4" /> Edit settings</DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/audit-runs/$runId/settings" params={{ runId }}>
+            <Settings2 className="h-4 w-4" /> Edit settings
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem><Copy className="h-4 w-4" /> Clone configuration</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="text-destructive focus:text-destructive"><Trash2 className="h-4 w-4" /> Delete configuration</DropdownMenuItem>
