@@ -62,13 +62,15 @@ export function DashboardNav() {
   const isAuditRunsRoute = path.startsWith("/audit-runs");
   const isAuditRunDetailRoute = path.startsWith("/audit-runs/");
   const auditRunId = isAuditRunDetailRoute ? path.split("/")[2] : "core-commerce";
+  const isAuditSetupRoute = path === `/audit-runs/${auditRunId}/settings`;
+  const isAuditOverviewRoute = isAuditRunDetailRoute && !isAuditSetupRoute;
   const activeDriver = isTechRoute
     ? "technical-health"
     : isBrandRoute
       ? "brand-authority"
       : path === "/dashboard"
-      ? search?.driver
-      : undefined;
+        ? search?.driver
+        : undefined;
   const isRevenueParentActive = path === "/dashboard" || isTechRoute || isBrandRoute;
   const [driversOpen, setDriversOpen] = useState(false);
   const [auditRunsOpen, setAuditRunsOpen] = useState(false);
@@ -93,7 +95,9 @@ export function DashboardNav() {
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        <p className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Workspace</p>
+        <p className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+          Workspace
+        </p>
 
         <div>
           <div
@@ -103,10 +107,7 @@ export function DashboardNav() {
                 : "text-foreground hover:bg-surface/60"
             }`}
           >
-            <Link
-              to="/dashboard"
-              className="flex items-center gap-2.5 flex-1 min-w-0 font-medium"
-            >
+            <Link to="/dashboard" className="flex items-center gap-2.5 flex-1 min-w-0 font-medium">
               <LayoutDashboard className="w-4 h-4 shrink-0" />
               <span className="truncate">Revenue & Opportunities</span>
             </Link>
@@ -145,39 +146,39 @@ export function DashboardNav() {
                       </Link>
                       {isActive && (
                         <>
-                        <Link
-                          to="/brand-authority/domain-age"
-                          className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                            isDomainAgeRoute
-                              ? "bg-primary/10 text-primary border border-primary/20"
-                              : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
-                          }`}
-                        >
-                          <Clock className="w-3 h-3 shrink-0" />
-                          <span className="truncate">Domain Age</span>
-                        </Link>
-                        <Link
-                          to="/brand-authority/page-age"
-                          className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                            isPageAgeRoute
-                              ? "bg-primary/10 text-primary border border-primary/20"
-                              : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
-                          }`}
-                        >
-                          <FileText className="w-3 h-3 shrink-0" />
-                          <span className="truncate">Page Age</span>
-                        </Link>
-                        <Link
-                          to="/brand-authority/site-focus"
-                          className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                            isSiteFocusRoute
-                              ? "bg-primary/10 text-primary border border-primary/20"
-                              : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
-                          }`}
-                        >
-                          <Target className="w-3 h-3 shrink-0" />
-                          <span className="truncate">Site Focus</span>
-                        </Link>
+                          <Link
+                            to="/brand-authority/domain-age"
+                            className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                              isDomainAgeRoute
+                                ? "bg-primary/10 text-primary border border-primary/20"
+                                : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
+                            }`}
+                          >
+                            <Clock className="w-3 h-3 shrink-0" />
+                            <span className="truncate">Domain Age</span>
+                          </Link>
+                          <Link
+                            to="/brand-authority/page-age"
+                            className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                              isPageAgeRoute
+                                ? "bg-primary/10 text-primary border border-primary/20"
+                                : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
+                            }`}
+                          >
+                            <FileText className="w-3 h-3 shrink-0" />
+                            <span className="truncate">Page Age</span>
+                          </Link>
+                          <Link
+                            to="/brand-authority/site-focus"
+                            className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                              isSiteFocusRoute
+                                ? "bg-primary/10 text-primary border border-primary/20"
+                                : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
+                            }`}
+                          >
+                            <Target className="w-3 h-3 shrink-0" />
+                            <span className="truncate">Site Focus</span>
+                          </Link>
                         </>
                       )}
                     </div>
@@ -240,22 +241,47 @@ export function DashboardNav() {
             aria-expanded={auditRunsOpen}
             className="p-0.5 rounded text-muted-foreground hover:text-foreground hover:bg-surface focus:outline-none focus:ring-2 focus:ring-ring"
           >
-            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${auditRunsOpen ? "" : "-rotate-90"}`} />
+            <ChevronDown
+              className={`w-3.5 h-3.5 transition-transform ${auditRunsOpen ? "" : "-rotate-90"}`}
+            />
           </button>
         </div>
         {auditRunsOpen && (
           <div className="ml-3 border-l border-border pl-3 pt-1">
             <Link
+              to="/audit-runs"
+              className={`flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                path === "/audit-runs"
+                  ? "border border-primary/20 bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
+              }`}
+            >
+              <Bot className="h-3 w-3 shrink-0" />
+              <span className="truncate">Runs</span>
+            </Link>
+            <Link
               to="/audit-runs/$runId"
               params={{ runId: auditRunId }}
-              className={`flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                isAuditRunDetailRoute
+              className={`mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                isAuditOverviewRoute
                   ? "border border-primary/20 bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
               }`}
             >
               <Gauge className="h-3 w-3 shrink-0" />
               <span className="truncate">Overview</span>
+            </Link>
+            <Link
+              to="/audit-runs/$runId/settings"
+              params={{ runId: auditRunId }}
+              className={`mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                isAuditSetupRoute
+                  ? "border border-primary/20 bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
+              }`}
+            >
+              <Settings className="h-3 w-3 shrink-0" />
+              <span className="truncate">Setup</span>
             </Link>
           </div>
         )}
@@ -277,7 +303,9 @@ export function DashboardNav() {
             </div>
             <div className="min-w-0 flex-1 text-left">
               <p className="text-xs font-medium truncate">{active.name}</p>
-              <p className="text-[10px] text-muted-foreground font-mono truncate">{active.domain}</p>
+              <p className="text-[10px] text-muted-foreground font-mono truncate">
+                {active.domain}
+              </p>
             </div>
             <ChevronUp className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
           </DropdownMenuTrigger>
@@ -293,9 +321,13 @@ export function DashboardNav() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-xs font-medium truncate">{p.name}</p>
-                    <p className="text-[10px] text-muted-foreground font-mono truncate">{p.domain}</p>
+                    <p className="text-[10px] text-muted-foreground font-mono truncate">
+                      {p.domain}
+                    </p>
                   </div>
-                  {p.initials === active.initials && <Check className="w-3.5 h-3.5 text-primary shrink-0" />}
+                  {p.initials === active.initials && (
+                    <Check className="w-3.5 h-3.5 text-primary shrink-0" />
+                  )}
                 </DropdownMenuItem>
               ))}
               <DropdownMenuItem className="gap-2 text-muted-foreground">
@@ -310,7 +342,10 @@ export function DashboardNav() {
                 <span className="text-xs">Account settings</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleLogout} className="gap-2 text-destructive focus:text-destructive">
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="gap-2 text-destructive focus:text-destructive"
+            >
               <LogOut className="w-4 h-4" />
               <span className="text-xs">Log out</span>
             </DropdownMenuItem>
@@ -318,7 +353,10 @@ export function DashboardNav() {
         </DropdownMenu>
       </div>
 
-      <Link to="/" className="px-5 py-3 text-[10px] font-mono uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors border-t border-border">
+      <Link
+        to="/"
+        className="px-5 py-3 text-[10px] font-mono uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors border-t border-border"
+      >
         ← Back to site
       </Link>
     </aside>
