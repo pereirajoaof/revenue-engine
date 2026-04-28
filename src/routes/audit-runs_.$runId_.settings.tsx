@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -260,7 +260,7 @@ function AuditSettingsRoute() {
   );
 }
 
-function SettingsPanel({ eyebrow, title, icon, children }: { eyebrow: string; title: string; icon: React.ReactNode; children: React.ReactNode }) {
+function SettingsPanel({ eyebrow, title, icon, children }: { eyebrow: string; title: string; icon: ReactNode; children: ReactNode }) {
   return (
     <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
       <div className="mb-5 flex items-center gap-3">
@@ -275,11 +275,11 @@ function SettingsPanel({ eyebrow, title, icon, children }: { eyebrow: string; ti
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, children }: { label: string; children: ReactNode }) {
   return <div className="space-y-2"><Label>{label}</Label>{children}</div>;
 }
 
-function ReadonlyField({ label, children }: { label: string; children: React.ReactNode }) {
+function ReadonlyField({ label, children }: { label: string; children: ReactNode }) {
   return <div className="space-y-2"><Label>{label}</Label><div className="flex h-9 items-center rounded-md border border-border bg-surface/70 px-3">{children}</div></div>;
 }
 
