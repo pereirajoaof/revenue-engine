@@ -26,8 +26,8 @@ import { Route as AuditRunsRunIdRouteImport } from './routes/audit-runs_.$runId'
 import { Route as TechnicalHealthCwvOpportunitiesRouteImport } from './routes/technical-health.cwv.opportunities'
 import { Route as TechnicalHealthCwvDeepDiveRouteImport } from './routes/technical-health.cwv.deep-dive'
 import { Route as BrandAuthorityPageAgeOutliersRouteImport } from './routes/brand-authority_.page-age.outliers'
-import { Route as AuditRunsRunIdSettingsRouteImport } from './routes/audit-runs_.$runId_.settings'
 import { Route as AuditRunsRunIdUrlsRouteImport } from './routes/audit-runs_.$runId_.urls'
+import { Route as AuditRunsRunIdSettingsRouteImport } from './routes/audit-runs_.$runId_.settings'
 import { Route as AuditRunsRunIdIssuesIssueIdRouteImport } from './routes/audit-runs_.$runId_.issues.$issueId'
 
 const TechnicalHealthRoute = TechnicalHealthRouteImport.update({
@@ -118,14 +118,14 @@ const BrandAuthorityPageAgeOutliersRoute =
     path: '/outliers',
     getParentRoute: () => BrandAuthorityPageAgeRoute,
   } as any)
-const AuditRunsRunIdSettingsRoute = AuditRunsRunIdSettingsRouteImport.update({
-  id: '/audit-runs_/$runId_/settings',
-  path: '/audit-runs/$runId/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuditRunsRunIdUrlsRoute = AuditRunsRunIdUrlsRouteImport.update({
   id: '/audit-runs_/$runId_/urls',
   path: '/audit-runs/$runId/urls',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditRunsRunIdSettingsRoute = AuditRunsRunIdSettingsRouteImport.update({
+  id: '/audit-runs_/$runId_/settings',
+  path: '/audit-runs/$runId/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuditRunsRunIdIssuesIssueIdRoute =
@@ -408,18 +408,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrandAuthorityPageAgeOutliersRouteImport
       parentRoute: typeof BrandAuthorityPageAgeRoute
     }
-    '/audit-runs_/$runId_/settings': {
-      id: '/audit-runs_/$runId_/settings'
-      path: '/audit-runs/$runId/settings'
-      fullPath: '/audit-runs/$runId/settings'
-      preLoaderRoute: typeof AuditRunsRunIdSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/audit-runs_/$runId_/urls': {
       id: '/audit-runs_/$runId_/urls'
       path: '/audit-runs/$runId/urls'
       fullPath: '/audit-runs/$runId/urls'
       preLoaderRoute: typeof AuditRunsRunIdUrlsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit-runs_/$runId_/settings': {
+      id: '/audit-runs_/$runId_/settings'
+      path: '/audit-runs/$runId/settings'
+      fullPath: '/audit-runs/$runId/settings'
+      preLoaderRoute: typeof AuditRunsRunIdSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/audit-runs_/$runId_/issues/$issueId': {
