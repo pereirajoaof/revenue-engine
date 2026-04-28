@@ -76,11 +76,13 @@ export function DashboardNav() {
   const [auditRunsOpen, setAuditRunsOpen] = useState(false);
 
   useEffect(() => {
-    if (isAuditRunsRoute) {
+    if (isAuditRunDetailRoute) {
       setDriversOpen(false);
       setAuditRunsOpen(true);
+    } else if (isAuditRunsRoute) {
+      setAuditRunsOpen(false);
     }
-  }, [isAuditRunsRoute]);
+  }, [isAuditRunDetailRoute, isAuditRunsRoute]);
 
   const handleLogout = () => {
     navigate({ to: "/" });
@@ -246,7 +248,7 @@ export function DashboardNav() {
             />
           </button>
         </div>
-        {auditRunsOpen && (
+        {auditRunsOpen && isAuditRunDetailRoute && (
           <div className="ml-3 border-l border-border pl-3 pt-1">
             <Link
               to="/audit-runs/$runId"
@@ -258,7 +260,7 @@ export function DashboardNav() {
               }`}
             >
               <Gauge className="h-3 w-3 shrink-0" />
-              <span className="truncate">Overview</span>
+              <span className="truncate">Run Analysis</span>
             </Link>
             <Link
               to="/audit-runs/$runId/settings"
