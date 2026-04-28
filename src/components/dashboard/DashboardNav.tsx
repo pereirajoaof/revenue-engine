@@ -64,7 +64,8 @@ export function DashboardNav() {
   const auditRunId = isAuditRunDetailRoute ? path.split("/")[2] : "core-commerce";
   const isAuditSetupRoute = path === `/audit-runs/${auditRunId}/settings`;
   const isAuditUrlExplorerRoute = path === `/audit-runs/${auditRunId}/urls`;
-  const isAuditOverviewRoute = isAuditRunDetailRoute && !isAuditSetupRoute && !isAuditUrlExplorerRoute;
+  const isAuditOverviewRoute =
+    isAuditRunDetailRoute && !isAuditSetupRoute && !isAuditUrlExplorerRoute;
   const activeDriver = isTechRoute
     ? "technical-health"
     : isBrandRoute
