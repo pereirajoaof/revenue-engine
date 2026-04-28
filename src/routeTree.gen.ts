@@ -486,6 +486,7 @@ const rootRouteChildren: RootRouteChildren = {
   BrandAuthorityPageAgeRoute: BrandAuthorityPageAgeRouteWithChildren,
   BrandAuthoritySiteFocusRoute: BrandAuthoritySiteFocusRoute,
   AuditRunsRunIdSettingsRoute: AuditRunsRunIdSettingsRoute,
+  AuditRunsRunIdUrlsRoute: AuditRunsRunIdUrlsRoute,
   AuditRunsRunIdIssuesIssueIdRoute: AuditRunsRunIdIssuesIssueIdRoute,
 }
 export const routeTree = rootRouteImport
