@@ -415,6 +415,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuditRunsRunIdSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/audit-runs_/$runId_/urls': {
+      id: '/audit-runs_/$runId_/urls'
+      path: '/audit-runs/$runId/urls'
+      fullPath: '/audit-runs/$runId/urls'
+      preLoaderRoute: typeof AuditRunsRunIdUrlsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/audit-runs_/$runId_/issues/$issueId': {
       id: '/audit-runs_/$runId_/issues/$issueId'
       path: '/audit-runs/$runId/issues/$issueId'
