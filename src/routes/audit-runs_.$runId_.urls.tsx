@@ -383,6 +383,18 @@ const ISSUE_OPTIONS: IssueFilter[] = [
   "Noindex",
 ];
 const SEGMENT_OPTIONS: SegmentFilter[] = ["All", "Added", "Changed", "Missing"];
+const CRAWL_HISTORY = [
+  { label: "18 Feb", factor: 0.74 },
+  { label: "25 Feb", factor: 0.18 },
+  { label: "5 Mar", factor: 0.86 },
+  { label: "12 Mar", factor: 0.22 },
+  { label: "19 Mar", factor: 0.31 },
+  { label: "26 Mar", factor: 0.42 },
+  { label: "2 Apr", factor: 0.24 },
+  { label: "9 Apr", factor: 1 },
+  { label: "16 Apr", factor: 0.28 },
+  { label: "23 Apr", factor: 0.34 },
+];
 
 function UrlExplorerRoute() {
   const { runId } = Route.useParams() as { runId: string };
@@ -418,9 +430,18 @@ function UrlExplorerRoute() {
     });
   }, [depth, indexable, issue, pageType, query, segment, status]);
 
-  const issueCount = filteredRows.filter((row) => row.issue !== "None").length;
-  const indexableCount = filteredRows.filter((row) => row.indexable === "Yes").length;
-  const errorCount = filteredRows.filter((row) => row.status >= 400).length;
+  const chartRows = useMemo(() => {
+    const filteredShare = filteredRows.length / Math.max(URL_ROWS.length, 1);
+    const filterWeight = hasFocusedFilter({ pageType, status, indexable, depth, issue, segment }) ? 0.58 : 1;
+    const baseline = Math.max(1, Math.round(run.urlsCrawled * filteredShare * filterWeight));
+
+    return CRAWL_HISTORY.map((item) => ({
+      ...item,
+      pages: Math.max(0, Math.round(baseline * item.factor)),
+    }));
+  }, [depth, filteredRows.length, indexable, issue, pageType, run.urlsCrawled, segment, status]);
+
+  const maxChartPages = Math.max(...chartRows.map((item) => item.pages), 1);
   const hasFilters =
     query ||
     pageType !== "All" ||
@@ -477,39 +498,14 @@ function UrlExplorerRoute() {
         </header>
 
         <main className="space-y-5 px-6 py-6 lg:px-8">
-          <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <ExplorerKpi
-              label="Filtered URLs"
-              value={formatNumber(filteredRows.length)}
-              detail={`${formatNumber(URL_ROWS.length)} loaded in sample`}
-            />
-            <ExplorerKpi
-              label="Indexable"
-              value={formatNumber(indexableCount)}
-              detail={`${Math.round((indexableCount / Math.max(filteredRows.length, 1)) * 100)}% of filtered`}
-            />
-            <ExplorerKpi
-              label="With issues"
-              value={formatNumber(issueCount)}
-              detail="Needs technical review"
-              tone="warning"
-            />
-            <ExplorerKpi
-              label="HTTP errors"
-              value={formatNumber(errorCount)}
-              detail="4xx and 5xx responses"
-              tone="danger"
-            />
-          </section>
-
           <section className="rounded-xl border border-border bg-card shadow-sm">
             <div className="border-b border-border p-4 lg:p-5">
               <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                 <div>
                   <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-                    Crawl inventory
+                    Crawl history
                   </p>
-                  <h2 className="mt-1 text-lg font-semibold">All crawled URLs</h2>
+                  <h2 className="mt-1 text-lg font-semibold">Pages over time</h2>
                 </div>
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                   <div className="relative w-full sm:w-[360px]">
@@ -564,6 +560,55 @@ function UrlExplorerRoute() {
                   options={SEGMENT_OPTIONS}
                   onChange={(value) => setSegment(value as SegmentFilter)}
                 />
+              </div>
+            </div>
+
+            <div className="p-4 lg:p-5">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <p className="font-mono text-3xl font-bold tracking-tight">
+                    {formatNumber(chartRows.at(-1)?.pages ?? 0)}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Pages matching the current filter on the latest crawl
+                  </p>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {formatNumber(filteredRows.length)} matching URLs in this crawl
+                </p>
+              </div>
+
+              <div className="mt-5 flex h-56 items-end gap-3 border-b border-border px-1">
+                {chartRows.map((item) => (
+                  <div key={item.label} className="flex min-w-0 flex-1 flex-col items-center gap-2">
+                    <div className="flex h-44 w-full items-end rounded-t bg-surface/45 px-1">
+                      <div
+                        className="w-full rounded-t-sm bg-primary/75 transition-all duration-300"
+                        style={{ height: `${Math.max(6, (item.pages / maxChartPages) * 100)}%` }}
+                        title={`${formatNumber(item.pages)} pages`}
+                      />
+                    </div>
+                    <span className="truncate text-[11px] text-muted-foreground">{item.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="rounded-xl border border-border bg-card shadow-sm">
+            <div className="flex flex-col gap-4 border-b border-border p-4 sm:flex-row sm:items-center sm:justify-between lg:p-5">
+              <div>
+                <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+                  Crawl inventory
+                </p>
+                <h2 className="mt-1 text-lg font-semibold">All crawled URLs</h2>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+                <span>{formatNumber(filteredRows.length)} matching URLs</span>
+                <Button variant="outline" size="sm">
+                  <Columns3 className="h-4 w-4" /> Columns
+                </Button>
               </div>
             </div>
 
@@ -771,6 +816,31 @@ function inDepthRange(value: CrawlUrl["depth"], range: DepthFilter) {
   if (range === "2–3") return value >= 2 && value <= 3;
   if (range === "4+") return value >= 4;
   return true;
+}
+
+function hasFocusedFilter({
+  pageType,
+  status,
+  indexable,
+  depth,
+  issue,
+  segment,
+}: {
+  pageType: PageTypeFilter;
+  status: StatusFilter;
+  indexable: IndexableFilter;
+  depth: DepthFilter;
+  issue: IssueFilter;
+  segment: SegmentFilter;
+}) {
+  return (
+    pageType !== "All" ||
+    status !== "All" ||
+    indexable !== "All" ||
+    depth !== "All" ||
+    issue !== "All" ||
+    segment !== "All"
+  );
 }
 
 function formatNumber(value: number) {
