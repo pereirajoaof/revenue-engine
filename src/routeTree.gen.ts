@@ -22,11 +22,11 @@ import { Route as TechnicalHealthCwvRouteImport } from './routes/technical-healt
 import { Route as BrandAuthoritySiteFocusRouteImport } from './routes/brand-authority_.site-focus'
 import { Route as BrandAuthorityPageAgeRouteImport } from './routes/brand-authority_.page-age'
 import { Route as BrandAuthorityDomainAgeRouteImport } from './routes/brand-authority_.domain-age'
-import { Route as AuditRunsSettingsRouteImport } from './routes/audit-runs_..settings'
 import { Route as AuditRunsRunIdRouteImport } from './routes/audit-runs_.$runId'
 import { Route as TechnicalHealthCwvOpportunitiesRouteImport } from './routes/technical-health.cwv.opportunities'
 import { Route as TechnicalHealthCwvDeepDiveRouteImport } from './routes/technical-health.cwv.deep-dive'
 import { Route as BrandAuthorityPageAgeOutliersRouteImport } from './routes/brand-authority_.page-age.outliers'
+import { Route as AuditRunsRunIdSettingsRouteImport } from './routes/audit-runs_.$runId_.settings'
 import { Route as AuditRunsRunIdIssuesIssueIdRouteImport } from './routes/audit-runs_.$runId_.issues.$issueId'
 
 const TechnicalHealthRoute = TechnicalHealthRouteImport.update({
@@ -94,11 +94,6 @@ const BrandAuthorityDomainAgeRoute = BrandAuthorityDomainAgeRouteImport.update({
   path: '/brand-authority/domain-age',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuditRunsSettingsRoute = AuditRunsSettingsRouteImport.update({
-  id: '/audit-runs_/settings',
-  path: '/audit-runs/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuditRunsRunIdRoute = AuditRunsRunIdRouteImport.update({
   id: '/audit-runs_/$runId',
   path: '/audit-runs/$runId',
@@ -122,6 +117,11 @@ const BrandAuthorityPageAgeOutliersRoute =
     path: '/outliers',
     getParentRoute: () => BrandAuthorityPageAgeRoute,
   } as any)
+const AuditRunsRunIdSettingsRoute = AuditRunsRunIdSettingsRouteImport.update({
+  id: '/audit-runs_/$runId_/settings',
+  path: '/audit-runs/$runId/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuditRunsRunIdIssuesIssueIdRoute =
   AuditRunsRunIdIssuesIssueIdRouteImport.update({
     id: '/audit-runs_/$runId_/issues/$issueId',
@@ -139,12 +139,12 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
   '/audit-runs/$runId': typeof AuditRunsRunIdRoute
-  '/audit-runs/settings': typeof AuditRunsSettingsRoute
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
   '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health/': typeof TechnicalHealthIndexRoute
+  '/audit-runs/$runId/settings': typeof AuditRunsRunIdSettingsRoute
   '/brand-authority/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
   '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
   '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
@@ -159,12 +159,12 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
   '/audit-runs/$runId': typeof AuditRunsRunIdRoute
-  '/audit-runs/settings': typeof AuditRunsSettingsRoute
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
   '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health': typeof TechnicalHealthIndexRoute
+  '/audit-runs/$runId/settings': typeof AuditRunsRunIdSettingsRoute
   '/brand-authority/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
   '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
   '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
@@ -181,12 +181,12 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
   '/audit-runs_/$runId': typeof AuditRunsRunIdRoute
-  '/audit-runs_/settings': typeof AuditRunsSettingsRoute
   '/brand-authority_/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority_/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
   '/brand-authority_/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health/': typeof TechnicalHealthIndexRoute
+  '/audit-runs_/$runId_/settings': typeof AuditRunsRunIdSettingsRoute
   '/brand-authority_/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
   '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
   '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
@@ -204,12 +204,12 @@ export interface FileRouteTypes {
     | '/settings'
     | '/technical-health'
     | '/audit-runs/$runId'
-    | '/audit-runs/settings'
     | '/brand-authority/domain-age'
     | '/brand-authority/page-age'
     | '/brand-authority/site-focus'
     | '/technical-health/cwv'
     | '/technical-health/'
+    | '/audit-runs/$runId/settings'
     | '/brand-authority/page-age/outliers'
     | '/technical-health/cwv/deep-dive'
     | '/technical-health/cwv/opportunities'
@@ -224,12 +224,12 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/settings'
     | '/audit-runs/$runId'
-    | '/audit-runs/settings'
     | '/brand-authority/domain-age'
     | '/brand-authority/page-age'
     | '/brand-authority/site-focus'
     | '/technical-health/cwv'
     | '/technical-health'
+    | '/audit-runs/$runId/settings'
     | '/brand-authority/page-age/outliers'
     | '/technical-health/cwv/deep-dive'
     | '/technical-health/cwv/opportunities'
@@ -245,12 +245,12 @@ export interface FileRouteTypes {
     | '/settings'
     | '/technical-health'
     | '/audit-runs_/$runId'
-    | '/audit-runs_/settings'
     | '/brand-authority_/domain-age'
     | '/brand-authority_/page-age'
     | '/brand-authority_/site-focus'
     | '/technical-health/cwv'
     | '/technical-health/'
+    | '/audit-runs_/$runId_/settings'
     | '/brand-authority_/page-age/outliers'
     | '/technical-health/cwv/deep-dive'
     | '/technical-health/cwv/opportunities'
@@ -267,10 +267,10 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   TechnicalHealthRoute: typeof TechnicalHealthRouteWithChildren
   AuditRunsRunIdRoute: typeof AuditRunsRunIdRoute
-  AuditRunsSettingsRoute: typeof AuditRunsSettingsRoute
   BrandAuthorityDomainAgeRoute: typeof BrandAuthorityDomainAgeRoute
   BrandAuthorityPageAgeRoute: typeof BrandAuthorityPageAgeRouteWithChildren
   BrandAuthoritySiteFocusRoute: typeof BrandAuthoritySiteFocusRoute
+  AuditRunsRunIdSettingsRoute: typeof AuditRunsRunIdSettingsRoute
   AuditRunsRunIdIssuesIssueIdRoute: typeof AuditRunsRunIdIssuesIssueIdRoute
 }
 
@@ -367,13 +367,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrandAuthorityDomainAgeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/audit-runs_/settings': {
-      id: '/audit-runs_/settings'
-      path: '/audit-runs/settings'
-      fullPath: '/audit-runs/settings'
-      preLoaderRoute: typeof AuditRunsSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/audit-runs_/$runId': {
       id: '/audit-runs_/$runId'
       path: '/audit-runs/$runId'
@@ -401,6 +394,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/brand-authority/page-age/outliers'
       preLoaderRoute: typeof BrandAuthorityPageAgeOutliersRouteImport
       parentRoute: typeof BrandAuthorityPageAgeRoute
+    }
+    '/audit-runs_/$runId_/settings': {
+      id: '/audit-runs_/$runId_/settings'
+      path: '/audit-runs/$runId/settings'
+      fullPath: '/audit-runs/$runId/settings'
+      preLoaderRoute: typeof AuditRunsRunIdSettingsRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/audit-runs_/$runId_/issues/$issueId': {
       id: '/audit-runs_/$runId_/issues/$issueId'
@@ -462,10 +462,10 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   TechnicalHealthRoute: TechnicalHealthRouteWithChildren,
   AuditRunsRunIdRoute: AuditRunsRunIdRoute,
-  AuditRunsSettingsRoute: AuditRunsSettingsRoute,
   BrandAuthorityDomainAgeRoute: BrandAuthorityDomainAgeRoute,
   BrandAuthorityPageAgeRoute: BrandAuthorityPageAgeRouteWithChildren,
   BrandAuthoritySiteFocusRoute: BrandAuthoritySiteFocusRoute,
+  AuditRunsRunIdSettingsRoute: AuditRunsRunIdSettingsRoute,
   AuditRunsRunIdIssuesIssueIdRoute: AuditRunsRunIdIssuesIssueIdRoute,
 }
 export const routeTree = rootRouteImport

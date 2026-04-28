@@ -14,7 +14,6 @@ import {
   Plus,
   Save,
   Settings2,
-  ShieldCheck,
   Trash2,
   X,
 } from "lucide-react";
@@ -38,7 +37,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export const Route = createFileRoute("/audit-runs_/settings")({
+export const Route = createFileRoute("/audit-runs_/$runId_/settings")({
   component: AuditSettingsRoute,
   head: () => ({
     meta: [
