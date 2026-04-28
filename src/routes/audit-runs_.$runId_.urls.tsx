@@ -1,0 +1,338 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Columns3,
+  Download,
+  ExternalLink,
+  FilterX,
+  Link2,
+  Play,
+  Search,
+  SlidersHorizontal,
+  XCircle,
+} from "lucide-react";
+import { DashboardNav } from "@/components/dashboard/DashboardNav";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+export const Route = createFileRoute("/audit-runs_/$runId_/urls")({
+  component: UrlExplorerRoute,
+  head: () => ({
+    meta: [
+      { title: "URL Explorer — OrganicOS" },
+      {
+        name: "description",
+        content:
+          "Explore, search, and filter every URL discovered in an OrganicOS audit crawl.",
+      },
+      { property: "og:title", content: "URL Explorer — OrganicOS" },
+      {
+        property: "og:description",
+        content:
+          "Run-specific crawl URL inventory with HTTP status, indexability, depth, traffic, and issue filters.",
+      },
+    ],
+  }),
+});
+
+type AuditRun = {
+  id: string;
+  name: string;
+  lastRun: string;
+  urlsCrawled: number;
+};
+
+type CrawlUrl = {
+  id: string;
+  url: string;
+  title: string;
+  pageType: "Route" | "City" | "Operator" | "Blog" | "Support" | "Commerce";
+  status: 200 | 301 | 302 | 404 | 500;
+  indexable: "Yes" | "No";
+  depth: 0 | 1 | 2 | 3 | 4 | 5;
+  inlinks: number;
+  organicTraffic: number;
+  impressions: number;
+  segment: "All" | "Added" | "Changed" | "Missing";
+  issue: "None" | "Canonical" | "Title" | "Meta" | "Broken link" | "Noindex";
+  firstFound: string;
+  lastCrawled: string;
+};
+
+type StatusFilter = "All" | "2xx" | "3xx" | "4xx" | "5xx";
+type IndexableFilter = "All" | "Yes" | "No";
+type DepthFilter = "All" | "0–1" | "2–3" | "4+";
+type IssueFilter = "All" | CrawlUrl["issue"];
+type PageTypeFilter = "All" | CrawlUrl["pageType"];
+type SegmentFilter = "All" | CrawlUrl["segment"];
+
+const AUDIT_RUNS: AuditRun[] = [
+  { id: "core-commerce", name: "Core Revenue Pages", lastRun: "Today · 08:42", urlsCrawled: 18432 },
+  { id: "international", name: "International Expansion", lastRun: "Running now", urlsCrawled: 68240 },
+  { id: "content-hubs", name: "Editorial Hubs", lastRun: "Yesterday · 21:16", urlsCrawled: 12805 },
+  { id: "templates", name: "Template QA Sweep", lastRun: "Apr 24 · 04:12", urlsCrawled: 4390 },
+  { id: "migration", name: "Post-Migration Guardrail", lastRun: "Apr 23 · 01:04", urlsCrawled: 94512 },
+  { id: "marketplace", name: "Marketplace Supply Pages", lastRun: "Apr 22 · 13:30", urlsCrawled: 27650 },
+  { id: "brand", name: "Brand & Support Surface", lastRun: "Apr 18 · 10:00", urlsCrawled: 3240 },
+];
+
+const URL_ROWS: CrawlUrl[] = [
+  { id: "u1", url: "https://www.busbud.com/en", title: "Busbud: Book Bus & Train Tickets", pageType: "Commerce", status: 200, indexable: "Yes", depth: 0, inlinks: 7364, organicTraffic: 13110, impressions: 1147712, segment: "All", issue: "None", firstFound: "C-12", lastCrawled: "08:42" },
+  { id: "u2", url: "https://www.busbud.com/en/country/us", title: "Bus, Train, and Shuttle in United States", pageType: "City", status: 200, indexable: "Yes", depth: 1, inlinks: 7358, organicTraffic: 89, impressions: 53326, segment: "Changed", issue: "Title", firstFound: "C-10", lastCrawled: "08:43" },
+  { id: "u3", url: "https://www.busbud.com/blog", title: "Busbud Blog", pageType: "Blog", status: 200, indexable: "Yes", depth: 2, inlinks: 410, organicTraffic: 318, impressions: 18420, segment: "All", issue: "Meta", firstFound: "C-9", lastCrawled: "08:44" },
+  { id: "u4", url: "https://www.busbud.com/en/bus-tickets/new-york-boston", title: "New York to Boston Bus Tickets", pageType: "Route", status: 200, indexable: "No", depth: 2, inlinks: 58, organicTraffic: 1480, impressions: 128909, segment: "Changed", issue: "Noindex", firstFound: "C-8", lastCrawled: "08:48" },
+  { id: "u5", url: "https://www.busbud.com/en/train/london-manchester", title: "London to Manchester Train Tickets", pageType: "Route", status: 200, indexable: "Yes", depth: 2, inlinks: 49, organicTraffic: 870, impressions: 77412, segment: "Added", issue: "None", firstFound: "Latest", lastCrawled: "08:50" },
+  { id: "u6", url: "https://www.busbud.com/en/operator/flixbus", title: "FlixBus Tickets and Schedules", pageType: "Operator", status: 301, indexable: "No", depth: 3, inlinks: 36, organicTraffic: 740, impressions: 50611, segment: "Changed", issue: "Canonical", firstFound: "C-7", lastCrawled: "08:52" },
+  { id: "u7", url: "https://www.busbud.com/en/city/rome", title: "Buses to Rome", pageType: "City", status: 200, indexable: "Yes", depth: 3, inlinks: 31, organicTraffic: 612, impressions: 38104, segment: "All", issue: "Canonical", firstFound: "C-6", lastCrawled: "08:54" },
+  { id: "u8", url: "https://www.busbud.com/en/about/careers", title: "Careers at Busbud", pageType: "Support", status: 404, indexable: "No", depth: 1, inlinks: 0, organicTraffic: 0, impressions: 0, segment: "Added", issue: "Broken link", firstFound: "Latest", lastCrawled: "08:56" },
+  { id: "u9", url: "https://www.busbud.com/en/about/refund-policy", title: "Refund Policy", pageType: "Support", status: 404, indexable: "No", depth: 2, inlinks: 0, organicTraffic: 0, impressions: 0, segment: "Added", issue: "Broken link", firstFound: "Latest", lastCrawled: "08:58" },
+  { id: "u10", url: "https://www.busbud.com/en/stops/victoria-coach-station", title: "Victoria Coach Station", pageType: "City", status: 302, indexable: "No", depth: 4, inlinks: 18, organicTraffic: 388, impressions: 21450, segment: "Changed", issue: "Canonical", firstFound: "C-5", lastCrawled: "09:01" },
+  { id: "u11", url: "https://www.busbud.com/en/bus-company/alsa", title: "ALSA Bus Tickets", pageType: "Operator", status: 200, indexable: "Yes", depth: 3, inlinks: 24, organicTraffic: 520, impressions: 47392, segment: "All", issue: "Meta", firstFound: "C-4", lastCrawled: "09:04" },
+  { id: "u12", url: "https://www.busbud.com/en/routes/london-paris", title: "London to Paris Bus", pageType: "Route", status: 500, indexable: "No", depth: 4, inlinks: 12, organicTraffic: 184, impressions: 14290, segment: "Missing", issue: "Broken link", firstFound: "C-3", lastCrawled: "09:06" },
+  { id: "u13", url: "https://www.busbud.com/en/blog/best-bus-routes-europe", title: "Best Bus Routes in Europe", pageType: "Blog", status: 200, indexable: "Yes", depth: 5, inlinks: 11, organicTraffic: 318, impressions: 17428, segment: "All", issue: "Meta", firstFound: "C-3", lastCrawled: "09:09" },
+  { id: "u14", url: "https://www.busbud.com/en/bus-routes/madrid-barcelona", title: "Madrid to Barcelona Bus", pageType: "Route", status: 200, indexable: "Yes", depth: 2, inlinks: 43, organicTraffic: 920, impressions: 99120, segment: "All", issue: "Canonical", firstFound: "C-2", lastCrawled: "09:12" },
+  { id: "u15", url: "https://www.busbud.com/en/checkout", title: "Checkout", pageType: "Commerce", status: 200, indexable: "No", depth: 2, inlinks: 82, organicTraffic: 0, impressions: 0, segment: "All", issue: "None", firstFound: "C-12", lastCrawled: "09:15" },
+  { id: "u16", url: "https://www.busbud.com/en/sitemap.xml", title: "XML Sitemap", pageType: "Support", status: 200, indexable: "No", depth: 0, inlinks: 1, organicTraffic: 0, impressions: 0, segment: "All", issue: "None", firstFound: "C-12", lastCrawled: "09:18" },
+];
+
+const PAGE_TYPE_OPTIONS: PageTypeFilter[] = ["All", "Route", "City", "Operator", "Blog", "Support", "Commerce"];
+const STATUS_OPTIONS: StatusFilter[] = ["All", "2xx", "3xx", "4xx", "5xx"];
+const INDEXABLE_OPTIONS: IndexableFilter[] = ["All", "Yes", "No"];
+const DEPTH_OPTIONS: DepthFilter[] = ["All", "0–1", "2–3", "4+"];
+const ISSUE_OPTIONS: IssueFilter[] = ["All", "None", "Canonical", "Title", "Meta", "Broken link", "Noindex"];
+const SEGMENT_OPTIONS: SegmentFilter[] = ["All", "Added", "Changed", "Missing"];
+
+function UrlExplorerRoute() {
+  const { runId } = Route.useParams();
+  const run = AUDIT_RUNS.find((item) => item.id === runId) ?? AUDIT_RUNS[0];
+  const [query, setQuery] = useState("");
+  const [pageType, setPageType] = useState<PageTypeFilter>("All");
+  const [status, setStatus] = useState<StatusFilter>("All");
+  const [indexable, setIndexable] = useState<IndexableFilter>("All");
+  const [depth, setDepth] = useState<DepthFilter>("All");
+  const [issue, setIssue] = useState<IssueFilter>("All");
+  const [segment, setSegment] = useState<SegmentFilter>("All");
+
+  const filteredRows = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    return URL_ROWS.filter((row) => {
+      const matchesSearch = !normalized || `${row.url} ${row.title}`.toLowerCase().includes(normalized);
+      const matchesType = pageType === "All" || row.pageType === pageType;
+      const matchesStatus = status === "All" || `${row.status}`.startsWith(status[0]);
+      const matchesIndexable = indexable === "All" || row.indexable === indexable;
+      const matchesDepth = depth === "All" || inDepthRange(row.depth, depth);
+      const matchesIssue = issue === "All" || row.issue === issue;
+      const matchesSegment = segment === "All" || row.segment === segment;
+      return matchesSearch && matchesType && matchesStatus && matchesIndexable && matchesDepth && matchesIssue && matchesSegment;
+    });
+  }, [depth, indexable, issue, pageType, query, segment, status]);
+
+  const issueCount = filteredRows.filter((row) => row.issue !== "None").length;
+  const indexableCount = filteredRows.filter((row) => row.indexable === "Yes").length;
+  const errorCount = filteredRows.filter((row) => row.status >= 400).length;
+  const hasFilters = query || pageType !== "All" || status !== "All" || indexable !== "All" || depth !== "All" || issue !== "All" || segment !== "All";
+
+  const clearFilters = () => {
+    setQuery("");
+    setPageType("All");
+    setStatus("All");
+    setIndexable("All");
+    setDepth("All");
+    setIssue("All");
+    setSegment("All");
+  };
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <DashboardNav />
+      <div className="lg:pl-56">
+        <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur">
+          <div className="space-y-5 px-6 py-5 lg:px-8">
+            <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+              <div className="flex items-start gap-3">
+                <Button variant="ghost" size="icon" asChild aria-label="Back to run analysis">
+                  <Link to="/audit-runs/$runId" params={{ runId: run.id }}>
+                    <ArrowLeft className="h-4 w-4" />
+                  </Link>
+                </Button>
+                <div>
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Project / Run / Inventory</p>
+                  <h1 className="mt-1 text-2xl font-bold tracking-tight">URL Explorer</h1>
+                  <p className="mt-1 text-sm text-muted-foreground">{run.name} · {formatNumber(run.urlsCrawled)} URLs crawled · {run.lastRun}</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <Button><Play className="h-4 w-4" /> Run Again</Button>
+                <Button variant="outline"><Download className="h-4 w-4" /> Export</Button>
+                <ThemeToggle />
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main className="space-y-5 px-6 py-6 lg:px-8">
+          <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <ExplorerKpi label="Filtered URLs" value={formatNumber(filteredRows.length)} detail={`${formatNumber(URL_ROWS.length)} loaded in sample`} />
+            <ExplorerKpi label="Indexable" value={formatNumber(indexableCount)} detail={`${Math.round((indexableCount / Math.max(filteredRows.length, 1)) * 100)}% of filtered`} />
+            <ExplorerKpi label="With issues" value={formatNumber(issueCount)} detail="Needs technical review" tone="warning" />
+            <ExplorerKpi label="HTTP errors" value={formatNumber(errorCount)} detail="4xx and 5xx responses" tone="danger" />
+          </section>
+
+          <section className="rounded-xl border border-border bg-card shadow-sm">
+            <div className="border-b border-border p-4 lg:p-5">
+              <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+                <div>
+                  <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Crawl inventory</p>
+                  <h2 className="mt-1 text-lg font-semibold">All crawled URLs</h2>
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <div className="relative w-full sm:w-[360px]">
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search URL or page title…" className="pl-9" />
+                  </div>
+                  <Button variant="outline" disabled={!hasFilters} onClick={clearFilters}>
+                    <FilterX className="h-4 w-4" /> Clear
+                  </Button>
+                </div>
+              </div>
+
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                <FilterSelect label="Page type" value={pageType} options={PAGE_TYPE_OPTIONS} onChange={(value) => setPageType(value as PageTypeFilter)} />
+                <FilterSelect label="Status" value={status} options={STATUS_OPTIONS} onChange={(value) => setStatus(value as StatusFilter)} />
+                <FilterSelect label="Indexable" value={indexable} options={INDEXABLE_OPTIONS} onChange={(value) => setIndexable(value as IndexableFilter)} />
+                <FilterSelect label="Depth" value={depth} options={DEPTH_OPTIONS} onChange={(value) => setDepth(value as DepthFilter)} />
+                <FilterSelect label="Issue" value={issue} options={ISSUE_OPTIONS} onChange={(value) => setIssue(value as IssueFilter)} />
+                <FilterSelect label="Segment" value={segment} options={SEGMENT_OPTIONS} onChange={(value) => setSegment(value as SegmentFilter)} />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3 border-b border-border bg-surface/35 px-4 py-3 sm:flex-row sm:items-center sm:justify-between lg:px-5">
+              <div className="flex flex-wrap items-center gap-2">
+                {SEGMENT_OPTIONS.map((option) => (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => setSegment(option)}
+                    className={`rounded-md border px-3 py-1.5 text-xs font-medium transition-colors ${
+                      segment === option
+                        ? "border-primary/25 bg-primary/10 text-primary"
+                        : "border-border bg-background text-muted-foreground hover:bg-surface hover:text-foreground"
+                    }`}
+                  >
+                    {option} {option === "All" ? formatNumber(URL_ROWS.length) : formatNumber(URL_ROWS.filter((row) => row.segment === option).length)}
+                  </button>
+                ))}
+              </div>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <SlidersHorizontal className="h-3.5 w-3.5" />
+                <span>{formatNumber(filteredRows.length)} matching URLs</span>
+                <Button variant="outline" size="sm"><Columns3 className="h-4 w-4" /> Columns</Button>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <Table className="min-w-[1320px]">
+                <TableHeader>
+                  <TableRow className="bg-surface/40 hover:bg-surface/40">
+                    <TableHead className="w-[390px]">URL</TableHead>
+                    <TableHead>Page type</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Indexable</TableHead>
+                    <TableHead className="text-right">Depth</TableHead>
+                    <TableHead className="text-right">Inlinks</TableHead>
+                    <TableHead className="text-right">Organic traffic</TableHead>
+                    <TableHead className="text-right">Impressions</TableHead>
+                    <TableHead>Issue</TableHead>
+                    <TableHead>First found</TableHead>
+                    <TableHead>Last crawl</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredRows.map((row) => (
+                    <TableRow key={row.id}>
+                      <TableCell>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <a href={row.url} target="_blank" rel="noreferrer" className="max-w-[350px] truncate text-sm font-medium text-primary underline-offset-4 hover:underline">
+                              {row.url}
+                            </a>
+                            <ExternalLink className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                          </div>
+                          <p className="max-w-[350px] truncate text-xs text-muted-foreground">{row.title}</p>
+                        </div>
+                      </TableCell>
+                      <TableCell><Badge variant="outline">{row.pageType}</Badge></TableCell>
+                      <TableCell><StatusBadge status={row.status} /></TableCell>
+                      <TableCell><IndexableBadge value={row.indexable} /></TableCell>
+                      <TableCell className="text-right font-mono">{row.depth}</TableCell>
+                      <TableCell className="text-right font-mono">{formatNumber(row.inlinks)}</TableCell>
+                      <TableCell className="text-right font-mono">{formatNumber(row.organicTraffic)}</TableCell>
+                      <TableCell className="text-right font-mono">{formatNumber(row.impressions)}</TableCell>
+                      <TableCell><IssueBadge issue={row.issue} /></TableCell>
+                      <TableCell className="font-mono text-xs text-muted-foreground">{row.firstFound}</TableCell>
+                      <TableCell className="font-mono text-xs text-muted-foreground">{row.lastCrawled}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  );
+}
+
+function FilterSelect({ label, value, options, onChange }: { label: string; value: string; options: readonly string[]; onChange: (value: string) => void }) {
+  return (
+    <label className="space-y-1.5">
+      <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{label}</span>
+      <select value={value} onChange={(event) => onChange(event.target.value)} className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm outline-none transition-colors focus:ring-1 focus:ring-ring">
+        {options.map((option) => <option key={option} value={option}>{option}</option>)}
+      </select>
+    </label>
+  );
+}
+
+function ExplorerKpi({ label, value, detail, tone = "neutral" }: { label: string; value: string; detail: string; tone?: "neutral" | "warning" | "danger" }) {
+  const toneClass = tone === "danger" ? "text-destructive" : tone === "warning" ? "text-chart-3" : "text-foreground";
+  return <div className="rounded-xl border border-border bg-card p-4 shadow-sm"><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{label}</p><p className={`mt-2 font-mono text-3xl font-bold ${toneClass}`}>{value}</p><p className="mt-1 text-xs text-muted-foreground">{detail}</p></div>;
+}
+
+function StatusBadge({ status }: { status: CrawlUrl["status"] }) {
+  const isOk = status < 300;
+  const isRedirect = status >= 300 && status < 400;
+  return <Badge variant={isOk ? "default" : isRedirect ? "secondary" : "destructive"}>{status}</Badge>;
+}
+
+function IndexableBadge({ value }: { value: CrawlUrl["indexable"] }) {
+  return <span className={`inline-flex items-center gap-1 text-xs font-medium ${value === "Yes" ? "text-primary" : "text-muted-foreground"}`}>{value === "Yes" ? <CheckCircle2 className="h-3.5 w-3.5" /> : <XCircle className="h-3.5 w-3.5" />}{value}</span>;
+}
+
+function IssueBadge({ issue }: { issue: CrawlUrl["issue"] }) {
+  if (issue === "None") return <span className="text-xs text-muted-foreground">None</span>;
+  return <span className="inline-flex items-center gap-1 rounded-md border border-border bg-surface px-2 py-1 text-xs font-medium text-foreground"><Link2 className="h-3 w-3 text-muted-foreground" />{issue}</span>;
+}
+
+function inDepthRange(value: CrawlUrl["depth"], range: DepthFilter) {
+  if (range === "0–1") return value <= 1;
+  if (range === "2–3") return value >= 2 && value <= 3;
+  if (range === "4+") return value >= 4;
+  return true;
+}
+
+function formatNumber(value: number) {
+  return new Intl.NumberFormat("en-GB").format(value);
+}
