@@ -151,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health/': typeof TechnicalHealthIndexRoute
   '/audit-runs/$runId/settings': typeof AuditRunsRunIdSettingsRoute
+  '/audit-runs/$runId/urls': typeof AuditRunsRunIdUrlsRoute
   '/brand-authority/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
   '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
   '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
@@ -171,6 +172,7 @@ export interface FileRoutesByTo {
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health': typeof TechnicalHealthIndexRoute
   '/audit-runs/$runId/settings': typeof AuditRunsRunIdSettingsRoute
+  '/audit-runs/$runId/urls': typeof AuditRunsRunIdUrlsRoute
   '/brand-authority/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
   '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
   '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
@@ -193,6 +195,7 @@ export interface FileRoutesById {
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/technical-health/': typeof TechnicalHealthIndexRoute
   '/audit-runs_/$runId_/settings': typeof AuditRunsRunIdSettingsRoute
+  '/audit-runs_/$runId_/urls': typeof AuditRunsRunIdUrlsRoute
   '/brand-authority_/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
   '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
   '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
