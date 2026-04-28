@@ -219,6 +219,7 @@ export interface FileRouteTypes {
     | '/technical-health/cwv'
     | '/technical-health/'
     | '/audit-runs/$runId/settings'
+    | '/audit-runs/$runId/urls'
     | '/brand-authority/page-age/outliers'
     | '/technical-health/cwv/deep-dive'
     | '/technical-health/cwv/opportunities'
@@ -239,6 +240,7 @@ export interface FileRouteTypes {
     | '/technical-health/cwv'
     | '/technical-health'
     | '/audit-runs/$runId/settings'
+    | '/audit-runs/$runId/urls'
     | '/brand-authority/page-age/outliers'
     | '/technical-health/cwv/deep-dive'
     | '/technical-health/cwv/opportunities'
@@ -260,6 +262,7 @@ export interface FileRouteTypes {
     | '/technical-health/cwv'
     | '/technical-health/'
     | '/audit-runs_/$runId_/settings'
+    | '/audit-runs_/$runId_/urls'
     | '/brand-authority_/page-age/outliers'
     | '/technical-health/cwv/deep-dive'
     | '/technical-health/cwv/opportunities'
@@ -280,6 +283,7 @@ export interface RootRouteChildren {
   BrandAuthorityPageAgeRoute: typeof BrandAuthorityPageAgeRouteWithChildren
   BrandAuthoritySiteFocusRoute: typeof BrandAuthoritySiteFocusRoute
   AuditRunsRunIdSettingsRoute: typeof AuditRunsRunIdSettingsRoute
+  AuditRunsRunIdUrlsRoute: typeof AuditRunsRunIdUrlsRoute
   AuditRunsRunIdIssuesIssueIdRoute: typeof AuditRunsRunIdIssuesIssueIdRoute
 }
 
