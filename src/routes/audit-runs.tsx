@@ -139,7 +139,7 @@ function AuditRunsPage() {
   const [urlRange, setUrlRange] = useState<UrlRange>("Any");
   const [page, setPage] = useState(1);
   const [createAuditOpen, setCreateAuditOpen] = useState(false);
-  const [createAuditStep, setCreateAuditStep] = useState(1);
+  const [createAuditStep, setCreateAuditStep] = useState(0);
   const navigate = useNavigate();
   const pageSize = 5;
 
@@ -180,7 +180,7 @@ function AuditRunsPage() {
                   open={createAuditOpen}
                   onOpenChange={(open) => {
                     setCreateAuditOpen(open);
-                    if (!open) setCreateAuditStep(1);
+                    if (!open) setCreateAuditStep(0);
                   }}
                 >
                   <DialogTrigger asChild>
@@ -273,6 +273,7 @@ function AuditRunsPage() {
 function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange: (step: number) => void }) {
   const steps = ["Basics", "Mode", "Entry points", "Scope rules", "Behaviour", "Limits", "Page types"];
   const isFinalStep = step === steps.length;
+  const isAuditTypeStep = step === 0;
 
   return (
     <DialogContent className="max-h-[88vh] max-w-5xl overflow-y-auto border-border bg-background p-0 shadow-2xl">
@@ -288,6 +289,20 @@ function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange:
             </DialogDescription>
           </DialogHeader>
           <div className="mt-8 space-y-2">
+            <button
+              type="button"
+              onClick={() => onStepChange(0)}
+              className={`flex w-full items-center gap-3 rounded-md border px-3 py-3 text-left transition-colors ${
+                isAuditTypeStep
+                  ? "border-primary/30 bg-primary/10 text-foreground"
+                  : "border-border bg-background text-foreground"
+              }`}
+            >
+              <span className={`flex h-7 w-7 items-center justify-center rounded-md border ${isAuditTypeStep ? "border-primary/25 text-primary" : "border-border text-muted-foreground"}`}>
+                <Target className="h-3.5 w-3.5" />
+              </span>
+              <span className="text-sm font-medium">Audit type</span>
+            </button>
             {steps.map((label, index) => {
               const itemStep = index + 1;
               const active = itemStep === step;
@@ -317,10 +332,13 @@ function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange:
 
         <div className="flex flex-col">
           <div className="border-b border-border p-6">
-            <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Step {step} of {steps.length}</p>
-            <h2 className="mt-2 text-3xl font-bold tracking-tight">{steps[step - 1]}</h2>
+            <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+              {isAuditTypeStep ? "Choose audit type" : `Step ${step} of ${steps.length}`}
+            </p>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight">{isAuditTypeStep ? "What kind of audit are you creating?" : steps[step - 1]}</h2>
           </div>
           <div className="flex-1 p-6">
+            {isAuditTypeStep && <AuditTypeStep onSelect={() => onStepChange(1)} />}
             {step === 1 && <ProjectBasicsStep />}
             {step === 2 && <CrawlModeStep />}
             {step === 3 && <EntryPointsStep />}
@@ -330,16 +348,56 @@ function CreateAuditDialog({ step, onStepChange }: { step: number; onStepChange:
             {step === 7 && <PageTypeMappingStep />}
           </div>
           <div className="flex items-center justify-between border-t border-border p-6">
-            <Button variant="outline" disabled={step === 1} onClick={() => onStepChange(Math.max(1, step - 1))}>
+            <Button variant="outline" disabled={isAuditTypeStep} onClick={() => onStepChange(Math.max(0, step - 1))}>
               <ArrowLeft className="h-4 w-4" /> Back
             </Button>
-            <Button onClick={() => onStepChange(isFinalStep ? 1 : Math.min(steps.length, step + 1))}>
-              {isFinalStep ? "Create audit" : "Continue"} {!isFinalStep && <ArrowRight className="h-4 w-4" />}
+            <Button onClick={() => onStepChange(isAuditTypeStep ? 1 : isFinalStep ? 0 : Math.min(steps.length, step + 1))}>
+              {isAuditTypeStep ? "Continue to setup" : isFinalStep ? "Create audit" : "Continue"} {!isFinalStep && <ArrowRight className="h-4 w-4" />}
             </Button>
           </div>
         </div>
       </div>
     </DialogContent>
+  );
+}
+
+function AuditTypeStep({ onSelect }: { onSelect: () => void }) {
+  return (
+    <div className="grid h-full content-start gap-4 lg:grid-cols-2">
+      <button
+        type="button"
+        onClick={onSelect}
+        className="group flex min-h-[260px] flex-col rounded-xl border border-primary/30 bg-primary/10 p-6 text-left shadow-sm transition-colors hover:bg-primary/15 focus:outline-none focus:ring-2 focus:ring-ring"
+      >
+        <span className="flex h-12 w-12 items-center justify-center rounded-md border border-primary/25 bg-background text-primary shadow-[0_0_24px_var(--glow)]">
+          <Bot className="h-5 w-5" />
+        </span>
+        <span className="mt-6 text-xl font-bold tracking-tight text-foreground">Technical SEO Revenue Audit</span>
+        <span className="mt-3 text-sm leading-6 text-muted-foreground">
+          OrganicOS controls this audit and uses its crawl data to populate the Revenue & Opportunities Dashboard.
+        </span>
+        <span className="mt-auto inline-flex items-center gap-2 pt-8 text-sm font-medium text-primary">
+          Select revenue audit <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+        </span>
+      </button>
+
+      <button
+        type="button"
+        onClick={onSelect}
+        className="group flex min-h-[260px] flex-col rounded-xl border border-border bg-card p-6 text-left shadow-sm transition-colors hover:border-primary/30 hover:bg-surface/70 focus:outline-none focus:ring-2 focus:ring-ring"
+      >
+        <span className="flex h-12 w-12 items-center justify-center rounded-md border border-border bg-surface text-muted-foreground">
+          <Settings2 className="h-5 w-5" />
+        </span>
+        <span className="mt-6 text-xl font-bold tracking-tight text-foreground">Manual setup</span>
+        <span className="mt-3 text-sm leading-6 text-muted-foreground">
+          Configure the crawl yourself. Information from this crawl will not be used to calculate metrics for the Revenue & Opportunities Dashboard.
+        </span>
+        <span className="mt-auto inline-flex items-center gap-2 pt-8 text-sm font-medium text-foreground">
+          Select manual setup <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+        </span>
+      </button>
+    </div>
   );
 }
 
