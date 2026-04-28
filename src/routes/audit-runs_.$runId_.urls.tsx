@@ -818,6 +818,31 @@ function inDepthRange(value: CrawlUrl["depth"], range: DepthFilter) {
   return true;
 }
 
+function hasFocusedFilter({
+  pageType,
+  status,
+  indexable,
+  depth,
+  issue,
+  segment,
+}: {
+  pageType: PageTypeFilter;
+  status: StatusFilter;
+  indexable: IndexableFilter;
+  depth: DepthFilter;
+  issue: IssueFilter;
+  segment: SegmentFilter;
+}) {
+  return (
+    pageType !== "All" ||
+    status !== "All" ||
+    indexable !== "All" ||
+    depth !== "All" ||
+    issue !== "All" ||
+    segment !== "All"
+  );
+}
+
 function formatNumber(value: number) {
   return new Intl.NumberFormat("en-GB").format(value);
 }
