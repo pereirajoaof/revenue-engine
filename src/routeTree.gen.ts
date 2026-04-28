@@ -27,6 +27,7 @@ import { Route as TechnicalHealthCwvOpportunitiesRouteImport } from './routes/te
 import { Route as TechnicalHealthCwvDeepDiveRouteImport } from './routes/technical-health.cwv.deep-dive'
 import { Route as BrandAuthorityPageAgeOutliersRouteImport } from './routes/brand-authority_.page-age.outliers'
 import { Route as AuditRunsRunIdSettingsRouteImport } from './routes/audit-runs_.$runId_.settings'
+import { Route as AuditRunsRunIdUrlsRouteImport } from './routes/audit-runs_.$runId_.urls'
 import { Route as AuditRunsRunIdIssuesIssueIdRouteImport } from './routes/audit-runs_.$runId_.issues.$issueId'
 
 const TechnicalHealthRoute = TechnicalHealthRouteImport.update({
@@ -120,6 +121,11 @@ const BrandAuthorityPageAgeOutliersRoute =
 const AuditRunsRunIdSettingsRoute = AuditRunsRunIdSettingsRouteImport.update({
   id: '/audit-runs_/$runId_/settings',
   path: '/audit-runs/$runId/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditRunsRunIdUrlsRoute = AuditRunsRunIdUrlsRouteImport.update({
+  id: '/audit-runs_/$runId_/urls',
+  path: '/audit-runs/$runId/urls',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuditRunsRunIdIssuesIssueIdRoute =
