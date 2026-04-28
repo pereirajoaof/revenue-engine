@@ -264,8 +264,9 @@ export function DashboardNav() {
               <Gauge className="h-3 w-3 shrink-0" />
               <span className="truncate">Run Analysis</span>
             </Link>
-            <a
-              href={`/audit-runs/${auditRunId}/urls`}
+            <Link
+              to="/audit-runs/$runId/urls"
+              params={{ runId: auditRunId }}
               className={`mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
                 isAuditUrlExplorerRoute
                   ? "border border-primary/20 bg-primary/10 text-primary"
@@ -274,7 +275,7 @@ export function DashboardNav() {
             >
               <Search className="h-3 w-3 shrink-0" />
               <span className="truncate">URL Explorer</span>
-            </a>
+            </Link>
             <Link
               to="/audit-runs/$runId/settings"
               params={{ runId: auditRunId }}
