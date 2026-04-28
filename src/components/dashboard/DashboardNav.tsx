@@ -249,20 +249,9 @@ export function DashboardNav() {
         {auditRunsOpen && (
           <div className="ml-3 border-l border-border pl-3 pt-1">
             <Link
-              to="/audit-runs"
-              className={`flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                path === "/audit-runs"
-                  ? "border border-primary/20 bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
-              }`}
-            >
-              <Bot className="h-3 w-3 shrink-0" />
-              <span className="truncate">Runs</span>
-            </Link>
-            <Link
               to="/audit-runs/$runId"
               params={{ runId: auditRunId }}
-              className={`mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+              className={`flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
                 isAuditOverviewRoute
                   ? "border border-primary/20 bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
