@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/brand-authority_/site-focus")({
 });
 
 type Segment = "Core Topic" | "Adjacent" | "Off-Topic";
-type MapMode = "2d" | "3d";
+type MapMode = "page" | "topic";
 type SortKey = "url" | "radiusScore" | "cluster" | "currentRevenue" | "potentialRevenue";
 
 type PageEmbedding = {
@@ -74,9 +74,9 @@ const pageEmbeddings: PageEmbedding[] = [
 
 const segmentOrder: Segment[] = ["Core Topic", "Adjacent", "Off-Topic"];
 const segmentMeta: Record<Segment, { label: string; tone: string; fill: string; loss: string }> = {
-  "Core Topic": { label: "Core topic", tone: "text-primary", fill: "var(--primary)", loss: "Low" },
-  Adjacent: { label: "Adjacent", tone: "text-chart-3", fill: "var(--chart-3)", loss: "Medium" },
-  "Off-Topic": { label: "Off-topic", tone: "text-destructive", fill: "var(--destructive)", loss: "High" },
+  "Core Topic": { label: "Core Topics", tone: "text-primary", fill: "var(--primary)", loss: "Low" },
+  Adjacent: { label: "Adjacent Topics", tone: "text-chart-3", fill: "var(--chart-3)", loss: "Medium" },
+  "Off-Topic": { label: "Off-topics", tone: "text-destructive", fill: "var(--destructive)", loss: "High" },
 };
 
 const ACTIONS = [
@@ -86,7 +86,7 @@ const ACTIONS = [
 ] as const;
 
 function SiteFocusPage() {
-  const [mapMode, setMapMode] = useState<MapMode>("2d");
+  const [mapMode, setMapMode] = useState<MapMode>("page");
   const [selectedUrl, setSelectedUrl] = useState(pageEmbeddings[10].url);
   const [sortKey, setSortKey] = useState<SortKey>("radiusScore");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
