@@ -20,6 +20,7 @@ import { Route as AccountSettingsRouteImport } from './routes/account-settings'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WebsiteAuthorityIndexRouteImport } from './routes/website-authority.index'
 import { Route as TechnicalHealthIndexRouteImport } from './routes/technical-health.index'
+import { Route as WebsiteAuthorityInternalEquityRouteImport } from './routes/website-authority.internal-equity'
 import { Route as TechnicalHealthCwvRouteImport } from './routes/technical-health.cwv'
 import { Route as BrandAuthoritySiteFocusRouteImport } from './routes/brand-authority_.site-focus'
 import { Route as BrandAuthorityPageAgeRouteImport } from './routes/brand-authority_.page-age'
@@ -88,6 +89,12 @@ const TechnicalHealthIndexRoute = TechnicalHealthIndexRouteImport.update({
   path: '/',
   getParentRoute: () => TechnicalHealthRoute,
 } as any)
+const WebsiteAuthorityInternalEquityRoute =
+  WebsiteAuthorityInternalEquityRouteImport.update({
+    id: '/internal-equity',
+    path: '/internal-equity',
+    getParentRoute: () => WebsiteAuthorityRoute,
+  } as any)
 const TechnicalHealthCwvRoute = TechnicalHealthCwvRouteImport.update({
   id: '/cwv',
   path: '/cwv',
@@ -170,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
   '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
+  '/website-authority/internal-equity': typeof WebsiteAuthorityInternalEquityRoute
   '/technical-health/': typeof TechnicalHealthIndexRoute
   '/website-authority/': typeof WebsiteAuthorityIndexRoute
   '/audit-runs/$runId/settings': typeof AuditRunsRunIdSettingsRoute
@@ -193,6 +201,7 @@ export interface FileRoutesByTo {
   '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
   '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
+  '/website-authority/internal-equity': typeof WebsiteAuthorityInternalEquityRoute
   '/technical-health': typeof TechnicalHealthIndexRoute
   '/website-authority': typeof WebsiteAuthorityIndexRoute
   '/audit-runs/$runId/settings': typeof AuditRunsRunIdSettingsRoute
@@ -219,6 +228,7 @@ export interface FileRoutesById {
   '/brand-authority_/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
   '/brand-authority_/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
+  '/website-authority/internal-equity': typeof WebsiteAuthorityInternalEquityRoute
   '/technical-health/': typeof TechnicalHealthIndexRoute
   '/website-authority/': typeof WebsiteAuthorityIndexRoute
   '/audit-runs_/$runId_/settings': typeof AuditRunsRunIdSettingsRoute
@@ -246,6 +256,7 @@ export interface FileRouteTypes {
     | '/brand-authority/page-age'
     | '/brand-authority/site-focus'
     | '/technical-health/cwv'
+    | '/website-authority/internal-equity'
     | '/technical-health/'
     | '/website-authority/'
     | '/audit-runs/$runId/settings'
@@ -269,6 +280,7 @@ export interface FileRouteTypes {
     | '/brand-authority/page-age'
     | '/brand-authority/site-focus'
     | '/technical-health/cwv'
+    | '/website-authority/internal-equity'
     | '/technical-health'
     | '/website-authority'
     | '/audit-runs/$runId/settings'
@@ -294,6 +306,7 @@ export interface FileRouteTypes {
     | '/brand-authority_/page-age'
     | '/brand-authority_/site-focus'
     | '/technical-health/cwv'
+    | '/website-authority/internal-equity'
     | '/technical-health/'
     | '/website-authority/'
     | '/audit-runs_/$runId_/settings'
@@ -402,6 +415,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/technical-health/'
       preLoaderRoute: typeof TechnicalHealthIndexRouteImport
       parentRoute: typeof TechnicalHealthRoute
+    }
+    '/website-authority/internal-equity': {
+      id: '/website-authority/internal-equity'
+      path: '/internal-equity'
+      fullPath: '/website-authority/internal-equity'
+      preLoaderRoute: typeof WebsiteAuthorityInternalEquityRouteImport
+      parentRoute: typeof WebsiteAuthorityRoute
     }
     '/technical-health/cwv': {
       id: '/technical-health/cwv'
@@ -518,10 +538,12 @@ const TechnicalHealthRouteWithChildren = TechnicalHealthRoute._addFileChildren(
 )
 
 interface WebsiteAuthorityRouteChildren {
+  WebsiteAuthorityInternalEquityRoute: typeof WebsiteAuthorityInternalEquityRoute
   WebsiteAuthorityIndexRoute: typeof WebsiteAuthorityIndexRoute
 }
 
 const WebsiteAuthorityRouteChildren: WebsiteAuthorityRouteChildren = {
+  WebsiteAuthorityInternalEquityRoute: WebsiteAuthorityInternalEquityRoute,
   WebsiteAuthorityIndexRoute: WebsiteAuthorityIndexRoute,
 }
 
