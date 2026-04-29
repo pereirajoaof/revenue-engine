@@ -185,18 +185,15 @@ function TopicalMapPanel({ pages, centroid, selectedUrl, mapMode, angle, onAngle
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Legend />
-          {mapMode === "2d" ? (
-            <button type="button" onClick={() => onMapMode("3d")} className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-semibold hover:bg-card"><Orbit className="h-3.5 w-3.5" /> Switch to 3D View</button>
-          ) : (
-            <>
-              <button type="button" onClick={() => onAngleChange({ x: 58, y: 34 })} className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-semibold hover:bg-card"><RefreshCcw className="h-3.5 w-3.5" /> Reset view</button>
-              <button type="button" onClick={() => onMapMode("2d")} className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-semibold hover:bg-card"><Eye className="h-3.5 w-3.5" /> Back to 2D</button>
-            </>
-          )}
+          <div className="inline-flex rounded-md border border-border bg-surface p-1">
+            <button type="button" onClick={() => onMapMode("page")} className={`inline-flex items-center gap-2 rounded px-3 py-1 text-xs font-semibold transition-colors ${mapMode === "page" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}><Eye className="h-3.5 w-3.5" /> Page view</button>
+            <button type="button" onClick={() => onMapMode("topic")} className={`inline-flex items-center gap-2 rounded px-3 py-1 text-xs font-semibold transition-colors ${mapMode === "topic" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}><Orbit className="h-3.5 w-3.5" /> Topic view</button>
+          </div>
+          {mapMode === "topic" && <button type="button" onClick={() => onAngleChange({ x: 58, y: 34 })} className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-semibold hover:bg-card"><RefreshCcw className="h-3.5 w-3.5" /> Reset view</button>}
         </div>
       </div>
       <div className="relative h-[520px] overflow-hidden rounded-lg border border-border bg-background/45">
-        {mapMode === "2d" ? <Scatter2D pages={pages} selectedUrl={selectedUrl} onSelect={onSelect} /> : <Scatter3D pages={pages} centroid={centroid} selectedUrl={selectedUrl} angle={angle} onAngleChange={onAngleChange} onSelect={onSelect} />}
+        {mapMode === "page" ? <Scatter2D pages={pages} selectedUrl={selectedUrl} onSelect={onSelect} /> : <Scatter3D pages={pages} centroid={centroid} selectedUrl={selectedUrl} angle={angle} onAngleChange={onAngleChange} onSelect={onSelect} />}
       </div>
     </section>
   );
