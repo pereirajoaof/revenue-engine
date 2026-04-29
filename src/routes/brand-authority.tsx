@@ -52,6 +52,7 @@ const AUTHORITY_TREND = [
 ];
 
 const AUTHORITY_METRICS: AuthorityMetric[] = [
+  { label: "HostPageRank", score: 74, delta: 5.2, status: "Moderate", trend: [58, 60, 61, 63, 64, 66, 67, 69, 71, 72, 73, 74], driver: "Domain-level link equity and host trust" },
   { label: "Brand Love", score: 82, delta: 6.4, status: "Strong", trend: [69, 70, 72, 73, 75, 76, 78, 79, 80, 81, 80, 82], driver: "Repeat branded clicks and direct demand" },
   { label: "Brand Recognition", score: 76, delta: 4.8, status: "Strong", trend: [61, 62, 64, 65, 67, 69, 70, 72, 73, 74, 75, 76], driver: "Search recall and SERP selection" },
   { label: "Domain Age", score: 91, delta: 0.2, status: "Strong", trend: [90, 90, 90, 90, 91, 91, 91, 91, 91, 91, 91, 91], driver: "Long-lived domain trust" },
@@ -214,6 +215,14 @@ function AuthorityCards({ metrics }: { metrics: AuthorityMetric[] }) {
           <p className="mt-3 line-clamp-2 text-xs text-muted-foreground">{metric.driver}</p>
           </>
         );
+
+        if (metric.label === "HostPageRank") {
+          return (
+            <Link key={metric.label} to="/brand-authority/domain-authority" aria-label="Open HostPageRank detail page" className="group rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-colors hover:border-primary/40 hover:bg-surface/40 focus:outline-none focus:ring-2 focus:ring-ring">
+              {content}
+            </Link>
+          );
+        }
 
         if (metric.label === "Domain Age") {
           return (

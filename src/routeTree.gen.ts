@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WebsiteAuthorityRouteImport } from './routes/website-authority'
 import { Route as TechnicalHealthRouteImport } from './routes/technical-health'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
@@ -17,10 +18,13 @@ import { Route as BrandAuthorityRouteImport } from './routes/brand-authority'
 import { Route as AuditRunsRouteImport } from './routes/audit-runs'
 import { Route as AccountSettingsRouteImport } from './routes/account-settings'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WebsiteAuthorityIndexRouteImport } from './routes/website-authority.index'
 import { Route as TechnicalHealthIndexRouteImport } from './routes/technical-health.index'
+import { Route as WebsiteAuthorityInternalEquityRouteImport } from './routes/website-authority.internal-equity'
 import { Route as TechnicalHealthCwvRouteImport } from './routes/technical-health.cwv'
 import { Route as BrandAuthoritySiteFocusRouteImport } from './routes/brand-authority_.site-focus'
 import { Route as BrandAuthorityPageAgeRouteImport } from './routes/brand-authority_.page-age'
+import { Route as BrandAuthorityDomainAuthorityRouteImport } from './routes/brand-authority_.domain-authority'
 import { Route as BrandAuthorityDomainAgeRouteImport } from './routes/brand-authority_.domain-age'
 import { Route as AuditRunsRunIdRouteImport } from './routes/audit-runs_.$runId'
 import { Route as TechnicalHealthCwvOpportunitiesRouteImport } from './routes/technical-health.cwv.opportunities'
@@ -30,6 +34,11 @@ import { Route as AuditRunsRunIdUrlsRouteImport } from './routes/audit-runs_.$ru
 import { Route as AuditRunsRunIdSettingsRouteImport } from './routes/audit-runs_.$runId_.settings'
 import { Route as AuditRunsRunIdIssuesIssueIdRouteImport } from './routes/audit-runs_.$runId_.issues.$issueId'
 
+const WebsiteAuthorityRoute = WebsiteAuthorityRouteImport.update({
+  id: '/website-authority',
+  path: '/website-authority',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TechnicalHealthRoute = TechnicalHealthRouteImport.update({
   id: '/technical-health',
   path: '/technical-health',
@@ -70,11 +79,22 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WebsiteAuthorityIndexRoute = WebsiteAuthorityIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => WebsiteAuthorityRoute,
+} as any)
 const TechnicalHealthIndexRoute = TechnicalHealthIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => TechnicalHealthRoute,
 } as any)
+const WebsiteAuthorityInternalEquityRoute =
+  WebsiteAuthorityInternalEquityRouteImport.update({
+    id: '/internal-equity',
+    path: '/internal-equity',
+    getParentRoute: () => WebsiteAuthorityRoute,
+  } as any)
 const TechnicalHealthCwvRoute = TechnicalHealthCwvRouteImport.update({
   id: '/cwv',
   path: '/cwv',
@@ -90,6 +110,12 @@ const BrandAuthorityPageAgeRoute = BrandAuthorityPageAgeRouteImport.update({
   path: '/brand-authority/page-age',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrandAuthorityDomainAuthorityRoute =
+  BrandAuthorityDomainAuthorityRouteImport.update({
+    id: '/brand-authority_/domain-authority',
+    path: '/brand-authority/domain-authority',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const BrandAuthorityDomainAgeRoute = BrandAuthorityDomainAgeRouteImport.update({
   id: '/brand-authority_/domain-age',
   path: '/brand-authority/domain-age',
@@ -144,12 +170,16 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
+  '/website-authority': typeof WebsiteAuthorityRouteWithChildren
   '/audit-runs/$runId': typeof AuditRunsRunIdRoute
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
+  '/brand-authority/domain-authority': typeof BrandAuthorityDomainAuthorityRoute
   '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
   '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
+  '/website-authority/internal-equity': typeof WebsiteAuthorityInternalEquityRoute
   '/technical-health/': typeof TechnicalHealthIndexRoute
+  '/website-authority/': typeof WebsiteAuthorityIndexRoute
   '/audit-runs/$runId/settings': typeof AuditRunsRunIdSettingsRoute
   '/audit-runs/$runId/urls': typeof AuditRunsRunIdUrlsRoute
   '/brand-authority/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
@@ -167,10 +197,13 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/audit-runs/$runId': typeof AuditRunsRunIdRoute
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
+  '/brand-authority/domain-authority': typeof BrandAuthorityDomainAuthorityRoute
   '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
   '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
+  '/website-authority/internal-equity': typeof WebsiteAuthorityInternalEquityRoute
   '/technical-health': typeof TechnicalHealthIndexRoute
+  '/website-authority': typeof WebsiteAuthorityIndexRoute
   '/audit-runs/$runId/settings': typeof AuditRunsRunIdSettingsRoute
   '/audit-runs/$runId/urls': typeof AuditRunsRunIdUrlsRoute
   '/brand-authority/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
@@ -188,12 +221,16 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
+  '/website-authority': typeof WebsiteAuthorityRouteWithChildren
   '/audit-runs_/$runId': typeof AuditRunsRunIdRoute
   '/brand-authority_/domain-age': typeof BrandAuthorityDomainAgeRoute
+  '/brand-authority_/domain-authority': typeof BrandAuthorityDomainAuthorityRoute
   '/brand-authority_/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
   '/brand-authority_/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
+  '/website-authority/internal-equity': typeof WebsiteAuthorityInternalEquityRoute
   '/technical-health/': typeof TechnicalHealthIndexRoute
+  '/website-authority/': typeof WebsiteAuthorityIndexRoute
   '/audit-runs_/$runId_/settings': typeof AuditRunsRunIdSettingsRoute
   '/audit-runs_/$runId_/urls': typeof AuditRunsRunIdUrlsRoute
   '/brand-authority_/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
@@ -212,12 +249,16 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/settings'
     | '/technical-health'
+    | '/website-authority'
     | '/audit-runs/$runId'
     | '/brand-authority/domain-age'
+    | '/brand-authority/domain-authority'
     | '/brand-authority/page-age'
     | '/brand-authority/site-focus'
     | '/technical-health/cwv'
+    | '/website-authority/internal-equity'
     | '/technical-health/'
+    | '/website-authority/'
     | '/audit-runs/$runId/settings'
     | '/audit-runs/$runId/urls'
     | '/brand-authority/page-age/outliers'
@@ -235,10 +276,13 @@ export interface FileRouteTypes {
     | '/settings'
     | '/audit-runs/$runId'
     | '/brand-authority/domain-age'
+    | '/brand-authority/domain-authority'
     | '/brand-authority/page-age'
     | '/brand-authority/site-focus'
     | '/technical-health/cwv'
+    | '/website-authority/internal-equity'
     | '/technical-health'
+    | '/website-authority'
     | '/audit-runs/$runId/settings'
     | '/audit-runs/$runId/urls'
     | '/brand-authority/page-age/outliers'
@@ -255,12 +299,16 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/settings'
     | '/technical-health'
+    | '/website-authority'
     | '/audit-runs_/$runId'
     | '/brand-authority_/domain-age'
+    | '/brand-authority_/domain-authority'
     | '/brand-authority_/page-age'
     | '/brand-authority_/site-focus'
     | '/technical-health/cwv'
+    | '/website-authority/internal-equity'
     | '/technical-health/'
+    | '/website-authority/'
     | '/audit-runs_/$runId_/settings'
     | '/audit-runs_/$runId_/urls'
     | '/brand-authority_/page-age/outliers'
@@ -278,8 +326,10 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   SettingsRoute: typeof SettingsRoute
   TechnicalHealthRoute: typeof TechnicalHealthRouteWithChildren
+  WebsiteAuthorityRoute: typeof WebsiteAuthorityRouteWithChildren
   AuditRunsRunIdRoute: typeof AuditRunsRunIdRoute
   BrandAuthorityDomainAgeRoute: typeof BrandAuthorityDomainAgeRoute
+  BrandAuthorityDomainAuthorityRoute: typeof BrandAuthorityDomainAuthorityRoute
   BrandAuthorityPageAgeRoute: typeof BrandAuthorityPageAgeRouteWithChildren
   BrandAuthoritySiteFocusRoute: typeof BrandAuthoritySiteFocusRoute
   AuditRunsRunIdSettingsRoute: typeof AuditRunsRunIdSettingsRoute
@@ -289,6 +339,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/website-authority': {
+      id: '/website-authority'
+      path: '/website-authority'
+      fullPath: '/website-authority'
+      preLoaderRoute: typeof WebsiteAuthorityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/technical-health': {
       id: '/technical-health'
       path: '/technical-health'
@@ -345,12 +402,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/website-authority/': {
+      id: '/website-authority/'
+      path: '/'
+      fullPath: '/website-authority/'
+      preLoaderRoute: typeof WebsiteAuthorityIndexRouteImport
+      parentRoute: typeof WebsiteAuthorityRoute
+    }
     '/technical-health/': {
       id: '/technical-health/'
       path: '/'
       fullPath: '/technical-health/'
       preLoaderRoute: typeof TechnicalHealthIndexRouteImport
       parentRoute: typeof TechnicalHealthRoute
+    }
+    '/website-authority/internal-equity': {
+      id: '/website-authority/internal-equity'
+      path: '/internal-equity'
+      fullPath: '/website-authority/internal-equity'
+      preLoaderRoute: typeof WebsiteAuthorityInternalEquityRouteImport
+      parentRoute: typeof WebsiteAuthorityRoute
     }
     '/technical-health/cwv': {
       id: '/technical-health/cwv'
@@ -371,6 +442,13 @@ declare module '@tanstack/react-router' {
       path: '/brand-authority/page-age'
       fullPath: '/brand-authority/page-age'
       preLoaderRoute: typeof BrandAuthorityPageAgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand-authority_/domain-authority': {
+      id: '/brand-authority_/domain-authority'
+      path: '/brand-authority/domain-authority'
+      fullPath: '/brand-authority/domain-authority'
+      preLoaderRoute: typeof BrandAuthorityDomainAuthorityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/brand-authority_/domain-age': {
@@ -459,6 +537,19 @@ const TechnicalHealthRouteWithChildren = TechnicalHealthRoute._addFileChildren(
   TechnicalHealthRouteChildren,
 )
 
+interface WebsiteAuthorityRouteChildren {
+  WebsiteAuthorityInternalEquityRoute: typeof WebsiteAuthorityInternalEquityRoute
+  WebsiteAuthorityIndexRoute: typeof WebsiteAuthorityIndexRoute
+}
+
+const WebsiteAuthorityRouteChildren: WebsiteAuthorityRouteChildren = {
+  WebsiteAuthorityInternalEquityRoute: WebsiteAuthorityInternalEquityRoute,
+  WebsiteAuthorityIndexRoute: WebsiteAuthorityIndexRoute,
+}
+
+const WebsiteAuthorityRouteWithChildren =
+  WebsiteAuthorityRoute._addFileChildren(WebsiteAuthorityRouteChildren)
+
 interface BrandAuthorityPageAgeRouteChildren {
   BrandAuthorityPageAgeOutliersRoute: typeof BrandAuthorityPageAgeOutliersRoute
 }
@@ -481,8 +572,10 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   SettingsRoute: SettingsRoute,
   TechnicalHealthRoute: TechnicalHealthRouteWithChildren,
+  WebsiteAuthorityRoute: WebsiteAuthorityRouteWithChildren,
   AuditRunsRunIdRoute: AuditRunsRunIdRoute,
   BrandAuthorityDomainAgeRoute: BrandAuthorityDomainAgeRoute,
+  BrandAuthorityDomainAuthorityRoute: BrandAuthorityDomainAuthorityRoute,
   BrandAuthorityPageAgeRoute: BrandAuthorityPageAgeRouteWithChildren,
   BrandAuthoritySiteFocusRoute: BrandAuthoritySiteFocusRoute,
   AuditRunsRunIdSettingsRoute: AuditRunsRunIdSettingsRoute,
