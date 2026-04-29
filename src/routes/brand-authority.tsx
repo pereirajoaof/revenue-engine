@@ -1,826 +1,329 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { type ReactNode, useMemo, useState } from "react";
-import {
-  ArrowUpRight,
-  BadgeInfo,
-  ChevronRight,
-  CircleDot,
-  ExternalLink,
-  Info,
-  Link2,
-  MousePointerClick,
-  ShieldCheck,
-  Sparkles,
-  Target,
-} from "lucide-react";
-import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+import { ArrowDownRight, ArrowUpRight, Calendar, ChevronDown, CircleDot, ShieldCheck, Sparkles, TrendingUp } from "lucide-react";
+import { Line, LineChart, ReferenceDot, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Badge } from "@/components/ui/badge";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/brand-authority")({
   component: BrandAuthorityPage,
   head: () => ({
     meta: [
-      { title: "Authority Dashboard — OrganicOS" },
+      { title: "Brand Authority — OrganicOS" },
       {
         name: "description",
-        content:
-          "Analyze host-level brand authority and page-level structural authority across SEO growth signals.",
+        content: "Measure brand authority as an evolving growth asset across brand, domain, and content signals.",
       },
-      { property: "og:title", content: "Authority Dashboard — OrganicOS" },
+      { property: "og:title", content: "Brand Authority — OrganicOS" },
       {
         property: "og:description",
-        content:
-          "HostPageRank and structural authority dashboards for prioritizing SEO authority opportunities.",
+        content: "A financial intelligence layer for tracking whether brand strength is improving or weakening.",
       },
     ],
   }),
 });
 
-type Quadrant = "Hidden Gems" | "Dead Ends" | "Powerhouses" | "The Rot";
-type UrlStatus = "Under-linked" | "High Potential" | "Authority Leak" | "Stable";
-type AuthorityUrl = {
-  url: string;
+const RANGES = ["7d", "30d", "90d"] as const;
+const PAGE_TYPES = ["All page types", "Routes", "Stops", "City", "Operator", "Blog"];
+
+type Range = (typeof RANGES)[number];
+type AuthorityMetric = {
+  label: string;
   score: number;
-  topicalRelevance: number;
-  internalLinks: number;
-  ctr: number;
-  equity: number;
-  quadrant: Quadrant;
-  status: UrlStatus;
-  topicMatch: number;
-  sending: { page: string; value: number }[];
-  receiving: { page: string; value: number }[];
+  delta: number;
+  status: "Strong" | "Moderate" | "Weak";
+  trend: number[];
+  driver: string;
 };
 
-const hostTrend = [
-  { month: "Jul", score: 64 },
-  { month: "Aug", score: 67 },
-  { month: "Sep", score: 66 },
-  { month: "Oct", score: 70 },
-  { month: "Nov", score: 73 },
-  { month: "Dec", score: 78 },
+const AUTHORITY_TREND = [
+  { week: "W1", score: 62 },
+  { week: "W2", score: 64 },
+  { week: "W3", score: 63 },
+  { week: "W4", score: 67, marker: "Brand demand shift" },
+  { week: "W5", score: 69 },
+  { week: "W6", score: 71 },
+  { week: "W7", score: 70 },
+  { week: "W8", score: 74, marker: "Indexation lift" },
+  { week: "W9", score: 76 },
+  { week: "W10", score: 78 },
+  { week: "W11", score: 77 },
+  { week: "W12", score: 79 },
 ];
 
-const benchmark = [
-  { domain: "Your domain", score: 78 },
-  { domain: "Competitor A", score: 84 },
-  { domain: "Competitor B", score: 72 },
-  { domain: "Competitor C", score: 69 },
+const AUTHORITY_METRICS: AuthorityMetric[] = [
+  { label: "Brand Love", score: 82, delta: 6.4, status: "Strong", trend: [69, 70, 72, 73, 75, 76, 78, 79, 80, 81, 80, 82], driver: "Repeat branded clicks and direct demand" },
+  { label: "Brand Recognition", score: 76, delta: 4.8, status: "Strong", trend: [61, 62, 64, 65, 67, 69, 70, 72, 73, 74, 75, 76], driver: "Search recall and SERP selection" },
+  { label: "Domain Age", score: 91, delta: 0.2, status: "Strong", trend: [90, 90, 90, 90, 91, 91, 91, 91, 91, 91, 91, 91], driver: "Long-lived domain trust" },
+  { label: "Indexation", score: 68, delta: 8.1, status: "Moderate", trend: [52, 53, 55, 56, 58, 59, 61, 64, 65, 66, 67, 68], driver: "More strategic pages discovered" },
+  { label: "Site Quality", score: 73, delta: 3.2, status: "Moderate", trend: [65, 66, 67, 68, 70, 69, 70, 71, 72, 73, 72, 73], driver: "Technical quality and trust consistency" },
+  { label: "Site Focus", score: 64, delta: -2.6, status: "Moderate", trend: [72, 71, 70, 69, 68, 67, 67, 66, 65, 65, 64, 64], driver: "Topic concentration weakened" },
+  { label: "Page Age", score: 58, delta: -4.1, status: "Weak", trend: [68, 67, 66, 65, 63, 62, 61, 60, 59, 59, 58, 58], driver: "Freshness decay on older templates" },
 ];
 
-const authorityUrls: AuthorityUrl[] = [
-  {
-    url: "/routes/london-to-manchester",
-    score: 86,
-    topicalRelevance: 94,
-    internalLinks: 128,
-    ctr: 7.9,
-    equity: 82,
-    quadrant: "Powerhouses",
-    status: "Stable",
-    topicMatch: 91,
-    sending: [
-      { page: "/", value: 18 },
-      { page: "/routes", value: 16 },
-      { page: "/city/london", value: 14 },
-      { page: "/city/manchester", value: 12 },
-      { page: "/operators/national-express", value: 9 },
-    ],
-    receiving: [
-      { page: "/stops/victoria-coach-station", value: 13 },
-      { page: "/routes/london-to-birmingham", value: 11 },
-      { page: "/routes/manchester-to-leeds", value: 10 },
-      { page: "/tickets/coach", value: 7 },
-      { page: "/help/tickets", value: 5 },
-    ],
-  },
-  {
-    url: "/city/leeds",
-    score: 58,
-    topicalRelevance: 88,
-    internalLinks: 34,
-    ctr: 6.4,
-    equity: 38,
-    quadrant: "Hidden Gems",
-    status: "High Potential",
-    topicMatch: 84,
-    sending: [
-      { page: "/routes/manchester-to-leeds", value: 10 },
-      { page: "/routes/london-to-leeds", value: 9 },
-      { page: "/city/manchester", value: 7 },
-      { page: "/blog/cheap-north-routes", value: 5 },
-      { page: "/operators/megabus", value: 4 },
-    ],
-    receiving: [
-      { page: "/routes/leeds-to-york", value: 8 },
-      { page: "/stops/leeds-bus-station", value: 7 },
-      { page: "/routes/leeds-to-newcastle", value: 5 },
-      { page: "/tickets/day-return", value: 4 },
-      { page: "/help/luggage-rules", value: 3 },
-    ],
-  },
-  {
-    url: "/blog/old-timetable-guide",
-    score: 72,
-    topicalRelevance: 41,
-    internalLinks: 96,
-    ctr: 1.2,
-    equity: 74,
-    quadrant: "Dead Ends",
-    status: "Authority Leak",
-    topicMatch: 46,
-    sending: [
-      { page: "/blog", value: 13 },
-      { page: "/guides", value: 11 },
-      { page: "/help/timetables", value: 10 },
-      { page: "/routes", value: 8 },
-      { page: "/city/birmingham", value: 6 },
-    ],
-    receiving: [
-      { page: "/help/timetables", value: 9 },
-      { page: "/blog/best-days-out-uk", value: 7 },
-      { page: "/blog/cheap-weekend-routes", value: 6 },
-      { page: "/help/refunds", value: 4 },
-      { page: "/support", value: 3 },
-    ],
-  },
-  {
-    url: "/help/luggage-rules",
-    score: 24,
-    topicalRelevance: 37,
-    internalLinks: 18,
-    ctr: 0.8,
-    equity: 22,
-    quadrant: "The Rot",
-    status: "Under-linked",
-    topicMatch: 39,
-    sending: [
-      { page: "/help", value: 8 },
-      { page: "/support", value: 6 },
-      { page: "/tickets/coach", value: 4 },
-      { page: "/routes", value: 3 },
-      { page: "/", value: 2 },
-    ],
-    receiving: [
-      { page: "/help/coach-travel", value: 5 },
-      { page: "/help/accessibility", value: 4 },
-      { page: "/help/tickets", value: 3 },
-      { page: "/support/contact", value: 2 },
-      { page: "/terms", value: 1 },
-    ],
-  },
-  {
-    url: "/routes/airport-transfers",
-    score: 63,
-    topicalRelevance: 91,
-    internalLinks: 46,
-    ctr: 7.1,
-    equity: 43,
-    quadrant: "Hidden Gems",
-    status: "High Potential",
-    topicMatch: 87,
-    sending: [
-      { page: "/routes", value: 12 },
-      { page: "/city/london", value: 10 },
-      { page: "/stops/heathrow", value: 8 },
-      { page: "/stops/gatwick", value: 7 },
-      { page: "/operators/national-express", value: 5 },
-    ],
-    receiving: [
-      { page: "/routes/london-to-heathrow", value: 10 },
-      { page: "/routes/london-to-gatwick", value: 9 },
-      { page: "/stops/airport", value: 7 },
-      { page: "/tickets/airport", value: 4 },
-      { page: "/help/airport-luggage", value: 3 },
-    ],
-  },
-  {
-    url: "/poi/stonehenge-day-trip",
-    score: 31,
-    topicalRelevance: 52,
-    internalLinks: 22,
-    ctr: 1.7,
-    equity: 29,
-    quadrant: "The Rot",
-    status: "Under-linked",
-    topicMatch: 44,
-    sending: [
-      { page: "/blog/best-days-out-uk", value: 10 },
-      { page: "/poi", value: 7 },
-      { page: "/city/salisbury", value: 5 },
-      { page: "/blog/weekend-trips", value: 4 },
-      { page: "/routes", value: 2 },
-    ],
-    receiving: [
-      { page: "/blog/day-trips-by-coach", value: 6 },
-      { page: "/routes/london-to-salisbury", value: 5 },
-      { page: "/poi/bath-day-trip", value: 3 },
-      { page: "/tickets/coach", value: 2 },
-      { page: "/help/group-bookings", value: 1 },
-    ],
-  },
-  {
-    url: "/operator/national-express",
-    score: 81,
-    topicalRelevance: 78,
-    internalLinks: 118,
-    ctr: 3.2,
-    equity: 79,
-    quadrant: "Dead Ends",
-    status: "Authority Leak",
-    topicMatch: 73,
-    sending: [
-      { page: "/operators", value: 17 },
-      { page: "/routes", value: 15 },
-      { page: "/", value: 12 },
-      { page: "/tickets/coach", value: 9 },
-      { page: "/city/london", value: 8 },
-    ],
-    receiving: [
-      { page: "/routes/london-to-manchester", value: 13 },
-      { page: "/routes/london-to-birmingham", value: 11 },
-      { page: "/stops/victoria-coach-station", value: 9 },
-      { page: "/help/national-express", value: 5 },
-      { page: "/operators/megabus", value: 4 },
-    ],
-  },
-  {
-    url: "/routes/edinburgh-to-glasgow",
-    score: 79,
-    topicalRelevance: 92,
-    internalLinks: 91,
-    ctr: 6.8,
-    equity: 77,
-    quadrant: "Powerhouses",
-    status: "Stable",
-    topicMatch: 89,
-    sending: [
-      { page: "/routes", value: 16 },
-      { page: "/city/edinburgh", value: 13 },
-      { page: "/city/glasgow", value: 12 },
-      { page: "/operators/scottish-citylink", value: 9 },
-      { page: "/tickets/coach", value: 6 },
-    ],
-    receiving: [
-      { page: "/stops/edinburgh-bus-station", value: 11 },
-      { page: "/stops/glasgow-buchanan", value: 10 },
-      { page: "/routes/glasgow-to-aberdeen", value: 8 },
-      { page: "/city/scotland", value: 6 },
-      { page: "/help/timetables", value: 3 },
-    ],
-  },
-];
+const RANGE_MULTIPLIER: Record<Range, number> = { "7d": 0.42, "30d": 0.7, "90d": 1 };
 
 function BrandAuthorityPage() {
-  const [selectedQuadrant, setSelectedQuadrant] = useState<Quadrant | "All">("All");
-  const [selectedUrl, setSelectedUrl] = useState<AuthorityUrl | null>(null);
-  const filteredUrls = useMemo(
-    () =>
-      authorityUrls.filter(
-        (row) => selectedQuadrant === "All" || row.quadrant === selectedQuadrant,
-      ),
-    [selectedQuadrant],
-  );
+  const [range, setRange] = useState<Range>("90d");
+  const [pageType, setPageType] = useState(PAGE_TYPES[0]);
+
+  const filtered = useMemo(() => buildAuthorityView(range, pageType), [range, pageType]);
 
   return (
-    <div className="dark min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       <DashboardNav />
       <div className="lg:pl-56">
-        <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur">
-          <div className="flex flex-col gap-4 px-6 py-5 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-            <div>
-              <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-                SEO Authority Tool
-              </p>
-              <h1 className="mt-1 text-2xl font-bold tracking-tight">Authority Intelligence</h1>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge
-                variant="outline"
-                className="border-primary/25 bg-primary/10 font-mono text-primary"
-              >
-                Live model
-              </Badge>
-              <ThemeToggle />
-            </div>
-          </div>
-        </header>
-
-        <main className="space-y-6 px-6 py-6 lg:px-8">
-          <HostPageRankCard />
-          <StructuralAuthorityDashboard
-            rows={filteredUrls}
-            selectedQuadrant={selectedQuadrant}
-            onQuadrant={setSelectedQuadrant}
-            onSelectUrl={setSelectedUrl}
-          />
+        <BrandAuthorityHeader range={range} pageType={pageType} onRange={setRange} onPageType={setPageType} />
+        <main className="px-6 lg:px-8 py-6 space-y-6">
+          <AuthorityHero data={filtered.trend} score={filtered.score} delta={filtered.delta} confidence={filtered.confidence} />
+          <AuthorityCards metrics={filtered.metrics} />
+          <DriversOfChange drivers={filtered.drivers} />
         </main>
       </div>
-      <EquityDrawer url={selectedUrl} onOpenChange={(open) => !open && setSelectedUrl(null)} />
     </div>
   );
 }
 
-function HostPageRankCard() {
-  const score = 78;
+function BrandAuthorityHeader({ range, pageType, onRange, onPageType }: { range: Range; pageType: string; onRange: (range: Range) => void; onPageType: (pageType: string) => void }) {
   return (
-    <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
-      <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+    <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur">
+      <div className="px-6 lg:px-8 py-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-            View 1 · Brand Authority
-          </p>
-          <h2 className="mt-1 text-xl font-semibold">HostPageRank</h2>
+          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Growth driver</p>
+          <h1 className="mt-0.5 text-2xl font-bold tracking-tight">Brand Authority</h1>
         </div>
-        <WhyItMovedTooltip />
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center rounded-md border border-border bg-surface p-0.5">
+            <Calendar className="w-3.5 h-3.5 text-muted-foreground ml-2" />
+            {RANGES.map((item) => (
+              <button key={item} type="button" onClick={() => onRange(item)} className={`px-3 py-1.5 text-xs font-mono rounded-sm transition-colors ${range === item ? "bg-card text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+                {item === "7d" ? "Last 7d" : item === "30d" ? "Last 30d" : item === "90d" ? "Last 90d" : "Last 12m"}
+              </button>
+            ))}
+          </div>
+          <FilterMenu label="Page Type" value={pageType} options={PAGE_TYPES} onChange={onPageType} />
+          <ThemeToggle />
+        </div>
       </div>
+    </header>
+  );
+}
 
-      <div className="grid gap-5 xl:grid-cols-[360px_minmax(0,1fr)_360px]">
-        <div className="flex items-center justify-center rounded-lg border border-border bg-background/45 p-5">
-          <RadialGauge score={score} />
+function FilterMenu({ label, value, options, onChange }: { label: string; value: string; options: string[]; onChange: (value: string) => void }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button type="button" onClick={() => setOpen((v) => !v)} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-border bg-surface text-xs hover:bg-card transition-colors">
+        <span className="text-muted-foreground font-mono">{label}:</span>
+        <span>{value}</span>
+        <ChevronDown className="w-3 h-3 text-muted-foreground" />
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 z-20 mt-1 min-w-[190px] rounded-md border border-border bg-popover p-1 shadow-lg">
+            {options.map((option) => (
+              <button key={option} type="button" onClick={() => { onChange(option); setOpen(false); }} className={`w-full rounded px-2.5 py-1.5 text-left text-xs transition-colors ${option === value ? "bg-primary/10 text-primary" : "hover:bg-surface"}`}>
+                {option}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function AuthorityHero({ data, score, delta, confidence }: { data: typeof AUTHORITY_TREND; score: number; delta: number; confidence: number }) {
+  return (
+    <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
+      <div className="grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
+        <div className="flex flex-col justify-between gap-6">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-primary">
+              <Sparkles className="w-3.5 h-3.5" /> Brand Authority
+            </div>
+            <p className="mt-5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Score</p>
+            <div className="mt-2 flex items-end gap-3">
+              <span className="font-mono text-7xl font-bold leading-none tabular-nums">{score}</span>
+              <span className="mb-2 font-mono text-xl text-muted-foreground">/100</span>
+            </div>
+            <p className="mt-4 max-w-sm text-sm text-muted-foreground">Composite authority strength across brand, domain, and content signals.</p>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-lg border border-border bg-surface/45 p-3">
+              <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Vs previous</p>
+              <p className="mt-1 flex items-center gap-1 font-mono text-lg font-bold text-primary tabular-nums"><ArrowUpRight className="w-4 h-4" />+{delta}%</p>
+            </div>
+            <div className="rounded-lg border border-border bg-surface/45 p-3">
+              <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Confidence</p>
+              <p className="mt-1 font-mono text-lg font-bold tabular-nums">{confidence}%</p>
+            </div>
+          </div>
         </div>
-
-        <div className="rounded-lg border border-border bg-background/45 p-5">
+        <div className="min-h-[330px] rounded-lg border border-border bg-background/45 p-4">
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold">6-month movement</p>
-              <p className="text-xs text-muted-foreground">Host-level authority trend</p>
+              <p className="text-sm font-semibold">Score evolution</p>
+              <p className="text-xs text-muted-foreground">Weekly authority trajectory with inflection points.</p>
             </div>
-            <span className="inline-flex items-center gap-1 rounded-md border border-primary/20 bg-primary/10 px-2 py-1 font-mono text-xs text-primary">
-              <ArrowUpRight className="h-3.5 w-3.5" /> +14 pts
-            </span>
+            <TrendingUp className="w-4 h-4 text-primary" />
           </div>
-          <ResponsiveContainer width="100%" height={230}>
-            <LineChart data={hostTrend} margin={{ top: 12, right: 12, bottom: 4, left: 0 }}>
-              <XAxis
-                dataKey="month"
-                axisLine={false}
-                tickLine={false}
-                tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
-              />
-              <YAxis
-                domain={[50, 90]}
-                axisLine={false}
-                tickLine={false}
-                tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
-                width={30}
-              />
-              <Tooltip
-                content={<MiniTooltip />}
-                cursor={{ stroke: "var(--border)", strokeDasharray: "3 3" }}
-              />
-              <Line
-                type="monotone"
-                dataKey="score"
-                stroke="var(--chart-3)"
-                strokeWidth={3}
-                dot={{ r: 3, fill: "var(--chart-3)" }}
-                activeDot={{ r: 6, stroke: "var(--background)", strokeWidth: 2 }}
-              />
+          <ResponsiveContainer width="100%" height={270}>
+            <LineChart data={data} margin={{ top: 18, right: 20, bottom: 4, left: 0 }}>
+              <XAxis dataKey="week" axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
+              <YAxis domain={[40, 100]} axisLine={false} tickLine={false} tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} width={34} />
+              <Tooltip content={<AuthorityTooltip />} cursor={{ stroke: "var(--border)", strokeDasharray: "3 3" }} />
+              <Line type="monotone" dataKey="score" stroke="var(--chart-1)" strokeWidth={3} dot={false} activeDot={{ r: 5, fill: "var(--primary)", stroke: "var(--background)", strokeWidth: 2 }} />
+              {data.filter((point) => point.marker).map((point) => (
+                <ReferenceDot key={point.week} x={point.week} y={point.score} r={4} fill="var(--chart-1)" stroke="var(--background)" strokeWidth={2} />
+              ))}
             </LineChart>
           </ResponsiveContainer>
         </div>
-
-        <div className="rounded-lg border border-border bg-background/45 p-5">
-          <p className="text-sm font-semibold">Benchmarking</p>
-          <p className="mt-1 text-xs text-muted-foreground">Your Domain vs. Top 3 Competitors</p>
-          <div className="mt-5 space-y-4">
-            {benchmark.map((item) => (
-              <div key={item.domain}>
-                <div className="mb-1.5 flex items-center justify-between gap-3 text-xs">
-                  <span
-                    className={
-                      item.domain === "Your domain"
-                        ? "font-semibold text-foreground"
-                        : "text-muted-foreground"
-                    }
-                  >
-                    {item.domain}
-                  </span>
-                  <span className="font-mono tabular-nums">{item.score}</span>
-                </div>
-                <div className="h-2 overflow-hidden rounded-full bg-surface">
-                  <div
-                    className="h-full rounded-full bg-primary"
-                    style={{
-                      width: `${item.score}%`,
-                      background:
-                        item.domain === "Your domain"
-                          ? "linear-gradient(90deg, var(--chart-3), var(--primary))"
-                          : "var(--muted-foreground)",
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );
 }
 
-function RadialGauge({ score }: { score: number }) {
-  const radius = 96;
-  const circumference = 2 * Math.PI * radius;
-  const dash = (score / 100) * circumference;
+function AuthorityCards({ metrics }: { metrics: AuthorityMetric[] }) {
   return (
-    <div className="relative grid h-[300px] w-[300px] place-items-center">
-      <svg
-        viewBox="0 0 260 260"
-        className="h-full w-full -rotate-90"
-        role="img"
-        aria-label={`HostPageRank ${score} out of 100`}
-      >
-        <defs>
-          <linearGradient id="hostGauge" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="var(--chart-3)" />
-            <stop offset="100%" stopColor="var(--primary)" />
-          </linearGradient>
-        </defs>
-        <circle cx="130" cy="130" r={radius} fill="none" stroke="var(--surface)" strokeWidth="18" />
-        <circle
-          cx="130"
-          cy="130"
-          r={radius}
-          fill="none"
-          stroke="url(#hostGauge)"
-          strokeWidth="18"
-          strokeLinecap="round"
-          strokeDasharray={`${dash} ${circumference - dash}`}
-        />
-      </svg>
-      <div className="absolute text-center">
-        <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-          HostPageRank
-        </p>
-        <p className="mt-2 font-mono text-6xl font-bold tabular-nums">{score}</p>
-        <p className="mt-2 text-sm text-muted-foreground">Strong host authority</p>
-      </div>
-    </div>
-  );
-}
-
-function WhyItMovedTooltip() {
-  return (
-    <div className="group relative inline-flex w-fit">
-      <button
-        type="button"
-        className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2 text-xs font-semibold transition-colors hover:bg-card"
-      >
-        <Info className="h-4 w-4 text-primary" /> Why it moved
-      </button>
-      <div className="pointer-events-none absolute right-0 top-11 z-20 w-72 rounded-lg border border-border bg-popover p-4 text-sm opacity-0 shadow-xl transition-opacity group-hover:opacity-100">
-        <p className="font-semibold">Signal breakdown</p>
-        <div className="mt-3 space-y-2 text-xs">
-          <SignalRow label="External Backlinks" value="+2" tone="text-primary" />
-          <SignalRow label="Spam Risk" value="Low" tone="text-primary" />
-          <SignalRow label="Domain Age" value="Legacy" tone="text-chart-3" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function StructuralAuthorityDashboard({
-  rows,
-  selectedQuadrant,
-  onQuadrant,
-  onSelectUrl,
-}: {
-  rows: AuthorityUrl[];
-  selectedQuadrant: Quadrant | "All";
-  onQuadrant: (quadrant: Quadrant | "All") => void;
-  onSelectUrl: (url: AuthorityUrl) => void;
-}) {
-  return (
-    <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(540px,0.9fr)]">
-      <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
-        <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-          <div>
-            <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-              View 2 · Website Authority
-            </p>
-            <h2 className="mt-1 text-xl font-semibold">Structural Authority</h2>
+    <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+      {metrics.map((metric) => {
+        const content = (
+          <>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{metric.label}</p>
+              <p className="mt-2 font-mono text-3xl font-bold tabular-nums">{metric.score}<span className="text-sm text-muted-foreground">/100</span></p>
+            </div>
+            <StatusPill status={metric.status} />
           </div>
-          <button
-            type="button"
-            onClick={() => onQuadrant("All")}
-            className={`rounded-md border px-3 py-1.5 text-xs font-semibold transition-colors ${selectedQuadrant === "All" ? "border-primary/25 bg-primary/10 text-primary" : "border-border bg-surface text-muted-foreground hover:text-foreground"}`}
-          >
-            All URLs
-          </button>
-        </div>
-        <OpportunityMatrix
-          rows={authorityUrls}
-          selectedQuadrant={selectedQuadrant}
-          onQuadrant={onQuadrant}
-        />
-      </div>
+          <div className={`mt-3 inline-flex items-center gap-1 text-[11px] font-mono ${metric.delta >= 0 ? "text-primary" : "text-destructive"}`}>
+            {metric.delta >= 0 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+            {metric.delta > 0 ? "+" : ""}{metric.delta}% vs previous
+          </div>
+          <div className="mt-4 h-16">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={metric.trend.map((value, index) => ({ index, value }))} margin={{ top: 4, right: 2, bottom: 4, left: 2 }}>
+                <Tooltip content={<SparklineTooltip />} cursor={{ stroke: "var(--border)", strokeDasharray: "2 2" }} />
+                <Line type="monotone" dataKey="value" stroke={metric.delta >= 0 ? "var(--chart-1)" : "var(--chart-5)"} strokeWidth={2} dot={false} activeDot={{ r: 3 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="mt-3 line-clamp-2 text-xs text-muted-foreground">{metric.driver}</p>
+          </>
+        );
 
-      <UrlAnalysisTable rows={rows} selectedQuadrant={selectedQuadrant} onSelectUrl={onSelectUrl} />
-    </section>
-  );
-}
+        if (metric.label === "Domain Age") {
+          return (
+            <Link key={metric.label} to="/brand-authority/domain-age" aria-label="Open Domain Age detail page" className="group rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-colors hover:border-primary/40 hover:bg-surface/40 focus:outline-none focus:ring-2 focus:ring-ring">
+              {content}
+            </Link>
+          );
+        }
 
-function OpportunityMatrix({
-  rows,
-  selectedQuadrant,
-  onQuadrant,
-}: {
-  rows: AuthorityUrl[];
-  selectedQuadrant: Quadrant | "All";
-  onQuadrant: (quadrant: Quadrant) => void;
-}) {
-  const quadrants: { name: Quadrant; x: number; y: number; align: string }[] = [
-    { name: "Hidden Gems", x: 170, y: 72, align: "start" },
-    { name: "Powerhouses", x: 650, y: 72, align: "end" },
-    { name: "The Rot", x: 170, y: 390, align: "start" },
-    { name: "Dead Ends", x: 650, y: 390, align: "end" },
-  ];
-  return (
-    <svg
-      viewBox="0 0 820 500"
-      className="h-[520px] w-full rounded-lg border border-border bg-background/45"
-      role="img"
-      aria-label="Opportunity matrix scatter plot"
-    >
-      <rect x="70" y="40" width="680" height="400" rx="8" fill="var(--card)" opacity="0.32" />
-      <line x1="410" y1="40" x2="410" y2="440" stroke="var(--border)" strokeDasharray="6 6" />
-      <line x1="70" y1="240" x2="750" y2="240" stroke="var(--border)" strokeDasharray="6 6" />
-      {quadrants.map((quadrant) => (
-        <g key={quadrant.name} onClick={() => onQuadrant(quadrant.name)} className="cursor-pointer">
-          <rect
-            x={quadrant.x < 410 ? 70 : 410}
-            y={quadrant.y < 240 ? 40 : 240}
-            width="340"
-            height="200"
-            fill={selectedQuadrant === quadrant.name ? "var(--primary)" : "transparent"}
-            opacity="0.08"
-          />
-          <text
-            x={quadrant.x}
-            y={quadrant.y}
-            textAnchor={quadrant.align === "end" ? "end" : "start"}
-            className="fill-foreground text-[15px] font-semibold"
-          >
-            {quadrant.name}
-          </text>
-        </g>
-      ))}
-      <text
-        x="410"
-        y="486"
-        textAnchor="middle"
-        className="fill-muted-foreground text-[12px] font-mono"
-      >
-        Internal Equity Score
-      </text>
-      <text
-        x="22"
-        y="240"
-        transform="rotate(-90 22 240)"
-        textAnchor="middle"
-        className="fill-muted-foreground text-[12px] font-mono"
-      >
-        CTR
-      </text>
-      <text x="70" y="462" className="fill-muted-foreground text-[10px] font-mono">
-        Low
-      </text>
-      <text x="730" y="462" className="fill-muted-foreground text-[10px] font-mono">
-        High
-      </text>
-      <text x="42" y="438" className="fill-muted-foreground text-[10px] font-mono">
-        Low
-      </text>
-      <text x="40" y="48" className="fill-muted-foreground text-[10px] font-mono">
-        High
-      </text>
-      {rows.map((row) => {
-        const cx = 70 + (row.equity / 100) * 680;
-        const cy = 440 - (row.ctr / 9) * 400;
+        if (metric.label === "Page Age") {
+          return (
+            <Link key={metric.label} to="/brand-authority/page-age" aria-label="Open Page Age detail page" className="group rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-colors hover:border-primary/40 hover:bg-surface/40 focus:outline-none focus:ring-2 focus:ring-ring">
+              {content}
+            </Link>
+          );
+        }
+
         return (
-          <g key={row.url} className="cursor-pointer" onClick={() => onQuadrant(row.quadrant)}>
-            <title>{`${row.url}\nEquity: ${row.equity}\nCTR: ${row.ctr}%\n${row.quadrant}`}</title>
-            <circle
-              cx={cx}
-              cy={cy}
-              r={7 + row.score / 22}
-              fill={statusColor(row.status)}
-              opacity="0.82"
-              stroke="var(--background)"
-              strokeWidth="2"
-            />
-          </g>
+          <button key={metric.label} type="button" aria-label={`Open ${metric.label} detail page`} className="group rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-colors hover:border-primary/40 hover:bg-surface/40 focus:outline-none focus:ring-2 focus:ring-ring">
+            {content}
+          </button>
         );
       })}
-    </svg>
+    </section>
   );
 }
 
-function UrlAnalysisTable({
-  rows,
-  selectedQuadrant,
-  onSelectUrl,
-}: {
-  rows: AuthorityUrl[];
-  selectedQuadrant: Quadrant | "All";
-  onSelectUrl: (url: AuthorityUrl) => void;
-}) {
+function DriversOfChange({ drivers }: { drivers: readonly { label: string; value: string; direction: "up" | "down"; note: string }[] }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+    <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold">URL Analysis Table</p>
-          <p className="text-xs text-muted-foreground">
-            {selectedQuadrant === "All" ? "All quadrants" : selectedQuadrant} · {rows.length} URLs
-          </p>
+          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Drivers of change</p>
+          <h2 className="mt-1 text-lg font-semibold">What moved authority this period</h2>
         </div>
-        <MousePointerClick className="h-4 w-4 text-primary" />
+        <ShieldCheck className="w-5 h-5 text-primary" />
       </div>
-      <div className="overflow-hidden rounded-lg border border-border">
-        <table className="w-full text-sm">
-          <thead className="bg-surface/60 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-            <tr>
-              <th className="px-3 py-3 text-left font-medium">URL</th>
-              <th className="px-3 py-3 text-right font-medium">Authority</th>
-              <th className="px-3 py-3 text-right font-medium">Topical</th>
-              <th className="px-3 py-3 text-right font-medium">Links</th>
-              <th className="px-3 py-3 text-right font-medium">CTR</th>
-              <th className="px-3 py-3 text-left font-medium">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr
-                key={row.url}
-                onClick={() => onSelectUrl(row)}
-                className="cursor-pointer border-t border-border transition-colors hover:bg-surface/45"
-              >
-                <td className="max-w-[210px] truncate px-3 py-3 font-mono text-xs">{row.url}</td>
-                <td className="px-3 py-3 text-right font-mono font-bold tabular-nums">
-                  {row.score}
-                </td>
-                <td className="px-3 py-3 text-right font-mono tabular-nums">
-                  {row.topicalRelevance}%
-                </td>
-                <td className="px-3 py-3 text-right font-mono tabular-nums">{row.internalLinks}</td>
-                <td className="px-3 py-3 text-right font-mono text-primary tabular-nums">
-                  {row.ctr}%
-                </td>
-                <td className="px-3 py-3">
-                  <StatusBadge status={row.status} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-function EquityDrawer({
-  url,
-  onOpenChange,
-}: {
-  url: AuthorityUrl | null;
-  onOpenChange: (open: boolean) => void;
-}) {
-  return (
-    <Sheet open={Boolean(url)} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full overflow-y-auto border-border bg-card sm:max-w-xl">
-        {url && (
-          <>
-            <SheetHeader className="pr-8">
-              <SheetTitle className="font-mono text-base">{url.url}</SheetTitle>
-              <SheetDescription>Equity Flow and topical match diagnostics</SheetDescription>
-            </SheetHeader>
-            <div className="mt-6 space-y-5">
-              <div className="rounded-lg border border-border bg-background/45 p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-semibold">Topical Match</p>
-                    <p className="text-xs text-muted-foreground">
-                      Relevance of links to the page core topic
-                    </p>
-                  </div>
-                  <span className="font-mono text-2xl font-bold text-primary">
-                    {url.topicMatch}%
-                  </span>
-                </div>
-                <div className="mt-4 h-2 overflow-hidden rounded-full bg-surface">
-                  <div
-                    className="h-full rounded-full bg-primary"
-                    style={{ width: `${url.topicMatch}%` }}
-                  />
-                </div>
-              </div>
-              <FlowList
-                title="Top 5 pages sending equity"
-                icon={<ExternalLink className="h-4 w-4" />}
-                items={url.sending}
-              />
-              <FlowList
-                title="Top 5 pages receiving equity"
-                icon={<Link2 className="h-4 w-4" />}
-                items={url.receiving}
-              />
+      <div className="grid gap-3 md:grid-cols-3">
+        {drivers.map((driver) => (
+          <div key={driver.label} className="rounded-lg border border-border bg-surface/40 p-4">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-sm font-medium">{driver.label}</p>
+              <span className={`inline-flex items-center gap-1 font-mono text-xs ${driver.direction === "up" ? "text-primary" : "text-destructive"}`}>
+                {driver.direction === "up" ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+                {driver.value}
+              </span>
             </div>
-          </>
-        )}
-      </SheetContent>
-    </Sheet>
-  );
-}
-
-function FlowList({
-  title,
-  icon,
-  items,
-}: {
-  title: string;
-  icon: React.ReactNode;
-  items: { page: string; value: number }[];
-}) {
-  return (
-    <div className="rounded-lg border border-border bg-background/45 p-4">
-      <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
-        {icon}
-        {title}
-      </div>
-      <div className="space-y-2">
-        {items.map((item) => (
-          <div
-            key={item.page}
-            className="flex items-center justify-between gap-3 rounded-md bg-surface/50 px-3 py-2"
-          >
-            <span className="truncate font-mono text-xs text-muted-foreground">{item.page}</span>
-            <span className="font-mono text-xs font-bold text-primary">{item.value}</span>
+            <p className="mt-2 text-xs text-muted-foreground">{driver.note}</p>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
-function StatusBadge({ status }: { status: UrlStatus }) {
-  const classes: Record<UrlStatus, string> = {
-    "Under-linked": "border-border bg-surface text-muted-foreground",
-    "High Potential": "border-primary/20 bg-primary/10 text-primary",
-    "Authority Leak": "border-chart-4/30 bg-chart-4/10 text-chart-4",
-    Stable: "border-chart-3/25 bg-chart-3/10 text-chart-3",
-  };
-  return (
-    <span
-      className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[10px] font-mono uppercase tracking-wider ${classes[status]}`}
-    >
-      <CircleDot className="h-3 w-3" />
-      {status}
-    </span>
-  );
+function StatusPill({ status }: { status: AuthorityMetric["status"] }) {
+  const className = status === "Strong" ? "border-primary/20 bg-primary/10 text-primary" : status === "Weak" ? "border-destructive/20 bg-destructive/10 text-destructive" : "border-border bg-surface text-muted-foreground";
+  return <span className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[10px] font-mono uppercase tracking-wider ${className}`}><CircleDot className="w-3 h-3" />{status}</span>;
 }
 
-function SignalRow({ label, value, tone }: { label: string; value: string; tone: string }) {
-  return (
-    <div className="flex items-center justify-between gap-3 rounded-md bg-surface/50 px-3 py-2">
-      <span className="text-muted-foreground">{label}</span>
-      <span className={`font-mono font-bold ${tone}`}>{value}</span>
-    </div>
-  );
-}
-
-function MiniTooltip({
-  active,
-  payload,
-  label,
-}: {
-  active?: boolean;
-  payload?: Array<{ value?: number }>;
-  label?: string;
-}) {
+function AuthorityTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value?: number; payload?: { marker?: string } }>; label?: string }) {
   if (!active || !payload?.length) return null;
   return (
     <div className="rounded-md border border-border bg-popover px-3 py-2 text-xs shadow-md">
       <p className="font-mono text-muted-foreground">{label}</p>
-      <p className="mt-1 font-mono font-bold text-foreground">HostPageRank {payload[0].value}</p>
+      <p className="mt-1 font-mono font-bold text-foreground">Authority {payload[0].value}/100</p>
+      {payload[0].payload?.marker && <p className="mt-1 text-primary">{payload[0].payload.marker}</p>}
     </div>
   );
 }
 
-function statusColor(status: UrlStatus) {
-  if (status === "High Potential") return "var(--primary)";
-  if (status === "Authority Leak") return "var(--chart-4)";
-  if (status === "Stable") return "var(--chart-3)";
-  return "var(--muted-foreground)";
+function SparklineTooltip({ active, payload }: { active?: boolean; payload?: Array<{ value?: number }> }) {
+  if (!active || !payload?.length) return null;
+  return <div className="rounded-md border border-border bg-popover px-2 py-1 font-mono text-xs shadow-md">{payload[0].value}/100</div>;
+}
+
+function buildAuthorityView(range: Range, pageType: string) {
+  const safePageType = pageType || PAGE_TYPES[0];
+  const pageShift = safePageType === "All page types" ? 0 : (safePageType.length % 5) - 2;
+  const marketShift = 0;
+  const multiplier = RANGE_MULTIPLIER[range];
+  const scoreShift = Math.round((pageShift + marketShift) * 1.5);
+  const score = clamp(79 + scoreShift, 0, 100);
+  const delta = Number((7.8 * multiplier + pageShift * 0.4).toFixed(1));
+  const confidence = clamp(Math.round(86 + marketShift * 2 - (range === "7d" ? 8 : 0)), 0, 99);
+  const metrics = AUTHORITY_METRICS.map((metric, index) => {
+    const adjustedScore = clamp(metric.score + pageShift + marketShift + (index % 2), 0, 100);
+    const adjustedDelta = Number((metric.delta * multiplier + pageShift * 0.25).toFixed(1));
+    return {
+      ...metric,
+      score: adjustedScore,
+      delta: adjustedDelta,
+      status: adjustedScore >= 75 ? "Strong" : adjustedScore < 60 ? "Weak" : "Moderate",
+      trend: metric.trend.map((point, trendIndex) => clamp(Math.round(point + pageShift + marketShift + trendIndex * (multiplier - 1) * 0.45), 0, 100)),
+    } satisfies AuthorityMetric;
+  });
+  return {
+    score,
+    delta,
+    confidence,
+    trend: AUTHORITY_TREND.map((point, index) => ({ ...point, score: clamp(Math.round(point.score + scoreShift + index * (multiplier - 1) * 0.7), 0, 100) })),
+    metrics,
+    drivers: [
+      { label: "Brand searches", value: `+${Math.round(12 * multiplier)}%`, direction: "up", note: "Demand for named queries increased versus the previous comparable period." },
+      { label: "Indexed pages", value: `+${Math.round(8 * multiplier)}%`, direction: "up", note: "More commercially relevant URLs are eligible to contribute authority." },
+      { label: "Content freshness", value: `-${Math.max(2, Math.round(5 / multiplier))}%`, direction: "down", note: "Older page groups are losing contribution weight and need refresh priority." },
+    ] as const,
+  };
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
 }
