@@ -345,13 +345,19 @@ function PageDetailPanel({ page, onClose }: { page: DerivedPage; onClose: () => 
 }
 
 function LeakageBreakdown({ rows }: { rows: ReturnType<typeof buildTopicalModel>["breakdown"] }) {
+  const [expandedSegments, setExpandedSegments] = useState<Record<Segment, boolean>>({ "Core Topic": true, Adjacent: true, "Off-Topic": true });
+
+  const toggleSegment = (segment: Segment) => {
+    setExpandedSegments((current) => ({ ...current, [segment]: !current[segment] }));
+  };
+
   return (
     <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
       <div className="mb-4 flex items-start justify-between gap-3"><div><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Authority leakage breakdown</p><h2 className="mt-1 text-lg font-semibold">How lack of focus impacts revenue</h2></div><TriangleAlert className="h-5 w-5 text-destructive" /></div>
       <div className="overflow-x-auto rounded-lg border border-border">
         <table className="w-full min-w-[760px] border-collapse text-left text-sm">
           <thead className="bg-surface/70 text-[10px] font-mono uppercase tracking-wider text-muted-foreground"><tr><Th>Segment</Th><Th>Pages</Th><Th>Revenue</Th><Th>Authority Loss</Th><Th>Opportunity</Th></tr></thead>
-          <tbody>{rows.map((row) => <Fragment key={row.segment}><tr className="border-t border-border bg-surface/25"><Td><span className={`font-semibold ${segmentMeta[row.segment].tone}`}>{segmentMeta[row.segment].label}</span></Td><Td mono className="font-bold">{row.pages}</Td><Td mono className="font-bold">{formatMoney(row.revenue)}</Td><Td>{segmentMeta[row.segment].loss}</Td><Td mono className="font-bold text-primary">{row.opportunity > 0 ? formatMoney(row.opportunity) : "—"}</Td></tr>{(row.topics ?? []).map((topic) => <tr key={`${row.segment}-${topic.name}`} className="border-t border-border/50"><Td><div className="flex items-center gap-2 pl-5 text-muted-foreground"><span className="h-px w-5 bg-border" /><span>{topic.name}</span></div></Td><Td mono>{topic.pages}</Td><Td mono>{formatMoney(topic.revenue)}</Td><Td className="text-muted-foreground">Breakdown</Td><Td mono className="text-primary">{topic.opportunity > 0 ? formatMoney(topic.opportunity) : "—"}</Td></tr>)}</Fragment>)}</tbody>
+          <tbody>{rows.map((row) => <Fragment key={row.segment}><tr className="border-t border-border bg-surface/25 transition-colors hover:bg-surface/45"><Td><button type="button" onClick={() => toggleSegment(row.segment)} className={`inline-flex items-center gap-2 font-semibold ${segmentMeta[row.segment].tone}`} aria-expanded={expandedSegments[row.segment]}><ChevronDown className={`h-3.5 w-3.5 transition-transform ${expandedSegments[row.segment] ? "" : "-rotate-90"}`} />{segmentMeta[row.segment].label}</button></Td><Td mono className="font-bold">{row.pages}</Td><Td mono className="font-bold">{formatMoney(row.revenue)}</Td><Td>{segmentMeta[row.segment].loss}</Td><Td mono className="font-bold text-primary">{row.opportunity > 0 ? formatMoney(row.opportunity) : "—"}</Td></tr>{expandedSegments[row.segment] && (row.topics ?? []).map((topic) => <tr key={`${row.segment}-${topic.name}`} className="border-t border-border/50"><Td><div className="flex items-center gap-2 pl-5 text-muted-foreground"><span className="h-px w-5 bg-border" /><span>{topic.name}</span></div></Td><Td mono>{topic.pages}</Td><Td mono>{formatMoney(topic.revenue)}</Td><Td className="text-muted-foreground">Breakdown</Td><Td mono className="text-primary">{topic.opportunity > 0 ? formatMoney(topic.opportunity) : "—"}</Td></tr>)}</Fragment>)}</tbody>
         </table>
       </div>
     </section>
