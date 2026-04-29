@@ -443,7 +443,11 @@ function buildTopicalModel(pages: PageEmbedding[]) {
   const outside = derived.filter((page) => page.segment !== "Core Topic");
   const breakdown = segmentOrder.map((segment) => {
     const segmentPages = derived.filter((page) => page.segment === segment);
-    return { segment, pages: segmentPages.length, revenue: segmentPages.reduce((sum, page) => sum + page.currentRevenue, 0), opportunity: segmentPages.reduce((sum, page) => sum + page.authorityLoss, 0) };
+    const topics = [...new Set(segmentPages.map((page) => page.cluster))].map((name) => {
+      const topicPages = segmentPages.filter((page) => page.cluster === name);
+      return { name, pages: topicPages.length, revenue: topicPages.reduce((sum, page) => sum + page.currentRevenue, 0), opportunity: topicPages.reduce((sum, page) => sum + page.authorityLoss, 0) };
+    });
+    return { segment, pages: segmentPages.length, revenue: segmentPages.reduce((sum, page) => sum + page.currentRevenue, 0), opportunity: segmentPages.reduce((sum, page) => sum + page.authorityLoss, 0), topics };
   });
   return { pages: derived, centroid, siteFocusScore, outsideRadiusPct: Math.round((outside.length / derived.length) * 100), revenueAtRisk: outside.reduce((sum, page) => sum + page.currentRevenue, 0), recoverableRevenue: outside.reduce((sum, page) => sum + page.authorityLoss, 0), breakdown };
 }
