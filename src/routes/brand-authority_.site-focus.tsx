@@ -187,13 +187,12 @@ function TopicalMapPanel({ pages, centroid, selectedUrl, mapMode, angle, onAngle
           <Legend />
           <div className="inline-flex rounded-md border border-border bg-surface p-1">
             <button type="button" onClick={() => onMapMode("page")} className={`inline-flex items-center gap-2 rounded px-3 py-1 text-xs font-semibold transition-colors ${mapMode === "page" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}><Eye className="h-3.5 w-3.5" /> Page view</button>
-            <button type="button" onClick={() => onMapMode("topic")} className={`inline-flex items-center gap-2 rounded px-3 py-1 text-xs font-semibold transition-colors ${mapMode === "topic" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}><Orbit className="h-3.5 w-3.5" /> Topic view</button>
+            <button type="button" onClick={() => onMapMode("topic")} className={`inline-flex items-center gap-2 rounded px-3 py-1 text-xs font-semibold transition-colors ${mapMode === "topic" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}><Target className="h-3.5 w-3.5" /> Topic view</button>
           </div>
-          {mapMode === "topic" && <button type="button" onClick={() => onAngleChange({ x: 58, y: 34 })} className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-semibold hover:bg-card"><RefreshCcw className="h-3.5 w-3.5" /> Reset view</button>}
         </div>
       </div>
       <div className="relative h-[520px] overflow-hidden rounded-lg border border-border bg-background/45">
-        {mapMode === "page" ? <Scatter2D pages={pages} selectedUrl={selectedUrl} onSelect={onSelect} /> : <Scatter3D pages={pages} centroid={centroid} selectedUrl={selectedUrl} angle={angle} onAngleChange={onAngleChange} onSelect={onSelect} />}
+        {mapMode === "page" ? <Scatter2D pages={pages} selectedUrl={selectedUrl} onSelect={onSelect} /> : <TopicMap pages={pages} onSelect={onSelect} />}
       </div>
     </section>
   );
@@ -227,6 +226,41 @@ function ScatterPoint({ page, selected, onSelect }: { page: DerivedPage; selecte
       {selected && <circle cx={cx} cy={cy} r={size + 8} fill="none" stroke="var(--ring)" strokeWidth="2" />}
       <circle cx={cx} cy={cy} r={size} fill={segmentMeta[page.segment].fill} opacity={0.35 + page.confidence * 0.55} stroke="var(--background)" strokeWidth="2" />
     </g>
+  );
+}
+
+function TopicMap({ pages, onSelect }: { pages: DerivedPage[]; onSelect: (url: string) => void }) {
+  const topics = [...new Set(pages.map((page) => page.cluster))].map((cluster) => {
+    const topicPages = pages.filter((page) => page.cluster === cluster);
+    const revenue = topicPages.reduce((sum, page) => sum + page.currentRevenue, 0);
+    const opportunity = topicPages.reduce((sum, page) => sum + page.authorityLoss, 0);
+    const avgX = topicPages.reduce((sum, page) => sum + page.x, 0) / topicPages.length;
+    const avgY = topicPages.reduce((sum, page) => sum + page.y, 0) / topicPages.length;
+    const avgRadius = topicPages.reduce((sum, page) => sum + page.radiusScore, 0) / topicPages.length;
+    const segment: Segment = avgRadius <= 34 ? "Core Topic" : avgRadius <= 68 ? "Adjacent" : "Off-Topic";
+    const leadPage = topicPages.sort((a, b) => b.currentRevenue - a.currentRevenue)[0];
+    return { cluster, pages: topicPages.length, revenue, opportunity, avgX, avgY, avgRadius, segment, leadPage };
+  });
+
+  return (
+    <svg viewBox="0 0 900 520" className="h-full w-full" role="img" aria-label="Topic authority map">
+      <circle cx="450" cy="260" r="210" fill="none" stroke="var(--border)" strokeDasharray="7 7" />
+      <circle cx="450" cy="260" r="8" fill="var(--primary)" />
+      <text x="466" y="255" className="fill-muted-foreground text-[11px] font-mono">site centroid</text>
+      {topics.map((topic) => {
+        const cx = 450 + topic.avgX * 300;
+        const cy = 260 - topic.avgY * 230;
+        const size = 34 + Math.sqrt(topic.revenue) / 34;
+        return (
+          <g key={topic.cluster} className="cursor-pointer" onClick={() => onSelect(topic.leadPage.url)}>
+            <title>{`${topic.cluster}\n${topic.pages} pages\nRevenue: ${formatMoney(topic.revenue)}\nOpportunity: ${formatMoney(topic.opportunity)}`}</title>
+            <circle cx={cx} cy={cy} r={size} fill={segmentMeta[topic.segment].fill} opacity="0.22" stroke={segmentMeta[topic.segment].fill} strokeWidth="2" />
+            <text x={cx} y={cy - 4} textAnchor="middle" className="fill-foreground text-[12px] font-semibold">{topic.cluster}</text>
+            <text x={cx} y={cy + 13} textAnchor="middle" className="fill-muted-foreground text-[10px] font-mono">{topic.pages} pages · {formatMoney(topic.revenue)}</text>
+          </g>
+        );
+      })}
+    </svg>
   );
 }
 
