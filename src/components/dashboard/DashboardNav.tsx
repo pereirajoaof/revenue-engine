@@ -83,8 +83,10 @@ export function DashboardNav() {
       setAuditRunsOpen(true);
     } else if (isAuditRunsRoute) {
       setAuditRunsOpen(false);
+    } else if (activeDriver) {
+      setDriversOpen(true);
     }
-  }, [isAuditRunDetailRoute, isAuditRunsRoute]);
+  }, [activeDriver, isAuditRunDetailRoute, isAuditRunsRoute]);
 
   const handleLogout = () => {
     navigate({ to: "/" });
