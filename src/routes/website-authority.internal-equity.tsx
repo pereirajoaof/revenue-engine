@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, ExternalLink, Link2 } from "lucide-react";
-import { CartesianGrid, ReferenceLine, Scatter, ScatterChart, Tooltip as ChartTooltip, XAxis, YAxis, ZAxis } from "recharts";
+import { CartesianGrid, ReferenceLine, ResponsiveContainer, Scatter, ScatterChart, Tooltip as ChartTooltip, XAxis, YAxis, ZAxis } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
@@ -72,20 +72,22 @@ function InternalEquityPage() {
           </div>
         </div>
         <div className="relative h-[430px] rounded-lg border border-border bg-background/45 p-4">
-          <div className="absolute left-[7%] top-5 text-xs font-semibold text-primary">Hidden Gems</div>
-          <div className="absolute right-8 top-5 text-xs font-semibold text-chart-3">Powerhouses</div>
-          <div className="absolute bottom-6 left-[7%] text-xs font-semibold text-muted-foreground">Dead Ends</div>
-          <div className="absolute bottom-6 right-8 text-xs font-semibold text-destructive">The Rot</div>
-          <ScatterChart width={1100} height={395} margin={{ top: 18, right: 24, bottom: 28, left: 12 }} className="max-w-full">
-            <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
-            <XAxis dataKey="authority" type="number" domain={[0, 100]} name="Internal Equity Score" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
-            <YAxis dataKey="ctr" type="number" domain={[0, 8]} name="CTR" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} width={34} />
-            <ZAxis range={[90, 180]} />
-            <ReferenceLine x={55} stroke="var(--border)" strokeWidth={2} />
-            <ReferenceLine y={3.5} stroke="var(--border)" strokeWidth={2} />
-            <ChartTooltip content={<MatrixTooltip />} cursor={{ stroke: "var(--primary)", strokeDasharray: "3 3" }} />
-            <Scatter data={filtered} fill="var(--chart-3)" onClick={(point) => setSelectedUrl(point as UrlRow)} />
-          </ScatterChart>
+          <QuadrantButton quadrant="Hidden Gems" className="left-[7%] top-5 text-primary" onClick={setActiveQuadrant} />
+          <QuadrantButton quadrant="Powerhouses" className="right-8 top-5 text-chart-3" onClick={setActiveQuadrant} />
+          <QuadrantButton quadrant="Dead Ends" className="bottom-6 left-[7%] text-muted-foreground" onClick={setActiveQuadrant} />
+          <QuadrantButton quadrant="The Rot" className="bottom-6 right-8 text-destructive" onClick={setActiveQuadrant} />
+          <ResponsiveContainer width="100%" height="100%">
+            <ScatterChart margin={{ top: 18, right: 24, bottom: 28, left: 12 }}>
+              <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
+              <XAxis dataKey="authority" type="number" domain={[0, 100]} name="Internal Equity Score" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
+              <YAxis dataKey="ctr" type="number" domain={[0, 8]} name="CTR" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} width={34} />
+              <ZAxis range={[90, 180]} />
+              <ReferenceLine x={55} stroke="var(--border)" strokeWidth={2} />
+              <ReferenceLine y={3.5} stroke="var(--border)" strokeWidth={2} />
+              <ChartTooltip content={<MatrixTooltip />} cursor={{ stroke: "var(--primary)", strokeDasharray: "3 3" }} />
+              <Scatter data={filtered} fill="var(--chart-3)" onClick={(point) => setSelectedUrl((point as { payload?: UrlRow }).payload ?? (point as UrlRow))} />
+            </ScatterChart>
+          </ResponsiveContainer>
         </div>
       </section>
 
@@ -126,6 +128,10 @@ function InternalEquityPage() {
 function StatusBadge({ status }: { status: UrlRow["status"] }) {
   const tone = status === "High Potential" ? "border-primary/20 bg-primary/10 text-primary" : status === "Authority Leak" ? "border-chart-4/30 bg-chart-4/10 text-chart-4" : status === "Under-linked" ? "border-chart-3/30 bg-chart-3/10 text-chart-3" : "border-border bg-surface text-foreground";
   return <Badge variant="outline" className={tone}>{status}</Badge>;
+}
+
+function QuadrantButton({ quadrant, className, onClick }: { quadrant: Quadrant; className: string; onClick: (quadrant: Quadrant) => void }) {
+  return <button type="button" onClick={() => onClick(quadrant)} className={`absolute z-10 rounded px-1.5 py-1 text-xs font-semibold transition-colors hover:bg-surface/80 ${className}`}>{quadrant}</button>;
 }
 
 function EquityDrawer({ row, onOpenChange }: { row: UrlRow | null; onOpenChange: (open: boolean) => void }) {
