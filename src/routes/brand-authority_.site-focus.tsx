@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/brand-authority_/site-focus")({
 });
 
 type Segment = "Core Topic" | "Adjacent" | "Off-Topic";
-type MapMode = "2d" | "3d";
+type MapMode = "page" | "topic";
 type SortKey = "url" | "radiusScore" | "cluster" | "currentRevenue" | "potentialRevenue";
 
 type PageEmbedding = {
@@ -74,9 +74,9 @@ const pageEmbeddings: PageEmbedding[] = [
 
 const segmentOrder: Segment[] = ["Core Topic", "Adjacent", "Off-Topic"];
 const segmentMeta: Record<Segment, { label: string; tone: string; fill: string; loss: string }> = {
-  "Core Topic": { label: "Core topic", tone: "text-primary", fill: "var(--primary)", loss: "Low" },
-  Adjacent: { label: "Adjacent", tone: "text-chart-3", fill: "var(--chart-3)", loss: "Medium" },
-  "Off-Topic": { label: "Off-topic", tone: "text-destructive", fill: "var(--destructive)", loss: "High" },
+  "Core Topic": { label: "Core Topics", tone: "text-primary", fill: "var(--primary)", loss: "Low" },
+  Adjacent: { label: "Adjacent Topics", tone: "text-chart-3", fill: "var(--chart-3)", loss: "Medium" },
+  "Off-Topic": { label: "Off-topics", tone: "text-destructive", fill: "var(--destructive)", loss: "High" },
 };
 
 const ACTIONS = [
@@ -86,7 +86,7 @@ const ACTIONS = [
 ] as const;
 
 function SiteFocusPage() {
-  const [mapMode, setMapMode] = useState<MapMode>("2d");
+  const [mapMode, setMapMode] = useState<MapMode>("page");
   const [selectedUrl, setSelectedUrl] = useState(pageEmbeddings[10].url);
   const [sortKey, setSortKey] = useState<SortKey>("radiusScore");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
@@ -185,18 +185,14 @@ function TopicalMapPanel({ pages, centroid, selectedUrl, mapMode, angle, onAngle
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Legend />
-          {mapMode === "2d" ? (
-            <button type="button" onClick={() => onMapMode("3d")} className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-semibold hover:bg-card"><Orbit className="h-3.5 w-3.5" /> Switch to 3D View</button>
-          ) : (
-            <>
-              <button type="button" onClick={() => onAngleChange({ x: 58, y: 34 })} className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-semibold hover:bg-card"><RefreshCcw className="h-3.5 w-3.5" /> Reset view</button>
-              <button type="button" onClick={() => onMapMode("2d")} className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-semibold hover:bg-card"><Eye className="h-3.5 w-3.5" /> Back to 2D</button>
-            </>
-          )}
+          <div className="inline-flex rounded-md border border-border bg-surface p-1">
+            <button type="button" onClick={() => onMapMode("page")} className={`inline-flex items-center gap-2 rounded px-3 py-1 text-xs font-semibold transition-colors ${mapMode === "page" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}><Eye className="h-3.5 w-3.5" /> Page view</button>
+            <button type="button" onClick={() => onMapMode("topic")} className={`inline-flex items-center gap-2 rounded px-3 py-1 text-xs font-semibold transition-colors ${mapMode === "topic" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}><Target className="h-3.5 w-3.5" /> Topic view</button>
+          </div>
         </div>
       </div>
       <div className="relative h-[520px] overflow-hidden rounded-lg border border-border bg-background/45">
-        {mapMode === "2d" ? <Scatter2D pages={pages} selectedUrl={selectedUrl} onSelect={onSelect} /> : <Scatter3D pages={pages} centroid={centroid} selectedUrl={selectedUrl} angle={angle} onAngleChange={onAngleChange} onSelect={onSelect} />}
+        {mapMode === "page" ? <Scatter2D pages={pages} selectedUrl={selectedUrl} onSelect={onSelect} /> : <TopicMap pages={pages} onSelect={onSelect} />}
       </div>
     </section>
   );
@@ -230,6 +226,41 @@ function ScatterPoint({ page, selected, onSelect }: { page: DerivedPage; selecte
       {selected && <circle cx={cx} cy={cy} r={size + 8} fill="none" stroke="var(--ring)" strokeWidth="2" />}
       <circle cx={cx} cy={cy} r={size} fill={segmentMeta[page.segment].fill} opacity={0.35 + page.confidence * 0.55} stroke="var(--background)" strokeWidth="2" />
     </g>
+  );
+}
+
+function TopicMap({ pages, onSelect }: { pages: DerivedPage[]; onSelect: (url: string) => void }) {
+  const topics = [...new Set(pages.map((page) => page.cluster))].map((cluster) => {
+    const topicPages = pages.filter((page) => page.cluster === cluster);
+    const revenue = topicPages.reduce((sum, page) => sum + page.currentRevenue, 0);
+    const opportunity = topicPages.reduce((sum, page) => sum + page.authorityLoss, 0);
+    const avgX = topicPages.reduce((sum, page) => sum + page.x, 0) / topicPages.length;
+    const avgY = topicPages.reduce((sum, page) => sum + page.y, 0) / topicPages.length;
+    const avgRadius = topicPages.reduce((sum, page) => sum + page.radiusScore, 0) / topicPages.length;
+    const segment: Segment = avgRadius <= 34 ? "Core Topic" : avgRadius <= 68 ? "Adjacent" : "Off-Topic";
+    const leadPage = topicPages.sort((a, b) => b.currentRevenue - a.currentRevenue)[0];
+    return { cluster, pages: topicPages.length, revenue, opportunity, avgX, avgY, avgRadius, segment, leadPage };
+  });
+
+  return (
+    <svg viewBox="0 0 900 520" className="h-full w-full" role="img" aria-label="Topic authority map">
+      <circle cx="450" cy="260" r="210" fill="none" stroke="var(--border)" strokeDasharray="7 7" />
+      <circle cx="450" cy="260" r="8" fill="var(--primary)" />
+      <text x="466" y="255" className="fill-muted-foreground text-[11px] font-mono">site centroid</text>
+      {topics.map((topic) => {
+        const cx = 450 + topic.avgX * 300;
+        const cy = 260 - topic.avgY * 230;
+        const size = 34 + Math.sqrt(topic.revenue) / 34;
+        return (
+          <g key={topic.cluster} className="cursor-pointer" onClick={() => onSelect(topic.leadPage.url)}>
+            <title>{`${topic.cluster}\n${topic.pages} pages\nRevenue: ${formatMoney(topic.revenue)}\nOpportunity: ${formatMoney(topic.opportunity)}`}</title>
+            <circle cx={cx} cy={cy} r={size} fill={segmentMeta[topic.segment].fill} opacity="0.22" stroke={segmentMeta[topic.segment].fill} strokeWidth="2" />
+            <text x={cx} y={cy - 4} textAnchor="middle" className="fill-foreground text-[12px] font-semibold">{topic.cluster}</text>
+            <text x={cx} y={cy + 13} textAnchor="middle" className="fill-muted-foreground text-[10px] font-mono">{topic.pages} pages · {formatMoney(topic.revenue)}</text>
+          </g>
+        );
+      })}
+    </svg>
   );
 }
 
@@ -303,7 +334,7 @@ function PageDetailPanel({ page, onClose }: { page: DerivedPage; onClose: () => 
       </div>
       <div className="mt-5 rounded-lg border border-border bg-surface/40 p-4">
         <p className="text-xs font-mono uppercase tracking-wider text-muted-foreground">Diagnosis</p>
-        <p className="mt-2 text-sm text-muted-foreground"><span className={`font-semibold ${segmentMeta[page.segment].tone}`}>{page.segment}</span> page in the <span className="text-foreground">{page.cluster}</span> cluster. It represents <span className="font-mono text-primary">{formatMoney(page.authorityLoss)}</span> of recoverable revenue impact.</p>
+        <p className="mt-2 text-sm text-muted-foreground"><span className={`font-semibold ${segmentMeta[page.segment].tone}`}>{segmentMeta[page.segment].label}</span> page in the <span className="text-foreground">{page.cluster}</span> cluster. It represents <span className="font-mono text-primary">{formatMoney(page.authorityLoss)}</span> of recoverable revenue impact.</p>
       </div>
       <div className="mt-4 rounded-lg border border-primary/20 bg-primary/10 p-4">
         <p className="text-xs font-mono uppercase tracking-wider text-primary">Recommended action</p>
@@ -320,7 +351,7 @@ function LeakageBreakdown({ rows }: { rows: ReturnType<typeof buildTopicalModel>
       <div className="overflow-x-auto rounded-lg border border-border">
         <table className="w-full min-w-[760px] border-collapse text-left text-sm">
           <thead className="bg-surface/70 text-[10px] font-mono uppercase tracking-wider text-muted-foreground"><tr><Th>Segment</Th><Th>Pages</Th><Th>Revenue</Th><Th>Authority Loss</Th><Th>Opportunity</Th></tr></thead>
-          <tbody>{rows.map((row) => <tr key={row.segment} className="border-t border-border"><Td><span className={`font-semibold ${segmentMeta[row.segment].tone}`}>{row.segment}</span></Td><Td mono>{row.pages}</Td><Td mono>{formatMoney(row.revenue)}</Td><Td>{segmentMeta[row.segment].loss}</Td><Td mono className="font-bold text-primary">{row.opportunity > 0 ? formatMoney(row.opportunity) : "—"}</Td></tr>)}</tbody>
+          <tbody>{rows.map((row) => <Fragment key={row.segment}><tr className="border-t border-border"><Td><span className={`font-semibold ${segmentMeta[row.segment].tone}`}>{segmentMeta[row.segment].label}</span></Td><Td mono>{row.pages}</Td><Td mono>{formatMoney(row.revenue)}</Td><Td>{segmentMeta[row.segment].loss}</Td><Td mono className="font-bold text-primary">{row.opportunity > 0 ? formatMoney(row.opportunity) : "—"}</Td></tr><tr className="border-t border-border/60 bg-surface/25"><td colSpan={5} className="px-3 py-3"><div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">{row.topics.map((topic) => <div key={`${row.segment}-${topic.name}`} className="rounded-md border border-border bg-card px-3 py-2"><div className="flex items-start justify-between gap-3"><p className="text-sm font-semibold">{topic.name}</p><p className="font-mono text-xs font-bold text-primary">{formatMoney(topic.opportunity)}</p></div><p className="mt-1 text-xs text-muted-foreground">{topic.pages} pages · {formatMoney(topic.revenue)} revenue</p></div>)}</div></td></tr></Fragment>)}</tbody>
         </table>
       </div>
     </section>
@@ -407,7 +438,7 @@ function PagesOutsideRadius({ rows, sortKey, sortDir, onSort, onExport }: { rows
   return (
     <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
       <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"><div><p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Pages outside radius</p><h2 className="mt-1 text-lg font-semibold">URL-level drift priorities</h2></div><button type="button" onClick={onExport} className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-1.5 text-xs font-semibold hover:bg-card"><Download className="h-3.5 w-3.5" /> Export all rows</button></div>
-      <div className="overflow-x-auto rounded-lg border border-border"><table className="w-full min-w-[1080px] border-collapse text-left text-sm"><thead className="bg-surface/70 text-[10px] font-mono uppercase tracking-wider text-muted-foreground"><tr><SortTh label="URL" active={sortKey === "url"} dir={sortDir} onClick={() => onSort("url")} /><SortTh label="Radius score" active={sortKey === "radiusScore"} dir={sortDir} onClick={() => onSort("radiusScore")} /><SortTh label="Topic cluster" active={sortKey === "cluster"} dir={sortDir} onClick={() => onSort("cluster")} /><SortTh label="Current revenue" active={sortKey === "currentRevenue"} dir={sortDir} onClick={() => onSort("currentRevenue")} /><SortTh label="Potential revenue" active={sortKey === "potentialRevenue"} dir={sortDir} onClick={() => onSort("potentialRevenue")} /><Th>Recommended action</Th></tr></thead><tbody>{rows.map((row) => <tr key={row.url} className="border-t border-border align-top transition-colors hover:bg-surface/35"><Td><div className="flex items-center gap-2"><Search className="h-3.5 w-3.5 shrink-0 text-muted-foreground" /><span className="font-mono text-xs font-semibold">{row.url}</span></div><p className="mt-1 text-xs text-muted-foreground">{row.pageType} · {row.segment}</p></Td><Td mono className={row.segment === "Off-Topic" ? "font-bold text-destructive" : "font-bold"}>{row.radiusScore}</Td><Td>{row.cluster}</Td><Td mono>{formatMoney(row.currentRevenue)}</Td><Td mono className="font-bold text-primary">{formatMoney(row.potentialRevenue)}</Td><Td><span className="inline-flex items-center gap-1 rounded-md border border-border bg-surface/60 px-2 py-1 text-xs font-semibold"><Target className="h-3 w-3 text-primary" />{row.action}</span></Td></tr>)}</tbody></table></div>
+      <div className="overflow-x-auto rounded-lg border border-border"><table className="w-full min-w-[1080px] border-collapse text-left text-sm"><thead className="bg-surface/70 text-[10px] font-mono uppercase tracking-wider text-muted-foreground"><tr><SortTh label="URL" active={sortKey === "url"} dir={sortDir} onClick={() => onSort("url")} /><SortTh label="Radius score" active={sortKey === "radiusScore"} dir={sortDir} onClick={() => onSort("radiusScore")} /><SortTh label="Topic cluster" active={sortKey === "cluster"} dir={sortDir} onClick={() => onSort("cluster")} /><SortTh label="Current revenue" active={sortKey === "currentRevenue"} dir={sortDir} onClick={() => onSort("currentRevenue")} /><SortTh label="Potential revenue" active={sortKey === "potentialRevenue"} dir={sortDir} onClick={() => onSort("potentialRevenue")} /><Th>Recommended action</Th></tr></thead><tbody>{rows.map((row) => <tr key={row.url} className="border-t border-border align-top transition-colors hover:bg-surface/35"><Td><div className="flex items-center gap-2"><Search className="h-3.5 w-3.5 shrink-0 text-muted-foreground" /><span className="font-mono text-xs font-semibold">{row.url}</span></div><p className="mt-1 text-xs text-muted-foreground">{row.pageType} · {segmentMeta[row.segment].label}</p></Td><Td mono className={row.segment === "Off-Topic" ? "font-bold text-destructive" : "font-bold"}>{row.radiusScore}</Td><Td>{row.cluster}</Td><Td mono>{formatMoney(row.currentRevenue)}</Td><Td mono className="font-bold text-primary">{formatMoney(row.potentialRevenue)}</Td><Td><span className="inline-flex items-center gap-1 rounded-md border border-border bg-surface/60 px-2 py-1 text-xs font-semibold"><Target className="h-3 w-3 text-primary" />{row.action}</span></Td></tr>)}</tbody></table></div>
     </section>
   );
 }
@@ -446,7 +477,11 @@ function buildTopicalModel(pages: PageEmbedding[]) {
   const outside = derived.filter((page) => page.segment !== "Core Topic");
   const breakdown = segmentOrder.map((segment) => {
     const segmentPages = derived.filter((page) => page.segment === segment);
-    return { segment, pages: segmentPages.length, revenue: segmentPages.reduce((sum, page) => sum + page.currentRevenue, 0), opportunity: segmentPages.reduce((sum, page) => sum + page.authorityLoss, 0) };
+    const topics = [...new Set(segmentPages.map((page) => page.cluster))].map((name) => {
+      const topicPages = segmentPages.filter((page) => page.cluster === name);
+      return { name, pages: topicPages.length, revenue: topicPages.reduce((sum, page) => sum + page.currentRevenue, 0), opportunity: topicPages.reduce((sum, page) => sum + page.authorityLoss, 0) };
+    });
+    return { segment, pages: segmentPages.length, revenue: segmentPages.reduce((sum, page) => sum + page.currentRevenue, 0), opportunity: segmentPages.reduce((sum, page) => sum + page.authorityLoss, 0), topics };
   });
   return { pages: derived, centroid, siteFocusScore, outsideRadiusPct: Math.round((outside.length / derived.length) * 100), revenueAtRisk: outside.reduce((sum, page) => sum + page.currentRevenue, 0), recoverableRevenue: outside.reduce((sum, page) => sum + page.authorityLoss, 0), breakdown };
 }
