@@ -224,6 +224,14 @@ function AuthorityCards({ metrics }: { metrics: AuthorityMetric[] }) {
           );
         }
 
+        if (metric.label === "Brand Love") {
+          return (
+            <Link key={metric.label} to="/brand-authority/brand-love" aria-label="Open Brand Love detail page" className="group rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-colors hover:border-primary/40 hover:bg-surface/40 focus:outline-none focus:ring-2 focus:ring-ring">
+              {content}
+            </Link>
+          );
+        }
+
         if (metric.label === "Domain Age") {
           return (
             <Link key={metric.label} to="/brand-authority/domain-age" aria-label="Open Domain Age detail page" className="group rounded-xl border border-border bg-card p-4 text-left shadow-sm transition-colors hover:border-primary/40 hover:bg-surface/40 focus:outline-none focus:ring-2 focus:ring-ring">
