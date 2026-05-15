@@ -233,14 +233,13 @@ const TIMELINE = [
 
 function BrandLovePage() {
   const [range, setRange] = useState<Range>("12m");
-  const [competitor, setCompetitor] = useState<(typeof COMPETITORS)[number]>("Northwind");
   const [demandGrain, setDemandGrain] = useState<"M" | "Q" | "Y">("M");
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <DashboardNav />
       <div className="lg:pl-56">
-        <Header range={range} onRange={setRange} competitor={competitor} onCompetitor={setCompetitor} />
+        <Header range={range} onRange={setRange} />
         <main className="mx-auto max-w-[1400px] space-y-10 px-6 py-8 lg:px-10">
           <Section delay={0}>
             <Hero />
@@ -342,13 +341,9 @@ function Section({ children, delay = 0 }: { children: React.ReactNode; delay?: n
 function Header({
   range,
   onRange,
-  competitor,
-  onCompetitor,
 }: {
   range: Range;
   onRange: (r: Range) => void;
-  competitor: (typeof COMPETITORS)[number];
-  onCompetitor: (c: (typeof COMPETITORS)[number]) => void;
 }) {
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur">
@@ -382,15 +377,6 @@ function Header({
               </button>
             ))}
           </div>
-          <select
-            value={competitor}
-            onChange={(e) => onCompetitor(e.target.value as (typeof COMPETITORS)[number])}
-            className="rounded-md border border-border bg-card px-2.5 py-1.5 text-xs"
-          >
-            {COMPETITORS.filter((c) => c !== "Acme (You)").map((c) => (
-              <option key={c}>{c}</option>
-            ))}
-          </select>
           <button
             type="button"
             className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs hover:bg-surface"
