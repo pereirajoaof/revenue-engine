@@ -58,6 +58,7 @@ export function DashboardNav() {
   const isBrandRoute = path.startsWith("/brand-authority");
   const isWebsiteAuthorityRoute = path.startsWith("/website-authority");
   const isDomainAuthorityRoute = path === "/brand-authority/domain-authority";
+  const isBrandLoveRoute = path === "/brand-authority/brand-love";
   const isDomainAgeRoute = path === "/brand-authority/domain-age";
   const isPageAgeRoute = path.startsWith("/brand-authority/page-age");
   const isSiteFocusRoute = path === "/brand-authority/site-focus";
@@ -166,6 +167,17 @@ export function DashboardNav() {
                           >
                             <Gauge className="w-3 h-3 shrink-0" />
                             <span className="truncate">HostPageRank</span>
+                          </Link>
+                          <Link
+                            to="/brand-authority/brand-love"
+                            className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                              isBrandLoveRoute
+                                ? "bg-primary/10 text-primary border border-primary/20"
+                                : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
+                            }`}
+                          >
+                            <Sparkles className="w-3 h-3 shrink-0" />
+                            <span className="truncate">Brand Love</span>
                           </Link>
                           <Link
                             to="/brand-authority/domain-age"
