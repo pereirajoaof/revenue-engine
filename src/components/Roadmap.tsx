@@ -38,6 +38,18 @@ const modules: {
     unlocks:
       "Continuous low-frequency crawling around traffic-heavy priority clusters with real-time Slack / email alerts.",
   },
+  {
+    name: "Brand & competitor analysis",
+    status: "planned",
+    unlocks:
+      "Competitor topical spread cross-analysis, real-time domain-age delta tracking, and localized share of voice overlays.",
+  },
+  {
+    name: "AI search share of market",
+    status: "planned",
+    unlocks:
+      "Structured LLM citation crawling, conversational search layout tracking, and automated visibility impact reports.",
+  },
 ];
 
 const statusMeta: Record<

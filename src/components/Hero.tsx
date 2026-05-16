@@ -45,7 +45,7 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.18 }}
           >
             OrganicOS is the first data-driven SEO engine that translates technical health,
-            domain authority, and content lifecycle spreads into clear, quantifiable revenue.
+            domain authority, brand equity, and AI search share of market into clear, quantifiable revenue.
           </motion.p>
 
           <motion.div
