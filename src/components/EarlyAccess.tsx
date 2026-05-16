@@ -16,11 +16,19 @@ const HEADACHES = [
     id: "prune",
     label: "We have massive content footprints and don't know what to prune or consolidate.",
   },
+  {
+    id: "ai",
+    label: "We are completely blind to our visibility and citation share in AI search engines.",
+  },
+  {
+    id: "competitor",
+    label: "We are auditing our site in a vacuum without real competitor context or benchmarks.",
+  },
 ];
 
 const schema = z.object({
   email: z.string().trim().email("Enter a valid work email.").max(255),
-  headache: z.enum(["roi", "drift", "prune"], {
+  headache: z.enum(["roi", "drift", "prune", "ai", "competitor"], {
     errorMap: () => ({ message: "Pick the option closest to your reality." }),
   }),
 });

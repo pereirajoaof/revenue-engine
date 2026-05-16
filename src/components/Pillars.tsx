@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Target, Clock, Coins } from "lucide-react";
+import { Target, Clock, Coins, Users, Sparkles } from "lucide-react";
 
 const pillars = [
   {
@@ -44,6 +44,34 @@ const pillars = [
       "Roadmap sorted by £ impact",
     ],
   },
+  {
+    number: "04",
+    icon: Users,
+    title: "Brand & competitor analysis",
+    problem:
+      "SEO data is inherently self-referential. Measuring your topical authority or domain age in a vacuum hides aggressive competitor land grabs and masks critical baseline deficits.",
+    solution:
+      "OrganicOS overlays competitor domain age trends and imports competitor topical spreads into your project space. We cross-reference your unweighted mean CTR values against competitor benchmarks, making your self-referential scores fully contextual.",
+    details: [
+      "Competitor domain age benchmarking",
+      "External topical spread comparisons",
+      "Contextual CTR benchmark overlays",
+    ],
+  },
+  {
+    number: "05",
+    icon: Sparkles,
+    title: "AI search share of market",
+    problem:
+      "Traditional GSC impression data completely misses modern conversational search engines, leaving brands blind to how they are referenced as sources in LLM search layouts.",
+    solution:
+      "We pull semantic topic metrics and track brand term citations across conversational engines. By feeding these insights into our geometric mean scoring system, you see exactly where your content builds market share in AI answers — and where your visibility is decaying.",
+    details: [
+      "LLM citation & brand term tracking",
+      "AI search visibility metrics",
+      "Algorithmic share-of-market maps",
+    ],
+  },
 ];
 
 export function Pillars() {
@@ -64,8 +92,8 @@ export function Pillars() {
             A financial translation layer<br />for search marketing.
           </h2>
           <p className="mt-5 text-muted-foreground leading-relaxed">
-            Not another crawler. Three pillars that turn every signal — semantic, temporal, technical
-            — into a number a CFO understands.
+            Not another crawler. Five pillars that turn every signal — semantic, temporal,
+            technical, competitive, and algorithmic — into a number a CFO understands.
           </p>
         </motion.div>
 
