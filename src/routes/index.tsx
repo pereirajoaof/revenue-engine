@@ -2,17 +2,26 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
 import { Pillars } from "@/components/Pillars";
-import { CtaSection } from "@/components/CtaSection";
+import { Roadmap } from "@/components/Roadmap";
+import { EarlyAccess } from "@/components/EarlyAccess";
 import { Footer } from "@/components/Footer";
 
 export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "OrganicOS — Turn SEO Into a Revenue Engine" },
-      { name: "description", content: "OrganicOS connects search demand directly to revenue. Quantify opportunity, deconstruct rankings, and connect every SEO action to business outcomes." },
-      { property: "og:title", content: "OrganicOS — Turn SEO Into a Revenue Engine" },
-      { property: "og:description", content: "The operating system for organic growth. Stop guessing, start growing revenue." },
+      { title: "OrganicOS — Stop Auditing Pixels. Start Auditing Revenue." },
+      {
+        name: "description",
+        content:
+          "The first data-driven SEO engine that translates technical health, domain authority, and content lifecycle into quantifiable revenue. Get founding-tier early access.",
+      },
+      { property: "og:title", content: "OrganicOS — Stop Auditing Pixels. Start Auditing Revenue." },
+      {
+        property: "og:description",
+        content:
+          "A financial translation layer for search marketing. Map topical drift, portfolio age, and technical debt to absolute revenue impact.",
+      },
     ],
   }),
 });
@@ -23,7 +32,8 @@ function Index() {
       <Nav />
       <Hero />
       <Pillars />
-      <CtaSection />
+      <Roadmap />
+      <EarlyAccess />
       <Footer />
     </div>
   );
