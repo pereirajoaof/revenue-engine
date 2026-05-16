@@ -13,6 +13,7 @@ import { Route as WebsiteAuthorityRouteImport } from './routes/website-authority
 import { Route as TechnicalHealthRouteImport } from './routes/technical-health'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as EarlyAccessRouteImport } from './routes/early-access'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BrandAuthorityRouteImport } from './routes/brand-authority'
 import { Route as AuditRunsRouteImport } from './routes/audit-runs'
@@ -53,6 +54,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EarlyAccessRoute = EarlyAccessRouteImport.update({
+  id: '/early-access',
+  path: '/early-access',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -173,6 +179,7 @@ export interface FileRoutesByFullPath {
   '/audit-runs': typeof AuditRunsRoute
   '/brand-authority': typeof BrandAuthorityRoute
   '/dashboard': typeof DashboardRoute
+  '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
@@ -200,6 +207,7 @@ export interface FileRoutesByTo {
   '/audit-runs': typeof AuditRunsRoute
   '/brand-authority': typeof BrandAuthorityRoute
   '/dashboard': typeof DashboardRoute
+  '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
   '/audit-runs/$runId': typeof AuditRunsRunIdRoute
@@ -226,6 +234,7 @@ export interface FileRoutesById {
   '/audit-runs': typeof AuditRunsRoute
   '/brand-authority': typeof BrandAuthorityRoute
   '/dashboard': typeof DashboardRoute
+  '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
@@ -255,6 +264,7 @@ export interface FileRouteTypes {
     | '/audit-runs'
     | '/brand-authority'
     | '/dashboard'
+    | '/early-access'
     | '/onboarding'
     | '/settings'
     | '/technical-health'
@@ -282,6 +292,7 @@ export interface FileRouteTypes {
     | '/audit-runs'
     | '/brand-authority'
     | '/dashboard'
+    | '/early-access'
     | '/onboarding'
     | '/settings'
     | '/audit-runs/$runId'
@@ -307,6 +318,7 @@ export interface FileRouteTypes {
     | '/audit-runs'
     | '/brand-authority'
     | '/dashboard'
+    | '/early-access'
     | '/onboarding'
     | '/settings'
     | '/technical-health'
@@ -335,6 +347,7 @@ export interface RootRouteChildren {
   AuditRunsRoute: typeof AuditRunsRoute
   BrandAuthorityRoute: typeof BrandAuthorityRoute
   DashboardRoute: typeof DashboardRoute
+  EarlyAccessRoute: typeof EarlyAccessRoute
   OnboardingRoute: typeof OnboardingRoute
   SettingsRoute: typeof SettingsRoute
   TechnicalHealthRoute: typeof TechnicalHealthRouteWithChildren
@@ -378,6 +391,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/early-access': {
+      id: '/early-access'
+      path: '/early-access'
+      fullPath: '/early-access'
+      preLoaderRoute: typeof EarlyAccessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -589,6 +609,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuditRunsRoute: AuditRunsRoute,
   BrandAuthorityRoute: BrandAuthorityRoute,
   DashboardRoute: DashboardRoute,
+  EarlyAccessRoute: EarlyAccessRoute,
   OnboardingRoute: OnboardingRoute,
   SettingsRoute: SettingsRoute,
   TechnicalHealthRoute: TechnicalHealthRouteWithChildren,
@@ -606,3 +627,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
