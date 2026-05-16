@@ -22,9 +22,15 @@ export function Nav() {
           <Link
             to="/early-access"
             hash="early-access"
-            className="px-5 py-2 rounded-lg bg-surface border border-border text-sm font-medium text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+            className="hidden sm:inline-flex px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
-            Get early access
+            Early access
+          </Link>
+          <Link
+            to="/request-demo"
+            className="px-5 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:brightness-110 transition-all shadow-[0_0_24px_var(--glow)]"
+          >
+            Request a demo
           </Link>
         </div>
       </div>
