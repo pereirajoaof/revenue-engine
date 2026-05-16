@@ -19,12 +19,13 @@ export function Nav() {
           >
             View dashboard
           </Link>
-          <a
-            href="#early-access"
+          <Link
+            to="/early-access"
+            hash="early-access"
             className="px-5 py-2 rounded-lg bg-surface border border-border text-sm font-medium text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
           >
             Get early access
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
