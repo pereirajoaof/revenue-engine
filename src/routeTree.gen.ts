@@ -32,7 +32,7 @@ import { Route as BrandAuthorityBrandLoveRouteImport } from './routes/brand-auth
 import { Route as AuditRunsRunIdRouteImport } from './routes/audit-runs_.$runId'
 import { Route as TechnicalHealthCwvOpportunitiesRouteImport } from './routes/technical-health.cwv.opportunities'
 import { Route as TechnicalHealthCwvDeepDiveRouteImport } from './routes/technical-health.cwv.deep-dive'
-import { Route as BrandAuthoritySiteFocusTableRouteImport } from './routes/brand-authority_.site-focus.table'
+import { Route as BrandAuthoritySiteFocusTableRouteImport } from './routes/brand-authority_.site-focus_.table'
 import { Route as BrandAuthorityPageAgeOutliersRouteImport } from './routes/brand-authority_.page-age.outliers'
 import { Route as AuditRunsRunIdUrlsRouteImport } from './routes/audit-runs_.$runId_.urls'
 import { Route as AuditRunsRunIdSettingsRouteImport } from './routes/audit-runs_.$runId_.settings'
@@ -159,9 +159,9 @@ const TechnicalHealthCwvDeepDiveRoute =
   } as any)
 const BrandAuthoritySiteFocusTableRoute =
   BrandAuthoritySiteFocusTableRouteImport.update({
-    id: '/table',
-    path: '/table',
-    getParentRoute: () => BrandAuthoritySiteFocusRoute,
+    id: '/brand-authority_/site-focus_/table',
+    path: '/brand-authority/site-focus/table',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const BrandAuthorityPageAgeOutliersRoute =
   BrandAuthorityPageAgeOutliersRouteImport.update({
@@ -203,7 +203,7 @@ export interface FileRoutesByFullPath {
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority/domain-authority': typeof BrandAuthorityDomainAuthorityRoute
   '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
-  '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRouteWithChildren
+  '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/website-authority/internal-equity': typeof WebsiteAuthorityInternalEquityRoute
   '/technical-health/': typeof TechnicalHealthIndexRoute
@@ -231,7 +231,7 @@ export interface FileRoutesByTo {
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority/domain-authority': typeof BrandAuthorityDomainAuthorityRoute
   '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
-  '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRouteWithChildren
+  '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/website-authority/internal-equity': typeof WebsiteAuthorityInternalEquityRoute
   '/technical-health': typeof TechnicalHealthIndexRoute
@@ -262,7 +262,7 @@ export interface FileRoutesById {
   '/brand-authority_/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority_/domain-authority': typeof BrandAuthorityDomainAuthorityRoute
   '/brand-authority_/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
-  '/brand-authority_/site-focus': typeof BrandAuthoritySiteFocusRouteWithChildren
+  '/brand-authority_/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
   '/website-authority/internal-equity': typeof WebsiteAuthorityInternalEquityRoute
   '/technical-health/': typeof TechnicalHealthIndexRoute
@@ -270,7 +270,7 @@ export interface FileRoutesById {
   '/audit-runs_/$runId_/settings': typeof AuditRunsRunIdSettingsRoute
   '/audit-runs_/$runId_/urls': typeof AuditRunsRunIdUrlsRoute
   '/brand-authority_/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
-  '/brand-authority_/site-focus/table': typeof BrandAuthoritySiteFocusTableRoute
+  '/brand-authority_/site-focus_/table': typeof BrandAuthoritySiteFocusTableRoute
   '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
   '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
   '/audit-runs_/$runId_/issues/$issueId': typeof AuditRunsRunIdIssuesIssueIdRoute
@@ -360,7 +360,7 @@ export interface FileRouteTypes {
     | '/audit-runs_/$runId_/settings'
     | '/audit-runs_/$runId_/urls'
     | '/brand-authority_/page-age/outliers'
-    | '/brand-authority_/site-focus/table'
+    | '/brand-authority_/site-focus_/table'
     | '/technical-health/cwv/deep-dive'
     | '/technical-health/cwv/opportunities'
     | '/audit-runs_/$runId_/issues/$issueId'
@@ -383,9 +383,10 @@ export interface RootRouteChildren {
   BrandAuthorityDomainAgeRoute: typeof BrandAuthorityDomainAgeRoute
   BrandAuthorityDomainAuthorityRoute: typeof BrandAuthorityDomainAuthorityRoute
   BrandAuthorityPageAgeRoute: typeof BrandAuthorityPageAgeRouteWithChildren
-  BrandAuthoritySiteFocusRoute: typeof BrandAuthoritySiteFocusRouteWithChildren
+  BrandAuthoritySiteFocusRoute: typeof BrandAuthoritySiteFocusRoute
   AuditRunsRunIdSettingsRoute: typeof AuditRunsRunIdSettingsRoute
   AuditRunsRunIdUrlsRoute: typeof AuditRunsRunIdUrlsRoute
+  BrandAuthoritySiteFocusTableRoute: typeof BrandAuthoritySiteFocusTableRoute
   AuditRunsRunIdIssuesIssueIdRoute: typeof AuditRunsRunIdIssuesIssueIdRoute
 }
 
@@ -552,12 +553,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TechnicalHealthCwvDeepDiveRouteImport
       parentRoute: typeof TechnicalHealthCwvRoute
     }
-    '/brand-authority_/site-focus/table': {
-      id: '/brand-authority_/site-focus/table'
-      path: '/table'
+    '/brand-authority_/site-focus_/table': {
+      id: '/brand-authority_/site-focus_/table'
+      path: '/brand-authority/site-focus/table'
       fullPath: '/brand-authority/site-focus/table'
       preLoaderRoute: typeof BrandAuthoritySiteFocusTableRouteImport
-      parentRoute: typeof BrandAuthoritySiteFocusRoute
+      parentRoute: typeof rootRouteImport
     }
     '/brand-authority_/page-age/outliers': {
       id: '/brand-authority_/page-age/outliers'
@@ -643,20 +644,6 @@ const BrandAuthorityPageAgeRouteWithChildren =
     BrandAuthorityPageAgeRouteChildren,
   )
 
-interface BrandAuthoritySiteFocusRouteChildren {
-  BrandAuthoritySiteFocusTableRoute: typeof BrandAuthoritySiteFocusTableRoute
-}
-
-const BrandAuthoritySiteFocusRouteChildren: BrandAuthoritySiteFocusRouteChildren =
-  {
-    BrandAuthoritySiteFocusTableRoute: BrandAuthoritySiteFocusTableRoute,
-  }
-
-const BrandAuthoritySiteFocusRouteWithChildren =
-  BrandAuthoritySiteFocusRoute._addFileChildren(
-    BrandAuthoritySiteFocusRouteChildren,
-  )
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountSettingsRoute: AccountSettingsRoute,
@@ -674,11 +661,21 @@ const rootRouteChildren: RootRouteChildren = {
   BrandAuthorityDomainAgeRoute: BrandAuthorityDomainAgeRoute,
   BrandAuthorityDomainAuthorityRoute: BrandAuthorityDomainAuthorityRoute,
   BrandAuthorityPageAgeRoute: BrandAuthorityPageAgeRouteWithChildren,
-  BrandAuthoritySiteFocusRoute: BrandAuthoritySiteFocusRouteWithChildren,
+  BrandAuthoritySiteFocusRoute: BrandAuthoritySiteFocusRoute,
   AuditRunsRunIdSettingsRoute: AuditRunsRunIdSettingsRoute,
   AuditRunsRunIdUrlsRoute: AuditRunsRunIdUrlsRoute,
+  BrandAuthoritySiteFocusTableRoute: BrandAuthoritySiteFocusTableRoute,
   AuditRunsRunIdIssuesIssueIdRoute: AuditRunsRunIdIssuesIssueIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
