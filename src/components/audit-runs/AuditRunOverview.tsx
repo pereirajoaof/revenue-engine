@@ -104,6 +104,11 @@ export function AuditRunOverview({ runId }: { runId: string }) {
               <div className="flex flex-wrap items-end gap-2">
                 <FilterSelect label="Crawl" value="Latest crawl" options={["Latest crawl", "Apr 25 crawl", "Apr 18 crawl", "Apr 11 crawl"]} />
                 <FilterSelect label="Page type" value="All page types" options={["All page types", "Route pages", "Blog", "Category", "Product"]} />
+                <Button variant="outline" asChild>
+                  <Link to="/audit-runs/$runId/changes" params={{ runId: run.id }} search={{ bucket: "all", issue_type: "all" }}>
+                    What changed
+                  </Link>
+                </Button>
                 <Button><Play className="h-4 w-4" /> Run Again</Button>
                 <Button variant="outline" size="icon" asChild aria-label="Crawl settings">
                   <Link to="/audit-runs/$runId/settings" params={{ runId: run.id }}>
