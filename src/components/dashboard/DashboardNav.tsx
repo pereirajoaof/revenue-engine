@@ -22,6 +22,7 @@ import {
   MapPin,
   Clock,
   Target,
+  GitCompare,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -67,8 +68,9 @@ export function DashboardNav() {
   const auditRunId = isAuditRunDetailRoute ? path.split("/")[2] : "core-commerce";
   const isAuditSetupRoute = path === `/audit-runs/${auditRunId}/settings`;
   const isAuditUrlExplorerRoute = path === `/audit-runs/${auditRunId}/urls`;
+  const isAuditChangesRoute = path === `/audit-runs/${auditRunId}/changes`;
   const isAuditOverviewRoute =
-    isAuditRunDetailRoute && !isAuditSetupRoute && !isAuditUrlExplorerRoute;
+    isAuditRunDetailRoute && !isAuditSetupRoute && !isAuditUrlExplorerRoute && !isAuditChangesRoute;
   const activeDriver = isTechRoute
     ? "technical-health"
     : isBrandRoute
@@ -327,6 +329,18 @@ export function DashboardNav() {
             >
               <Search className="h-3 w-3 shrink-0" />
               <span className="truncate">URL Explorer</span>
+            </Link>
+            <Link
+              to="/audit-runs/$runId/changes"
+              params={{ runId: auditRunId }}
+              className={`mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                isAuditChangesRoute
+                  ? "border border-primary/20 bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
+              }`}
+            >
+              <GitCompare className="h-3 w-3 shrink-0" />
+              <span className="truncate">What changed</span>
             </Link>
             <Link
               to="/audit-runs/$runId/settings"
