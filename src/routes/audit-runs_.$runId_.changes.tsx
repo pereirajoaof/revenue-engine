@@ -174,9 +174,9 @@ function ChangesRoute() {
   }, [bucket, issue_type]);
 
   const setBucket = (b: Bucket) =>
-    navigate({ search: (prev) => ({ ...prev, bucket: b }), replace: true });
+    navigate({ search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, bucket: b }), replace: true });
   const setIssueType = (id: string) =>
-    navigate({ search: (prev) => ({ ...prev, issue_type: id }), replace: true });
+    navigate({ search: (prev: z.infer<typeof searchSchema>) => ({ ...prev, issue_type: id }), replace: true });
 
   return (
     <div className="min-h-screen bg-background text-foreground">
