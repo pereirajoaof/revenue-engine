@@ -331,6 +331,18 @@ export function DashboardNav() {
               <span className="truncate">URL Explorer</span>
             </Link>
             <Link
+              to="/audit-runs/$runId/changes"
+              params={{ runId: auditRunId }}
+              className={`mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                isAuditChangesRoute
+                  ? "border border-primary/20 bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
+              }`}
+            >
+              <GitCompare className="h-3 w-3 shrink-0" />
+              <span className="truncate">What changed</span>
+            </Link>
+            <Link
               to="/audit-runs/$runId/settings"
               params={{ runId: auditRunId }}
               className={`mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
