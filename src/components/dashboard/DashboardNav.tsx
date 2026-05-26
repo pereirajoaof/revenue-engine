@@ -22,6 +22,7 @@ import {
   MapPin,
   Clock,
   Target,
+  GitCompare,
 } from "lucide-react";
 import {
   DropdownMenu,
