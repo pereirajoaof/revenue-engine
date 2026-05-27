@@ -117,6 +117,19 @@ export function Step3Business({ businessModel, currency, customCurrency, primary
             className="w-full px-4 py-2.5 rounded-lg border border-border bg-card text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </Field>
+
+        <Field
+          label="What's your primary product category?"
+          hint="One short phrase. Powers AI Visibility cluster sampling and competitor mapping."
+        >
+          <input
+            type="text"
+            placeholder="e.g. coach booking apps, fitness studio SaaS, project management tools"
+            value={primaryCategory}
+            onChange={(e) => onChange({ primaryCategory: e.target.value })}
+            className="w-full px-4 py-2.5 rounded-lg border border-border bg-card text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+        </Field>
       </div>
     </StepShell>
   );
