@@ -244,7 +244,9 @@ function BrandLovePage() {
           <Section delay={0}>
             <Hero />
             <KpiGrid />
+            <AiVisibilityTeaser />
           </Section>
+
 
           <Section delay={0.05}>
             <SectionHeading
