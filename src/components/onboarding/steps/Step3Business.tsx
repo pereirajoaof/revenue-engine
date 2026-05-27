@@ -7,11 +7,13 @@ interface Props {
   currency: Currency | null;
   customCurrency: string;
   primaryMarket: string;
+  primaryCategory: string;
   onChange: (patch: Partial<{
     businessModel: BusinessModel;
     currency: Currency;
     customCurrency: string;
     primaryMarket: string;
+    primaryCategory: string;
   }>) => void;
   onBack: () => void;
   onNext: () => void;
@@ -31,8 +33,9 @@ const CURRENCIES: { id: Currency; label: string; symbol: string }[] = [
   { id: "OTHER", label: "Other", symbol: "—" },
 ];
 
-export function Step3Business({ businessModel, currency, customCurrency, primaryMarket, onChange, onBack, onNext }: Props) {
+export function Step3Business({ businessModel, currency, customCurrency, primaryMarket, primaryCategory, onChange, onBack, onNext }: Props) {
   const ready = !!businessModel && !!currency && primaryMarket.trim().length > 0
+    && primaryCategory.trim().length > 0
     && (currency !== "OTHER" || customCurrency.trim().length > 0);
 
   return (
