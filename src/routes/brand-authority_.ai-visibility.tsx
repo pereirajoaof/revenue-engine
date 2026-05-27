@@ -197,8 +197,9 @@ function AiVisibilityPage() {
   const [range, setRange] = useState<Range>("90d");
 
   // System-state demo flags (in a real app these come from props/loader)
-  const ga4Connected = true;
-  const pipelineState = "ok" as "ok" | "refreshing" | "failed";
+  const [ga4Connected] = useState(true);
+  const [pipelineState] = useState<"ok" | "refreshing" | "failed">("ok");
+
 
   const openReceipts = (sample = 0) =>
     navigate({ search: (p: typeof search) => ({ ...p, receipts: true, sample }) });
