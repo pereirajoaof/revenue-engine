@@ -644,7 +644,7 @@ function DirectTrafficCard() {
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-5">
         {[
           { l: "Returning visitor rate", v: "47.2%", d: 3.4 },
           { l: "Revenue / direct session", v: "$4.18", d: 6.1 },
@@ -659,7 +659,19 @@ function DirectTrafficCard() {
             </p>
           </div>
         ))}
+        <Link
+          to="/brand-authority/ai-visibility"
+          className="group flex flex-col rounded-lg border border-primary/30 bg-primary/5 p-3 transition-colors hover:border-primary/60 hover:bg-primary/10"
+        >
+          <p className="text-[10px] font-mono uppercase tracking-wider text-primary">AI Sessions This Week</p>
+          <p className="mt-1 font-mono text-lg font-semibold tabular-nums">2,184</p>
+          <p className="mt-auto inline-flex items-center gap-1 pt-1 font-mono text-[11px] text-primary">
+            View AI Visibility
+            <ChevronRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+          </p>
+        </Link>
       </div>
+
     </div>
   );
 }
