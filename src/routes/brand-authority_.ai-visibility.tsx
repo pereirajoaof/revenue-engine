@@ -3,12 +3,18 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   CartesianGrid,
+  Cell,
   Line,
   LineChart,
+  BarChart,
+  Bar,
   ResponsiveContainer,
+  Scatter,
+  ScatterChart,
   Tooltip as ChartTooltip,
   XAxis,
   YAxis,
+  ZAxis,
   Area,
   AreaChart,
 } from "recharts";
