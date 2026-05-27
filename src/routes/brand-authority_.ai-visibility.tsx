@@ -286,7 +286,10 @@ const RECEIPTS: Record<string, Receipt[]> = {
 function AiVisibilityPage() {
   const [range, setRange] = useState<Range>("90d");
   const [clusterId, setClusterId] = useState(CLUSTERS[0].id);
+  const [receiptsClusterId, setReceiptsClusterId] = useState<string | null>(null);
   const cluster = CLUSTERS.find((c) => c.id === clusterId) ?? CLUSTERS[0];
+  const receiptsCluster =
+    CLUSTER_ROWS.find((c) => c.id === receiptsClusterId) ?? null;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -318,21 +321,54 @@ function AiVisibilityPage() {
             </div>
           </Section>
 
+          <Section delay={0.08}>
+            <SectionHeading
+              eyebrow="02 — AI Traffic"
+              title="Sessions arriving from generative engines"
+              caption="Weekly AI-attributed sessions per model and the relationship between recommendation share and traffic per cluster."
+            />
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+              <AiSessionsCard />
+              <TrafficVsRecCard />
+            </div>
+          </Section>
+
           <Section delay={0.1}>
             <SectionHeading
-              eyebrow="02 — Cluster Breakdown"
+              eyebrow="03 — Cluster Breakdown"
               title="How every intent cluster is performing"
-              caption="Recommendation share, Top-3 inclusion, and first-mention rate across your tracked clusters."
+              caption="Recommendation share, Top-3 inclusion, and first-mention rate across your tracked clusters. Click a row for receipts."
             />
-            <ClusterTable rows={CLUSTER_ROWS} />
+            <ClusterTable
+              rows={CLUSTER_ROWS}
+              onOpenReceipts={(id) => setReceiptsClusterId(id)}
+            />
+          </Section>
+
+          <Section delay={0.12}>
+            <SectionHeading
+              eyebrow="04 — Citation Footprint"
+              title="What sources AI is citing about you"
+              caption="Per-cluster citation density and the source mix powering those mentions."
+            />
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+              <CitationDensityCard />
+              <CitationSourcesCard />
+            </div>
           </Section>
 
           <MethodologyFooter />
         </main>
       </div>
+
+      <ReceiptsModal
+        cluster={receiptsCluster}
+        onClose={() => setReceiptsClusterId(null)}
+      />
     </div>
   );
 }
+
 
 // ── Chrome ───────────────────────────────────────────────────────────────────
 
