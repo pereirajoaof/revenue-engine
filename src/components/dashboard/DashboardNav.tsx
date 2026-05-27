@@ -185,6 +185,20 @@ export function DashboardNav() {
                             <span className="truncate">Brand Love</span>
                           </Link>
                           <Link
+                            to="/brand-authority/ai-visibility"
+                            className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                              isAiVisibilityRoute
+                                ? "bg-primary/10 text-primary border border-primary/20"
+                                : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
+                            }`}
+                          >
+                            <Bot className="w-3 h-3 shrink-0" />
+                            <span className="truncate flex-1">AI Visibility</span>
+                            <span className="rounded-sm border border-primary/30 bg-primary/10 px-1 py-0 text-[8px] font-mono uppercase tracking-wider text-primary">
+                              Beta
+                            </span>
+                          </Link>
+                          <Link
                             to="/brand-authority/domain-age"
                             className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
                               isDomainAgeRoute
