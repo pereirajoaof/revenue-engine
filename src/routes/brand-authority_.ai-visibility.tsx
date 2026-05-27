@@ -15,14 +15,20 @@ import {
 import {
   ArrowDownRight,
   ArrowUpRight,
+  CheckCircle2,
   ChevronRight,
   Download,
+  ExternalLink,
+  FileText,
   Info,
+  Quote,
   Sparkles,
   Star,
   TrendingUp,
+  X,
   Zap,
 } from "lucide-react";
+import { Scatter, ScatterChart, ZAxis } from "recharts";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
