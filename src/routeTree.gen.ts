@@ -29,6 +29,7 @@ import { Route as BrandAuthorityPageAgeRouteImport } from './routes/brand-author
 import { Route as BrandAuthorityDomainAuthorityRouteImport } from './routes/brand-authority_.domain-authority'
 import { Route as BrandAuthorityDomainAgeRouteImport } from './routes/brand-authority_.domain-age'
 import { Route as BrandAuthorityBrandLoveRouteImport } from './routes/brand-authority_.brand-love'
+import { Route as BrandAuthorityAiVisibilityRouteImport } from './routes/brand-authority_.ai-visibility'
 import { Route as AuditRunsRunIdRouteImport } from './routes/audit-runs_.$runId'
 import { Route as TechnicalHealthCwvOpportunitiesRouteImport } from './routes/technical-health.cwv.opportunities'
 import { Route as TechnicalHealthCwvDeepDiveRouteImport } from './routes/technical-health.cwv.deep-dive'
@@ -142,6 +143,12 @@ const BrandAuthorityBrandLoveRoute = BrandAuthorityBrandLoveRouteImport.update({
   path: '/brand-authority/brand-love',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrandAuthorityAiVisibilityRoute =
+  BrandAuthorityAiVisibilityRouteImport.update({
+    id: '/brand-authority_/ai-visibility',
+    path: '/brand-authority/ai-visibility',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuditRunsRunIdRoute = AuditRunsRunIdRouteImport.update({
   id: '/audit-runs_/$runId',
   path: '/audit-runs/$runId',
@@ -211,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/technical-health': typeof TechnicalHealthRouteWithChildren
   '/website-authority': typeof WebsiteAuthorityRouteWithChildren
   '/audit-runs/$runId': typeof AuditRunsRunIdRoute
+  '/brand-authority/ai-visibility': typeof BrandAuthorityAiVisibilityRoute
   '/brand-authority/brand-love': typeof BrandAuthorityBrandLoveRoute
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority/domain-authority': typeof BrandAuthorityDomainAuthorityRoute
@@ -241,6 +249,7 @@ export interface FileRoutesByTo {
   '/request-demo': typeof RequestDemoRoute
   '/settings': typeof SettingsRoute
   '/audit-runs/$runId': typeof AuditRunsRunIdRoute
+  '/brand-authority/ai-visibility': typeof BrandAuthorityAiVisibilityRoute
   '/brand-authority/brand-love': typeof BrandAuthorityBrandLoveRoute
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority/domain-authority': typeof BrandAuthorityDomainAuthorityRoute
@@ -274,6 +283,7 @@ export interface FileRoutesById {
   '/technical-health': typeof TechnicalHealthRouteWithChildren
   '/website-authority': typeof WebsiteAuthorityRouteWithChildren
   '/audit-runs_/$runId': typeof AuditRunsRunIdRoute
+  '/brand-authority_/ai-visibility': typeof BrandAuthorityAiVisibilityRoute
   '/brand-authority_/brand-love': typeof BrandAuthorityBrandLoveRoute
   '/brand-authority_/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority_/domain-authority': typeof BrandAuthorityDomainAuthorityRoute
@@ -308,6 +318,7 @@ export interface FileRouteTypes {
     | '/technical-health'
     | '/website-authority'
     | '/audit-runs/$runId'
+    | '/brand-authority/ai-visibility'
     | '/brand-authority/brand-love'
     | '/brand-authority/domain-age'
     | '/brand-authority/domain-authority'
@@ -338,6 +349,7 @@ export interface FileRouteTypes {
     | '/request-demo'
     | '/settings'
     | '/audit-runs/$runId'
+    | '/brand-authority/ai-visibility'
     | '/brand-authority/brand-love'
     | '/brand-authority/domain-age'
     | '/brand-authority/domain-authority'
@@ -370,6 +382,7 @@ export interface FileRouteTypes {
     | '/technical-health'
     | '/website-authority'
     | '/audit-runs_/$runId'
+    | '/brand-authority_/ai-visibility'
     | '/brand-authority_/brand-love'
     | '/brand-authority_/domain-age'
     | '/brand-authority_/domain-authority'
@@ -403,6 +416,7 @@ export interface RootRouteChildren {
   TechnicalHealthRoute: typeof TechnicalHealthRouteWithChildren
   WebsiteAuthorityRoute: typeof WebsiteAuthorityRouteWithChildren
   AuditRunsRunIdRoute: typeof AuditRunsRunIdRoute
+  BrandAuthorityAiVisibilityRoute: typeof BrandAuthorityAiVisibilityRoute
   BrandAuthorityBrandLoveRoute: typeof BrandAuthorityBrandLoveRoute
   BrandAuthorityDomainAgeRoute: typeof BrandAuthorityDomainAgeRoute
   BrandAuthorityDomainAuthorityRoute: typeof BrandAuthorityDomainAuthorityRoute
@@ -558,6 +572,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrandAuthorityBrandLoveRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/brand-authority_/ai-visibility': {
+      id: '/brand-authority_/ai-visibility'
+      path: '/brand-authority/ai-visibility'
+      fullPath: '/brand-authority/ai-visibility'
+      preLoaderRoute: typeof BrandAuthorityAiVisibilityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/audit-runs_/$runId': {
       id: '/audit-runs_/$runId'
       path: '/audit-runs/$runId'
@@ -697,6 +718,7 @@ const rootRouteChildren: RootRouteChildren = {
   TechnicalHealthRoute: TechnicalHealthRouteWithChildren,
   WebsiteAuthorityRoute: WebsiteAuthorityRouteWithChildren,
   AuditRunsRunIdRoute: AuditRunsRunIdRoute,
+  BrandAuthorityAiVisibilityRoute: BrandAuthorityAiVisibilityRoute,
   BrandAuthorityBrandLoveRoute: BrandAuthorityBrandLoveRoute,
   BrandAuthorityDomainAgeRoute: BrandAuthorityDomainAgeRoute,
   BrandAuthorityDomainAuthorityRoute: BrandAuthorityDomainAuthorityRoute,
