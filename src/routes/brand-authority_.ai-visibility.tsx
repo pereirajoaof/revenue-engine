@@ -34,7 +34,7 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import { Scatter, ScatterChart, ZAxis } from "recharts";
+
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
