@@ -99,6 +99,7 @@ function OnboardingPage() {
                 currency={state.currency}
                 customCurrency={state.customCurrency}
                 primaryMarket={state.primaryMarket}
+                primaryCategory={state.primaryCategory}
                 onChange={update}
                 onBack={back}
                 onNext={advance}

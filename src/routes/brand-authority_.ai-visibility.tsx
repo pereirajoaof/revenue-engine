@@ -3,26 +3,38 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   CartesianGrid,
+  Cell,
   Line,
   LineChart,
+  BarChart,
+  Bar,
   ResponsiveContainer,
+  Scatter,
+  ScatterChart,
   Tooltip as ChartTooltip,
   XAxis,
   YAxis,
+  ZAxis,
   Area,
   AreaChart,
 } from "recharts";
 import {
   ArrowDownRight,
   ArrowUpRight,
+  CheckCircle2,
   ChevronRight,
   Download,
+  ExternalLink,
+  FileText,
   Info,
+  Quote,
   Sparkles,
   Star,
   TrendingUp,
+  X,
   Zap,
 } from "lucide-react";
+
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -171,12 +183,113 @@ const CLUSTER_ROWS: Array<{
   },
 ];
 
+// AI Traffic — weekly sessions & traffic-vs-recommendations scatter
+const AI_SESSIONS = [
+  { w: "W1", chatgpt: 110, perplexity: 62, claude: 28, gemini: 18 },
+  { w: "W2", chatgpt: 132, perplexity: 71, claude: 30, gemini: 22 },
+  { w: "W3", chatgpt: 148, perplexity: 78, claude: 34, gemini: 24 },
+  { w: "W4", chatgpt: 162, perplexity: 86, claude: 38, gemini: 28 },
+  { w: "W5", chatgpt: 178, perplexity: 92, claude: 42, gemini: 31 },
+  { w: "W6", chatgpt: 195, perplexity: 101, claude: 46, gemini: 34 },
+  { w: "W7", chatgpt: 214, perplexity: 112, claude: 51, gemini: 38 },
+  { w: "W8", chatgpt: 232, perplexity: 124, claude: 55, gemini: 42 },
+  { w: "W9", chatgpt: 248, perplexity: 132, claude: 58, gemini: 45 },
+  { w: "W10", chatgpt: 266, perplexity: 141, claude: 61, gemini: 48 },
+  { w: "W11", chatgpt: 281, perplexity: 152, claude: 64, gemini: 51 },
+  { w: "W12", chatgpt: 297, perplexity: 161, claude: 67, gemini: 55 },
+];
+
+const TRAFFIC_SCATTER = CLUSTER_ROWS.map((r, i) => ({
+  cluster: r.label,
+  rec: r.recShare.v,
+  sessions: [142, 41, 96, 18, 72][i] ?? 50,
+  primary: !!r.primary,
+}));
+
+// Citation Footprint — per-cluster density + source mix
+const CITATION_DENSITY = CLUSTER_ROWS.map((r, i) => ({
+  id: r.id,
+  label: r.label,
+  primary: !!r.primary,
+  citations: [42, 18, 31, 9, 24][i] ?? 12,
+  verified: [34, 11, 24, 6, 18][i] ?? 8,
+}));
+
+const CITATION_SOURCES = [
+  { source: "Your domain", value: 38, tone: "primary" as const },
+  { source: "Editorial / press", value: 22, tone: "neutral" as const },
+  { source: "Reddit / forums", value: 18, tone: "neutral" as const },
+  { source: "Review sites", value: 14, tone: "neutral" as const },
+  { source: "Competitor pages", value: 8, tone: "warn" as const },
+];
+
+// Receipts — sample prompts per cluster
+type Receipt = {
+  id: string;
+  prompt: string;
+  model: (typeof MODELS)[number]["id"];
+  week: string;
+  verified: boolean;
+  rank: number | null;
+  snippet: string;
+  citations: { domain: string; url: string }[];
+};
+
+const RECEIPTS: Record<string, Receipt[]> = {
+  "coach-booking": [
+    {
+      id: "r1",
+      prompt: "What are the best coach booking apps in the UK?",
+      model: "chatgpt",
+      week: "W12",
+      verified: true,
+      rank: 2,
+      snippet:
+        "For UK-based coaches, Acme is one of the most-recommended booking platforms thanks to its lightweight scheduling, GoCardless integration, and strong reviews on Trustpilot…",
+      citations: [
+        { domain: "trustpilot.com", url: "https://trustpilot.com/review/acme" },
+        { domain: "acme.com", url: "https://acme.com/uk" },
+      ],
+    },
+    {
+      id: "r2",
+      prompt: "Recommend booking software for personal trainers in London.",
+      model: "perplexity",
+      week: "W12",
+      verified: true,
+      rank: 1,
+      snippet:
+        "Acme leads the pack for UK-based personal trainers — easy mobile booking, Stripe payments, and an intuitive client portal…",
+      citations: [
+        { domain: "acme.com", url: "https://acme.com" },
+        { domain: "reddit.com", url: "https://reddit.com/r/personaltraining" },
+        { domain: "g2.com", url: "https://g2.com/products/acme" },
+      ],
+    },
+    {
+      id: "r3",
+      prompt: "Cheapest scheduling app for fitness coaches?",
+      model: "claude",
+      week: "W11",
+      verified: false,
+      rank: null,
+      snippet:
+        "Several options exist including Acuity, Calendly and TidyCal. Acme is mentioned in some reviews but pricing details vary…",
+      citations: [],
+    },
+  ],
+};
+
+
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 function AiVisibilityPage() {
   const [range, setRange] = useState<Range>("90d");
   const [clusterId, setClusterId] = useState(CLUSTERS[0].id);
+  const [receiptsClusterId, setReceiptsClusterId] = useState<string | null>(null);
   const cluster = CLUSTERS.find((c) => c.id === clusterId) ?? CLUSTERS[0];
+  const receiptsCluster =
+    CLUSTER_ROWS.find((c) => c.id === receiptsClusterId) ?? null;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -208,21 +321,54 @@ function AiVisibilityPage() {
             </div>
           </Section>
 
+          <Section delay={0.08}>
+            <SectionHeading
+              eyebrow="02 — AI Traffic"
+              title="Sessions arriving from generative engines"
+              caption="Weekly AI-attributed sessions per model and the relationship between recommendation share and traffic per cluster."
+            />
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+              <AiSessionsCard />
+              <TrafficVsRecCard />
+            </div>
+          </Section>
+
           <Section delay={0.1}>
             <SectionHeading
-              eyebrow="02 — Cluster Breakdown"
+              eyebrow="03 — Cluster Breakdown"
               title="How every intent cluster is performing"
-              caption="Recommendation share, Top-3 inclusion, and first-mention rate across your tracked clusters."
+              caption="Recommendation share, Top-3 inclusion, and first-mention rate across your tracked clusters. Click a row for receipts."
             />
-            <ClusterTable rows={CLUSTER_ROWS} />
+            <ClusterTable
+              rows={CLUSTER_ROWS}
+              onOpenReceipts={(id) => setReceiptsClusterId(id)}
+            />
+          </Section>
+
+          <Section delay={0.12}>
+            <SectionHeading
+              eyebrow="04 — Citation Footprint"
+              title="What sources AI is citing about you"
+              caption="Per-cluster citation density and the source mix powering those mentions."
+            />
+            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+              <CitationDensityCard />
+              <CitationSourcesCard />
+            </div>
           </Section>
 
           <MethodologyFooter />
         </main>
       </div>
+
+      <ReceiptsModal
+        cluster={receiptsCluster}
+        onClose={() => setReceiptsClusterId(null)}
+      />
     </div>
   );
 }
+
 
 // ── Chrome ───────────────────────────────────────────────────────────────────
 
@@ -578,7 +724,13 @@ function MetricCell({
 
 // ── Cluster Breakdown ────────────────────────────────────────────────────────
 
-function ClusterTable({ rows }: { rows: typeof CLUSTER_ROWS }) {
+function ClusterTable({
+  rows,
+  onOpenReceipts,
+}: {
+  rows: typeof CLUSTER_ROWS;
+  onOpenReceipts: (id: string) => void;
+}) {
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-card">
       <div className="overflow-x-auto">
@@ -590,50 +742,469 @@ function ClusterTable({ rows }: { rows: typeof CLUSTER_ROWS }) {
               <th className="px-3 py-2.5 text-right font-medium">Top-3</th>
               <th className="px-3 py-2.5 text-right font-medium">First Mention</th>
               <th className="px-3 py-2.5 text-center font-medium">Volatility</th>
-              <th className="w-8 px-2 py-2.5" aria-label="Drill" />
+              <th className="w-10 px-2 py-2.5" aria-label="Receipts" />
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
-              <tr
-                key={row.id}
-                className="border-b border-border last:border-0 hover:bg-surface/40"
-              >
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <span className="truncate font-medium">{row.label}</span>
-                    {row.primary && (
-                      <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider text-primary">
-                        <Star className="h-2.5 w-2.5 fill-current" />
-                        Primary
+            {rows.map((row) => {
+              const hasReceipts = !!RECEIPTS[row.id]?.length;
+              return (
+                <tr
+                  key={row.id}
+                  className="group border-b border-border last:border-0 hover:bg-surface/40"
+                >
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <span className="truncate font-medium">{row.label}</span>
+                      {row.primary && (
+                        <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider text-primary">
+                          <Star className="h-2.5 w-2.5 fill-current" />
+                          Primary
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <MetricCell metric={row.recShare} suffix="%" />
+                  <MetricCell metric={row.top3} suffix="%" />
+                  <MetricCell metric={row.firstMention} suffix="%" />
+                  <td className="px-3 py-3">
+                    <VolatilityDots level={row.volatility} />
+                  </td>
+                  <td className="px-2 py-3 text-right">
+                    <button
+                      type="button"
+                      onClick={() => onOpenReceipts(row.id)}
+                      title={
+                        hasReceipts
+                          ? "View receipts"
+                          : "No sampled prompts yet"
+                      }
+                      className="inline-flex items-center gap-1 rounded-md border border-transparent px-1.5 py-1 text-muted-foreground transition-colors hover:border-border hover:bg-surface hover:text-foreground"
+                    >
+                      <FileText className="h-3.5 w-3.5" />
+                      <span className="text-[10px] font-mono uppercase tracking-wider">
+                        Receipts
                       </span>
-                    )}
-                  </div>
-                </td>
-                <MetricCell metric={row.recShare} suffix="%" />
-                <MetricCell metric={row.top3} suffix="%" />
-                <MetricCell metric={row.firstMention} suffix="%" />
-                <td className="px-3 py-3">
-                  <VolatilityDots level={row.volatility} />
-                </td>
-                <td className="px-2 py-3 text-right">
-                  <button
-                    type="button"
-                    title="View receipts — coming soon"
-                    className="rounded p-1 text-muted-foreground opacity-50 hover:bg-surface hover:text-foreground"
-                    disabled
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </button>
-                </td>
-              </tr>
-            ))}
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
     </div>
   );
 }
+
+// ── AI Traffic ───────────────────────────────────────────────────────────────
+
+function AiSessionsCard() {
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <div className="mb-3 flex items-start justify-between">
+        <div>
+          <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
+            AI sessions per week
+          </p>
+          <p className="mt-0.5 text-sm font-medium">Stacked by source model</p>
+        </div>
+        <span className="rounded-full border border-border bg-surface px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider text-muted-foreground">
+          GA4-validated
+        </span>
+      </div>
+      <div className="h-64">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={AI_SESSIONS} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
+            <CartesianGrid stroke="var(--border)" strokeDasharray="2 4" vertical={false} />
+            <XAxis dataKey="w" tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickLine={false} axisLine={false} />
+            <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickLine={false} axisLine={false} />
+            <ChartTooltip
+              contentStyle={{
+                background: "var(--card)",
+                border: "1px solid var(--border)",
+                borderRadius: 8,
+                fontSize: 12,
+              }}
+            />
+            {MODELS.map((m, i) => (
+              <Bar
+                key={m.id}
+                dataKey={m.id}
+                stackId="a"
+                fill={m.color}
+                radius={i === MODELS.length - 1 ? [4, 4, 0, 0] : 0}
+              />
+            ))}
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+}
+
+function TrafficVsRecCard() {
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <div className="mb-3 flex items-start justify-between">
+        <div>
+          <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
+            Traffic vs Recommendations
+          </p>
+          <p className="mt-0.5 text-sm font-medium">
+            Sessions this week × recommendation share
+          </p>
+        </div>
+      </div>
+      <div className="h-64">
+        <ResponsiveContainer width="100%" height="100%">
+          <ScatterChart margin={{ top: 8, right: 16, bottom: 8, left: -8 }}>
+            <CartesianGrid stroke="var(--border)" strokeDasharray="2 4" />
+            <XAxis
+              type="number"
+              dataKey="rec"
+              name="Rec share"
+              tick={{ fill: "var(--muted-foreground)", fontSize: 10 }}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(v) => `${v}%`}
+              label={{
+                value: "Rec share",
+                position: "insideBottom",
+                offset: -4,
+                fill: "var(--muted-foreground)",
+                fontSize: 10,
+              }}
+            />
+            <YAxis
+              type="number"
+              dataKey="sessions"
+              name="Sessions"
+              tick={{ fill: "var(--muted-foreground)", fontSize: 10 }}
+              tickLine={false}
+              axisLine={false}
+            />
+            <ZAxis range={[80, 220]} />
+            <ChartTooltip
+              cursor={{ strokeDasharray: "3 3", stroke: "var(--border)" }}
+              contentStyle={{
+                background: "var(--card)",
+                border: "1px solid var(--border)",
+                borderRadius: 8,
+                fontSize: 12,
+              }}
+              formatter={(value: number, name: string) =>
+                name === "rec" ? `${value}%` : value
+              }
+              labelFormatter={() => ""}
+            />
+            <Scatter data={TRAFFIC_SCATTER}>
+              {TRAFFIC_SCATTER.map((d, i) => (
+                <Cell
+                  key={i}
+                  fill={d.primary ? "var(--primary)" : "var(--chart-2)"}
+                  fillOpacity={d.primary ? 0.95 : 0.55}
+                  stroke="var(--card)"
+                  strokeWidth={1}
+                />
+              ))}
+            </Scatter>
+          </ScatterChart>
+        </ResponsiveContainer>
+      </div>
+      <p className="mt-2 text-[10px] text-muted-foreground">
+        Clusters above the diagonal are converting recommendation share into
+        traffic. Primary cluster highlighted.
+      </p>
+    </div>
+  );
+}
+
+// ── Citation Footprint ───────────────────────────────────────────────────────
+
+function CitationDensityCard() {
+  const max = Math.max(...CITATION_DENSITY.map((d) => d.citations));
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <div className="mb-4">
+        <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
+          Citation density
+        </p>
+        <p className="mt-0.5 text-sm font-medium">
+          Verified vs total citations per cluster · last 12w
+        </p>
+      </div>
+      <div className="space-y-3">
+        {CITATION_DENSITY.map((d) => {
+          const totalPct = (d.citations / max) * 100;
+          const verifiedPct = (d.verified / max) * 100;
+          return (
+            <div key={d.id}>
+              <div className="mb-1 flex items-center justify-between text-xs">
+                <span className="flex items-center gap-1.5 truncate">
+                  {d.primary && (
+                    <Star className="h-2.5 w-2.5 fill-primary text-primary" />
+                  )}
+                  <span className="truncate">{d.label}</span>
+                </span>
+                <span className="font-mono tabular-nums text-muted-foreground">
+                  {d.verified}
+                  <span className="opacity-50"> / {d.citations}</span>
+                </span>
+              </div>
+              <div className="relative h-2 overflow-hidden rounded-full bg-surface">
+                <div
+                  className="absolute inset-y-0 left-0 rounded-full bg-primary/25"
+                  style={{ width: `${totalPct}%` }}
+                />
+                <div
+                  className="absolute inset-y-0 left-0 rounded-full bg-primary"
+                  style={{ width: `${verifiedPct}%` }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div className="mt-4 flex items-center gap-3 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+        <span className="flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-primary" /> Verified
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-primary/25" /> Unverified
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function CitationSourcesCard() {
+  const total = CITATION_SOURCES.reduce((a, b) => a + b.value, 0);
+  const toneClass = (t: "primary" | "neutral" | "warn") =>
+    t === "primary"
+      ? "bg-primary"
+      : t === "warn"
+        ? "bg-destructive/70"
+        : "bg-muted-foreground/50";
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <div className="mb-4">
+        <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
+          Source mix
+        </p>
+        <p className="mt-0.5 text-sm font-medium">
+          Where AI is pulling citations from
+        </p>
+      </div>
+      <div className="mb-4 flex h-3 w-full overflow-hidden rounded-full bg-surface">
+        {CITATION_SOURCES.map((s) => (
+          <div
+            key={s.source}
+            className={toneClass(s.tone)}
+            style={{ width: `${(s.value / total) * 100}%` }}
+            title={`${s.source} · ${s.value}%`}
+          />
+        ))}
+      </div>
+      <ul className="space-y-2">
+        {CITATION_SOURCES.map((s) => (
+          <li
+            key={s.source}
+            className="flex items-center justify-between text-xs"
+          >
+            <span className="flex items-center gap-2">
+              <span className={`h-2 w-2 rounded-full ${toneClass(s.tone)}`} />
+              {s.source}
+            </span>
+            <span className="font-mono tabular-nums text-muted-foreground">
+              {s.value}%
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-4 text-[10px] text-muted-foreground">
+        A healthy footprint leans on your own domain plus diverse third-party
+        endorsements — not just competitor pages.
+      </p>
+    </div>
+  );
+}
+
+// ── Receipts Modal ───────────────────────────────────────────────────────────
+
+function ReceiptsModal({
+  cluster,
+  onClose,
+}: {
+  cluster: (typeof CLUSTER_ROWS)[number] | null;
+  onClose: () => void;
+}) {
+  if (!cluster) return null;
+  const receipts = RECEIPTS[cluster.id] ?? [];
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-stretch justify-center bg-background/70 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        onClick={(e) => e.stopPropagation()}
+        className="m-4 flex max-h-[calc(100vh-2rem)] w-full max-w-6xl flex-col overflow-hidden rounded-xl border border-border bg-card shadow-2xl"
+      >
+        <div className="flex items-start justify-between gap-4 border-b border-border p-5">
+          <div className="min-w-0">
+            <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground">
+              Receipts · sampled prompts
+            </p>
+            <h2 className="mt-1 truncate text-lg font-semibold tracking-tight">
+              {cluster.label}
+            </h2>
+            <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
+              <span className="font-mono tabular-nums">
+                Rec share {cluster.recShare.v}%
+              </span>
+              <span>·</span>
+              <span className="font-mono tabular-nums">
+                Top-3 {cluster.top3.v}%
+              </span>
+              <span>·</span>
+              <span>{receipts.length} sampled prompts</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-md border border-border bg-surface p-1.5 text-muted-foreground hover:bg-background hover:text-foreground"
+            aria-label="Close receipts"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="grid flex-1 grid-cols-1 overflow-hidden lg:grid-cols-[minmax(0,1fr)_320px]">
+          <div className="overflow-y-auto p-5">
+            {receipts.length === 0 ? (
+              <div className="flex h-full flex-col items-center justify-center gap-2 text-center text-sm text-muted-foreground">
+                <FileText className="h-6 w-6" />
+                <p>No sampled prompts yet for this cluster.</p>
+                <p className="text-xs">
+                  Sampling runs weekly — check back after the next cycle.
+                </p>
+              </div>
+            ) : (
+              <ul className="space-y-4">
+                {receipts.map((r) => {
+                  const model = MODELS.find((m) => m.id === r.model);
+                  return (
+                    <li
+                      key={r.id}
+                      className="rounded-lg border border-border bg-surface/40 p-4"
+                    >
+                      <div className="flex flex-wrap items-center gap-2">
+                        {model && (
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider">
+                            <span
+                              className="h-1.5 w-1.5 rounded-full"
+                              style={{ background: model.color }}
+                            />
+                            {model.label}
+                          </span>
+                        )}
+                        <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                          {r.week}
+                        </span>
+                        {r.verified ? (
+                          <span className="inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-1.5 py-0.5 text-[10px] font-mono uppercase tracking-wider text-primary">
+                            <CheckCircle2 className="h-2.5 w-2.5" />
+                            Verified
+                          </span>
+                        ) : (
+                          <span className="rounded-full border border-border bg-surface px-1.5 py-0.5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+                            Unverified
+                          </span>
+                        )}
+                        {r.rank ? (
+                          <span className="ml-auto font-mono text-[11px] tabular-nums text-muted-foreground">
+                            Rank #{r.rank}
+                          </span>
+                        ) : (
+                          <span className="ml-auto font-mono text-[11px] tabular-nums text-muted-foreground">
+                            Not recommended
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-3 text-sm font-medium">{r.prompt}</p>
+                      <div className="mt-2 flex gap-2 text-sm text-muted-foreground">
+                        <Quote className="mt-1 h-3.5 w-3.5 shrink-0 opacity-60" />
+                        <p className="leading-relaxed">{r.snippet}</p>
+                      </div>
+                      {r.citations.length > 0 && (
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {r.citations.map((c) => (
+                            <a
+                              key={c.url}
+                              href={c.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2 py-0.5 text-[11px] text-muted-foreground hover:text-foreground"
+                            >
+                              {c.domain}
+                              <ExternalLink className="h-3 w-3" />
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </div>
+
+          <aside className="border-t border-border bg-surface/30 p-5 lg:border-l lg:border-t-0">
+            <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground">
+              How to fix
+            </p>
+            <h3 className="mt-1 text-sm font-semibold">
+              Lift recommendation share
+            </h3>
+            <ol className="mt-3 space-y-3 text-sm text-muted-foreground">
+              <li className="flex gap-2">
+                <span className="font-mono text-primary">01</span>
+                <span>
+                  Publish a comparison landing page targeting "{cluster.label}"
+                  with structured pros/cons.
+                </span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-mono text-primary">02</span>
+                <span>
+                  Seed third-party reviews on Trustpilot, G2, and category-specific
+                  Reddit threads.
+                </span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-mono text-primary">03</span>
+                <span>
+                  Add FAQ schema with the exact phrasing of the sampled prompts.
+                </span>
+              </li>
+            </ol>
+            <div className="mt-5 rounded-md border border-border bg-card p-3 text-[11px] text-muted-foreground">
+              Actions are heuristic for V0.5. The Insights Engine will rank
+              these by expected lift once we have 4 weeks of baseline.
+            </div>
+          </aside>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+
 
 // ── Primitives ───────────────────────────────────────────────────────────────
 

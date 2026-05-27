@@ -7,11 +7,13 @@ interface Props {
   currency: Currency | null;
   customCurrency: string;
   primaryMarket: string;
+  primaryCategory: string;
   onChange: (patch: Partial<{
     businessModel: BusinessModel;
     currency: Currency;
     customCurrency: string;
     primaryMarket: string;
+    primaryCategory: string;
   }>) => void;
   onBack: () => void;
   onNext: () => void;
@@ -31,8 +33,9 @@ const CURRENCIES: { id: Currency; label: string; symbol: string }[] = [
   { id: "OTHER", label: "Other", symbol: "—" },
 ];
 
-export function Step3Business({ businessModel, currency, customCurrency, primaryMarket, onChange, onBack, onNext }: Props) {
+export function Step3Business({ businessModel, currency, customCurrency, primaryMarket, primaryCategory, onChange, onBack, onNext }: Props) {
   const ready = !!businessModel && !!currency && primaryMarket.trim().length > 0
+    && primaryCategory.trim().length > 0
     && (currency !== "OTHER" || customCurrency.trim().length > 0);
 
   return (
@@ -111,6 +114,19 @@ export function Step3Business({ businessModel, currency, customCurrency, primary
             placeholder="e.g. United Kingdom, United States, Germany"
             value={primaryMarket}
             onChange={(e) => onChange({ primaryMarket: e.target.value })}
+            className="w-full px-4 py-2.5 rounded-lg border border-border bg-card text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+        </Field>
+
+        <Field
+          label="What's your primary product category?"
+          hint="One short phrase. Powers AI Visibility cluster sampling and competitor mapping."
+        >
+          <input
+            type="text"
+            placeholder="e.g. coach booking apps, fitness studio SaaS, project management tools"
+            value={primaryCategory}
+            onChange={(e) => onChange({ primaryCategory: e.target.value })}
             className="w-full px-4 py-2.5 rounded-lg border border-border bg-card text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </Field>
