@@ -23,6 +23,7 @@ import {
   Clock,
   Target,
   GitCompare,
+  Boxes,
 } from "lucide-react";
 import {
   DropdownMenu,
