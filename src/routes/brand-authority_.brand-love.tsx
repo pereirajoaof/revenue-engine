@@ -244,8 +244,8 @@ function BrandLovePage() {
           <Section delay={0}>
             <Hero />
             <KpiGrid />
-            <AiVisibilityTeaser />
           </Section>
+
 
 
           <Section delay={0.05}>
@@ -327,58 +327,8 @@ function BrandLovePage() {
   );
 }
 
-function AiVisibilityTeaser() {
-  const models = [
-    { label: "ChatGPT", color: "var(--chart-1)" },
-    { label: "Perplexity", color: "var(--chart-2)" },
-    { label: "Claude", color: "var(--chart-3)" },
-    { label: "Gemini", color: "var(--chart-4)" },
-  ];
-  return (
-    <Link
-      to="/brand-authority/ai-visibility"
-      className="group relative block overflow-hidden rounded-2xl border border-primary/25 bg-card p-6 shadow-sm transition-colors hover:border-primary/50"
-    >
-      <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
-      <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="max-w-xl space-y-2">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-primary">
-            <Sparkles className="h-3 w-3" /> AI Visibility · Beta
-          </div>
-          <h3 className="text-lg font-semibold tracking-tight">
-            How generative engines recommend you
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            Recommendation share, AI sessions, and citation footprint across
-            ChatGPT, Perplexity, Claude, and Gemini — tracked weekly.
-          </p>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center -space-x-1.5">
-            {models.map((m) => (
-              <span
-                key={m.label}
-                title={m.label}
-                className="h-6 w-6 rounded-full border-2 border-card"
-                style={{ background: m.color }}
-              />
-            ))}
-          </div>
-          <div className="text-right">
-            <p className="font-mono text-2xl font-semibold tabular-nums">18%</p>
-            <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-              Rec share · primary
-            </p>
-          </div>
-          <span className="inline-flex items-center gap-1 rounded-md border border-border bg-surface px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors group-hover:border-primary/50 group-hover:text-primary">
-            Open
-            <ChevronRight className="h-3.5 w-3.5" />
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
-}
+
+
 
 function Section({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   return (
@@ -694,7 +644,7 @@ function DirectTrafficCard() {
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-5">
         {[
           { l: "Returning visitor rate", v: "47.2%", d: 3.4 },
           { l: "Revenue / direct session", v: "$4.18", d: 6.1 },
@@ -709,7 +659,19 @@ function DirectTrafficCard() {
             </p>
           </div>
         ))}
+        <Link
+          to="/brand-authority/ai-visibility"
+          className="group flex flex-col rounded-lg border border-primary/30 bg-primary/5 p-3 transition-colors hover:border-primary/60 hover:bg-primary/10"
+        >
+          <p className="text-[10px] font-mono uppercase tracking-wider text-primary">AI Sessions This Week</p>
+          <p className="mt-1 font-mono text-lg font-semibold tabular-nums">2,184</p>
+          <p className="mt-auto inline-flex items-center gap-1 pt-1 font-mono text-[11px] text-primary">
+            View AI Visibility
+            <ChevronRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+          </p>
+        </Link>
       </div>
+
     </div>
   );
 }
