@@ -584,7 +584,7 @@ function InventoryErrors() {
 
 function TopChanges() {
   return (
-    <div className="rounded-xl border border-border bg-card shadow-sm">
+    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
       <div className="flex items-start justify-between gap-3 border-b border-border px-5 py-4">
         <div>
           <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Crawl-over-crawl</p>
