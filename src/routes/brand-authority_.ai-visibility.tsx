@@ -198,14 +198,15 @@ function AiVisibilityPage() {
 
   // System-state demo flags (in a real app these come from props/loader)
   const ga4Connected = true;
-  const pipelineState: "ok" | "refreshing" | "failed" = "ok";
+  const pipelineState = "ok" as "ok" | "refreshing" | "failed";
 
   const openReceipts = (sample = 0) =>
-    navigate({ search: (p) => ({ ...p, receipts: true, sample }) });
+    navigate({ search: (p: typeof search) => ({ ...p, receipts: true, sample }) });
   const closeReceipts = () =>
-    navigate({ search: (p) => ({ ...p, receipts: false }) });
+    navigate({ search: (p: typeof search) => ({ ...p, receipts: false }) });
   const setSample = (sample: number) =>
-    navigate({ search: (p) => ({ ...p, sample }) });
+    navigate({ search: (p: typeof search) => ({ ...p, sample }) });
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
