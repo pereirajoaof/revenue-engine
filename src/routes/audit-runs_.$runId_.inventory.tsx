@@ -599,12 +599,12 @@ function TopChanges() {
           const stroke = positive ? "var(--primary)" : negative ? "var(--destructive)" : "var(--muted-foreground)";
           const Icon = c.abs > 0 ? ArrowUpRight : c.abs < 0 ? ArrowDownRight : Minus;
           return (
-            <li key={c.name} className="group flex items-center gap-3 px-5 py-3 transition-colors hover:bg-surface/40">
+            <li key={c.name} className="group flex items-center gap-4 px-5 py-3 transition-colors hover:bg-surface/40">
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-foreground">{c.name}</p>
                 <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">Current · {fmt(c.current)}</p>
               </div>
-              <div className="hidden h-8 w-20 shrink-0 sm:block">
+              <div className="h-8 w-24 shrink-0">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={c.spark.map((v, i) => ({ i, v }))}>
                     <Line type="monotone" dataKey="v" stroke={stroke} strokeWidth={2} dot={false} />
@@ -619,14 +619,6 @@ function TopChanges() {
                   <Icon className="h-3 w-3" />{c.pct > 0 ? "+" : ""}{c.pct}%
                 </p>
               </div>
-              <span className={cn(
-                "hidden shrink-0 rounded-md border px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider md:inline-block",
-                positive ? "border-primary/25 bg-primary/10 text-primary"
-                  : negative ? "border-destructive/25 bg-destructive/10 text-destructive"
-                  : "border-border bg-surface/60 text-muted-foreground",
-              )}>
-                {positive ? "Improved" : negative ? "Degraded" : "Neutral"}
-              </span>
             </li>
           );
         })}
