@@ -36,6 +36,7 @@ import { Route as BrandAuthoritySiteFocusTableRouteImport } from './routes/brand
 import { Route as BrandAuthorityPageAgeOutliersRouteImport } from './routes/brand-authority_.page-age.outliers'
 import { Route as AuditRunsRunIdUrlsRouteImport } from './routes/audit-runs_.$runId_.urls'
 import { Route as AuditRunsRunIdSettingsRouteImport } from './routes/audit-runs_.$runId_.settings'
+import { Route as AuditRunsRunIdInventoryRouteImport } from './routes/audit-runs_.$runId_.inventory'
 import { Route as AuditRunsRunIdChangesRouteImport } from './routes/audit-runs_.$runId_.changes'
 import { Route as AuditRunsRunIdIssuesIssueIdRouteImport } from './routes/audit-runs_.$runId_.issues.$issueId'
 
@@ -180,6 +181,11 @@ const AuditRunsRunIdSettingsRoute = AuditRunsRunIdSettingsRouteImport.update({
   path: '/audit-runs/$runId/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuditRunsRunIdInventoryRoute = AuditRunsRunIdInventoryRouteImport.update({
+  id: '/audit-runs_/$runId_/inventory',
+  path: '/audit-runs/$runId/inventory',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuditRunsRunIdChangesRoute = AuditRunsRunIdChangesRouteImport.update({
   id: '/audit-runs_/$runId_/changes',
   path: '/audit-runs/$runId/changes',
@@ -215,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/technical-health/': typeof TechnicalHealthIndexRoute
   '/website-authority/': typeof WebsiteAuthorityIndexRoute
   '/audit-runs/$runId/changes': typeof AuditRunsRunIdChangesRoute
+  '/audit-runs/$runId/inventory': typeof AuditRunsRunIdInventoryRoute
   '/audit-runs/$runId/settings': typeof AuditRunsRunIdSettingsRoute
   '/audit-runs/$runId/urls': typeof AuditRunsRunIdUrlsRoute
   '/brand-authority/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
@@ -244,6 +251,7 @@ export interface FileRoutesByTo {
   '/technical-health': typeof TechnicalHealthIndexRoute
   '/website-authority': typeof WebsiteAuthorityIndexRoute
   '/audit-runs/$runId/changes': typeof AuditRunsRunIdChangesRoute
+  '/audit-runs/$runId/inventory': typeof AuditRunsRunIdInventoryRoute
   '/audit-runs/$runId/settings': typeof AuditRunsRunIdSettingsRoute
   '/audit-runs/$runId/urls': typeof AuditRunsRunIdUrlsRoute
   '/brand-authority/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
@@ -276,6 +284,7 @@ export interface FileRoutesById {
   '/technical-health/': typeof TechnicalHealthIndexRoute
   '/website-authority/': typeof WebsiteAuthorityIndexRoute
   '/audit-runs_/$runId_/changes': typeof AuditRunsRunIdChangesRoute
+  '/audit-runs_/$runId_/inventory': typeof AuditRunsRunIdInventoryRoute
   '/audit-runs_/$runId_/settings': typeof AuditRunsRunIdSettingsRoute
   '/audit-runs_/$runId_/urls': typeof AuditRunsRunIdUrlsRoute
   '/brand-authority_/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
@@ -309,6 +318,7 @@ export interface FileRouteTypes {
     | '/technical-health/'
     | '/website-authority/'
     | '/audit-runs/$runId/changes'
+    | '/audit-runs/$runId/inventory'
     | '/audit-runs/$runId/settings'
     | '/audit-runs/$runId/urls'
     | '/brand-authority/page-age/outliers'
@@ -338,6 +348,7 @@ export interface FileRouteTypes {
     | '/technical-health'
     | '/website-authority'
     | '/audit-runs/$runId/changes'
+    | '/audit-runs/$runId/inventory'
     | '/audit-runs/$runId/settings'
     | '/audit-runs/$runId/urls'
     | '/brand-authority/page-age/outliers'
@@ -369,6 +380,7 @@ export interface FileRouteTypes {
     | '/technical-health/'
     | '/website-authority/'
     | '/audit-runs_/$runId_/changes'
+    | '/audit-runs_/$runId_/inventory'
     | '/audit-runs_/$runId_/settings'
     | '/audit-runs_/$runId_/urls'
     | '/brand-authority_/page-age/outliers'
@@ -397,6 +409,7 @@ export interface RootRouteChildren {
   BrandAuthorityPageAgeRoute: typeof BrandAuthorityPageAgeRouteWithChildren
   BrandAuthoritySiteFocusRoute: typeof BrandAuthoritySiteFocusRoute
   AuditRunsRunIdChangesRoute: typeof AuditRunsRunIdChangesRoute
+  AuditRunsRunIdInventoryRoute: typeof AuditRunsRunIdInventoryRoute
   AuditRunsRunIdSettingsRoute: typeof AuditRunsRunIdSettingsRoute
   AuditRunsRunIdUrlsRoute: typeof AuditRunsRunIdUrlsRoute
   BrandAuthoritySiteFocusTableRoute: typeof BrandAuthoritySiteFocusTableRoute
@@ -594,6 +607,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuditRunsRunIdSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/audit-runs_/$runId_/inventory': {
+      id: '/audit-runs_/$runId_/inventory'
+      path: '/audit-runs/$runId/inventory'
+      fullPath: '/audit-runs/$runId/inventory'
+      preLoaderRoute: typeof AuditRunsRunIdInventoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/audit-runs_/$runId_/changes': {
       id: '/audit-runs_/$runId_/changes'
       path: '/audit-runs/$runId/changes'
@@ -683,6 +703,7 @@ const rootRouteChildren: RootRouteChildren = {
   BrandAuthorityPageAgeRoute: BrandAuthorityPageAgeRouteWithChildren,
   BrandAuthoritySiteFocusRoute: BrandAuthoritySiteFocusRoute,
   AuditRunsRunIdChangesRoute: AuditRunsRunIdChangesRoute,
+  AuditRunsRunIdInventoryRoute: AuditRunsRunIdInventoryRoute,
   AuditRunsRunIdSettingsRoute: AuditRunsRunIdSettingsRoute,
   AuditRunsRunIdUrlsRoute: AuditRunsRunIdUrlsRoute,
   BrandAuthoritySiteFocusTableRoute: BrandAuthoritySiteFocusTableRoute,
@@ -691,3 +712,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
