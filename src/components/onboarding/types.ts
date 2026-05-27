@@ -28,6 +28,7 @@ export interface OnboardingState {
   currency: Currency | null;
   customCurrency: string;
   primaryMarket: string;
+  primaryCategory: string;
   // Step 4
   brandedKeywords: string[];
   // Step 5
@@ -46,6 +47,7 @@ export const initialState: OnboardingState = {
   currency: null,
   customCurrency: "",
   primaryMarket: "",
+  primaryCategory: "",
   brandedKeywords: [],
   economicsMode: null,
   ga4Connected: false,
