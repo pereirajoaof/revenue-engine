@@ -1,44 +1,55 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { z } from "zod";
+import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import {
+  Area,
+  AreaChart,
   CartesianGrid,
   Cell,
   Line,
   LineChart,
-  BarChart,
-  Bar,
+  Pie,
+  PieChart,
   ResponsiveContainer,
-  Scatter,
-  ScatterChart,
   Tooltip as ChartTooltip,
   XAxis,
   YAxis,
-  ZAxis,
-  Area,
-  AreaChart,
 } from "recharts";
 import {
+  AlertTriangle,
   ArrowDownRight,
   ArrowUpRight,
   CheckCircle2,
+  ChevronLeft,
   ChevronRight,
+  Copy,
   Download,
   ExternalLink,
   FileText,
   Info,
+  Loader2,
   Quote,
+  RefreshCw,
   Sparkles,
   Star,
-  TrendingUp,
   X,
-  Zap,
 } from "lucide-react";
 
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
+// ── Route ────────────────────────────────────────────────────────────────────
+
+const searchSchema = z.object({
+  cluster: fallback(z.string(), "coach-booking").default("coach-booking"),
+  receipts: fallback(z.boolean(), false).default(false),
+  sample: fallback(z.number().int().min(0), 0).default(0),
+});
+
 export const Route = createFileRoute("/brand-authority_/ai-visibility")({
+  validateSearch: zodValidator(searchSchema),
   component: AiVisibilityPage,
   head: () => ({
     meta: [
@@ -46,278 +57,182 @@ export const Route = createFileRoute("/brand-authority_/ai-visibility")({
       {
         name: "description",
         content:
-          "How generative systems retrieve, recommend, and cite your brand across LLM-driven search.",
+          "How ChatGPT-with-search retrieves, recommends, and cites your brand. Discovery Intelligence V0.5.",
       },
       { property: "og:title", content: "AI Visibility — Brand Authority" },
       {
         property: "og:description",
         content:
-          "Discoverability, recommendation share, and citation footprint across ChatGPT, Perplexity, Claude, and Gemini.",
+          "Recommendation share, AI sessions, and receipts from your primary commercial cluster.",
       },
     ],
   }),
 });
 
-// ── Mock data ────────────────────────────────────────────────────────────────
+// ── Mock data (V0.5: ChatGPT-with-search only, primary cluster only) ────────
 
 const RANGES = ["7d", "30d", "90d", "All"] as const;
 type Range = (typeof RANGES)[number];
 
-const CLUSTERS = [
-  { id: "coach-booking", label: "best coach booking apps in the UK", primary: true },
-  { id: "scheduling-software", label: "online scheduling software" },
-  { id: "client-management", label: "client management for trainers" },
-  { id: "fitness-saas", label: "fitness studio SaaS" },
-  { id: "personal-trainer-tools", label: "personal trainer tools" },
-];
-
-const MODELS = [
-  { id: "chatgpt", label: "ChatGPT", color: "var(--chart-1)" },
-  { id: "perplexity", label: "Perplexity", color: "var(--chart-2)" },
-  { id: "claude", label: "Claude", color: "var(--chart-3)" },
-  { id: "gemini", label: "Gemini", color: "var(--chart-4)" },
-] as const;
+const PRIMARY_CLUSTER = {
+  id: "coach-booking",
+  label: "best coach booking apps in the UK",
+};
 
 const SPARK_REC = [12, 14, 13, 15, 16, 15, 17, 16, 18, 17, 19, 18];
 const SPARK_SESS = [340, 360, 390, 420, 410, 450, 470, 490, 520, 540, 560, 580];
 const SPARK_REV = [2100, 2300, 2400, 2600, 2900, 3000, 3200, 3400, 3600, 3800, 4000, 4200];
 
 const REC_TREND = [
-  { w: "W1", chatgpt: 12, perplexity: 9, claude: 6, gemini: 4 },
-  { w: "W2", chatgpt: 13, perplexity: 10, claude: 6, gemini: 5 },
-  { w: "W3", chatgpt: 14, perplexity: 11, claude: 7, gemini: 5 },
-  { w: "W4", chatgpt: 15, perplexity: 12, claude: 7, gemini: 6 },
-  { w: "W5", chatgpt: 14, perplexity: 12, claude: 8, gemini: 6 },
-  { w: "W6", chatgpt: 16, perplexity: 13, claude: 8, gemini: 7 },
-  { w: "W7", chatgpt: 17, perplexity: 13, claude: 9, gemini: 7 },
-  { w: "W8", chatgpt: 16, perplexity: 14, claude: 9, gemini: 8 },
-  { w: "W9", chatgpt: 18, perplexity: 14, claude: 10, gemini: 8 },
-  { w: "W10", chatgpt: 19, perplexity: 15, claude: 10, gemini: 9 },
-  { w: "W11", chatgpt: 18, perplexity: 16, claude: 11, gemini: 9 },
-  { w: "W12", chatgpt: 20, perplexity: 17, claude: 11, gemini: 10 },
+  { w: "W1", v: 12 }, { w: "W2", v: 13 }, { w: "W3", v: 14 }, { w: "W4", v: 15 },
+  { w: "W5", v: 14 }, { w: "W6", v: 16 }, { w: "W7", v: 17 }, { w: "W8", v: 16 },
+  { w: "W9", v: 18 }, { w: "W10", v: 19 }, { w: "W11", v: 18 }, { w: "W12", v: 20 },
+];
+
+const AI_SESSIONS = [
+  { w: "W1", v: 340 }, { w: "W2", v: 360 }, { w: "W3", v: 390 }, { w: "W4", v: 420 },
+  { w: "W5", v: 410 }, { w: "W6", v: 450 }, { w: "W7", v: 470 }, { w: "W8", v: 490 },
+  { w: "W9", v: 520 }, { w: "W10", v: 540 }, { w: "W11", v: 560 }, { w: "W12", v: 580 },
+];
+
+const SOURCE_MIX = [
+  { source: "ChatGPT", value: 412, color: "var(--chart-1)" },
+  { source: "Perplexity", value: 98, color: "var(--chart-2)" },
+  { source: "Claude", value: 41, color: "var(--chart-3)" },
+  { source: "Gemini", value: 22, color: "var(--chart-4)" },
+  { source: "Other AI", value: 7, color: "var(--muted-foreground)" },
+];
+
+const TOP_LANDING = [
+  { path: "/uk/coach-booking", sessions: 142, cvr: 4.2, revenue: 1280 },
+  { path: "/pricing", sessions: 96, cvr: 5.1, revenue: 1140 },
+  { path: "/integrations/stripe", sessions: 71, cvr: 3.4, revenue: 620 },
+  { path: "/compare/calendly", sessions: 58, cvr: 2.8, revenue: 410 },
+  { path: "/features/scheduling", sessions: 49, cvr: 3.1, revenue: 380 },
+  { path: "/blog/personal-trainer-booking", sessions: 38, cvr: 1.9, revenue: 180 },
+  { path: "/guides/uk-coaches", sessions: 31, cvr: 2.1, revenue: 160 },
 ];
 
 type Sig = "none" | "within" | "sig";
 
-const MODEL_METRICS: Array<{
-  model: (typeof MODELS)[number];
-  recShare: { v: number; d: number; sig: Sig };
-  top3: { v: number; d: number; sig: Sig };
-  firstMention: { v: number; d: number; sig: Sig };
-}> = [
-  {
-    model: MODELS[0],
-    recShare: { v: 20, d: 2.4, sig: "sig" },
-    top3: { v: 34, d: 1.8, sig: "within" },
-    firstMention: { v: 11, d: 0.4, sig: "none" },
-  },
-  {
-    model: MODELS[1],
-    recShare: { v: 17, d: 1.1, sig: "within" },
-    top3: { v: 29, d: 3.6, sig: "sig" },
-    firstMention: { v: 9, d: -0.2, sig: "none" },
-  },
-  {
-    model: MODELS[2],
-    recShare: { v: 11, d: -1.4, sig: "within" },
-    top3: { v: 21, d: -0.9, sig: "none" },
-    firstMention: { v: 6, d: 0.1, sig: "none" },
-  },
-  {
-    model: MODELS[3],
-    recShare: { v: 10, d: -3.1, sig: "sig" },
-    top3: { v: 18, d: -0.4, sig: "none" },
-    firstMention: { v: 5, d: -0.3, sig: "none" },
-  },
-];
-
-const CLUSTER_ROWS: Array<{
-  id: string;
-  label: string;
-  primary?: boolean;
-  recShare: { v: number; d: number; sig: Sig };
-  top3: { v: number; d: number; sig: Sig };
-  firstMention: { v: number; d: number; sig: Sig };
-  volatility: number; // 1–5
-}> = [
-  {
-    id: "coach-booking",
-    label: "best coach booking apps in the UK",
-    primary: true,
-    recShare: { v: 18, d: 2.1, sig: "sig" },
-    top3: { v: 31, d: 1.4, sig: "within" },
-    firstMention: { v: 10, d: 0.3, sig: "none" },
-    volatility: 2,
-  },
-  {
-    id: "scheduling-software",
-    label: "online scheduling software",
-    recShare: { v: 9, d: -0.6, sig: "within" },
-    top3: { v: 17, d: -2.2, sig: "sig" },
-    firstMention: { v: 4, d: -0.4, sig: "none" },
-    volatility: 4,
-  },
-  {
-    id: "client-management",
-    label: "client management for trainers",
-    recShare: { v: 14, d: 0.8, sig: "within" },
-    top3: { v: 24, d: 1.1, sig: "within" },
-    firstMention: { v: 7, d: 0.2, sig: "none" },
-    volatility: 2,
-  },
-  {
-    id: "fitness-saas",
-    label: "fitness studio SaaS",
-    recShare: { v: 6, d: 0.2, sig: "none" },
-    top3: { v: 11, d: 0.4, sig: "none" },
-    firstMention: { v: 3, d: 0.1, sig: "none" },
-    volatility: 1,
-  },
-  {
-    id: "personal-trainer-tools",
-    label: "personal trainer tools",
-    recShare: { v: 12, d: 3.4, sig: "sig" },
-    top3: { v: 22, d: 2.6, sig: "sig" },
-    firstMention: { v: 6, d: 0.7, sig: "within" },
-    volatility: 3,
-  },
-];
-
-// AI Traffic — weekly sessions & traffic-vs-recommendations scatter
-const AI_SESSIONS = [
-  { w: "W1", chatgpt: 110, perplexity: 62, claude: 28, gemini: 18 },
-  { w: "W2", chatgpt: 132, perplexity: 71, claude: 30, gemini: 22 },
-  { w: "W3", chatgpt: 148, perplexity: 78, claude: 34, gemini: 24 },
-  { w: "W4", chatgpt: 162, perplexity: 86, claude: 38, gemini: 28 },
-  { w: "W5", chatgpt: 178, perplexity: 92, claude: 42, gemini: 31 },
-  { w: "W6", chatgpt: 195, perplexity: 101, claude: 46, gemini: 34 },
-  { w: "W7", chatgpt: 214, perplexity: 112, claude: 51, gemini: 38 },
-  { w: "W8", chatgpt: 232, perplexity: 124, claude: 55, gemini: 42 },
-  { w: "W9", chatgpt: 248, perplexity: 132, claude: 58, gemini: 45 },
-  { w: "W10", chatgpt: 266, perplexity: 141, claude: 61, gemini: 48 },
-  { w: "W11", chatgpt: 281, perplexity: 152, claude: 64, gemini: 51 },
-  { w: "W12", chatgpt: 297, perplexity: 161, claude: 67, gemini: 55 },
-];
-
-const TRAFFIC_SCATTER = CLUSTER_ROWS.map((r, i) => ({
-  cluster: r.label,
-  rec: r.recShare.v,
-  sessions: [142, 41, 96, 18, 72][i] ?? 50,
-  primary: !!r.primary,
-}));
-
-// Citation Footprint — per-cluster density + source mix
-const CITATION_DENSITY = CLUSTER_ROWS.map((r, i) => ({
-  id: r.id,
-  label: r.label,
-  primary: !!r.primary,
-  citations: [42, 18, 31, 9, 24][i] ?? 12,
-  verified: [34, 11, 24, 6, 18][i] ?? 8,
-}));
-
-const CITATION_SOURCES = [
-  { source: "Your domain", value: 38, tone: "primary" as const },
-  { source: "Editorial / press", value: 22, tone: "neutral" as const },
-  { source: "Reddit / forums", value: 18, tone: "neutral" as const },
-  { source: "Review sites", value: 14, tone: "neutral" as const },
-  { source: "Competitor pages", value: 8, tone: "warn" as const },
-];
-
-// Receipts — sample prompts per cluster
 type Receipt = {
   id: string;
   prompt: string;
-  model: (typeof MODELS)[number]["id"];
+  promptInstance: string;
   week: string;
   verified: boolean;
   rank: number | null;
   snippet: string;
   citations: { domain: string; url: string }[];
+  entities: { name: string; isBrand: boolean; position: number | null }[];
 };
 
-const RECEIPTS: Record<string, Receipt[]> = {
-  "coach-booking": [
-    {
-      id: "r1",
-      prompt: "What are the best coach booking apps in the UK?",
-      model: "chatgpt",
-      week: "W12",
-      verified: true,
-      rank: 2,
-      snippet:
-        "For UK-based coaches, Acme is one of the most-recommended booking platforms thanks to its lightweight scheduling, GoCardless integration, and strong reviews on Trustpilot…",
-      citations: [
-        { domain: "trustpilot.com", url: "https://trustpilot.com/review/acme" },
-        { domain: "acme.com", url: "https://acme.com/uk" },
-      ],
-    },
-    {
-      id: "r2",
-      prompt: "Recommend booking software for personal trainers in London.",
-      model: "perplexity",
-      week: "W12",
-      verified: true,
-      rank: 1,
-      snippet:
-        "Acme leads the pack for UK-based personal trainers — easy mobile booking, Stripe payments, and an intuitive client portal…",
-      citations: [
-        { domain: "acme.com", url: "https://acme.com" },
-        { domain: "reddit.com", url: "https://reddit.com/r/personaltraining" },
-        { domain: "g2.com", url: "https://g2.com/products/acme" },
-      ],
-    },
-    {
-      id: "r3",
-      prompt: "Cheapest scheduling app for fitness coaches?",
-      model: "claude",
-      week: "W11",
-      verified: false,
-      rank: null,
-      snippet:
-        "Several options exist including Acuity, Calendly and TidyCal. Acme is mentioned in some reviews but pricing details vary…",
-      citations: [],
-    },
-  ],
-};
-
+const RECEIPTS: Receipt[] = [
+  {
+    id: "r1",
+    prompt: "What are the best coach booking apps in the UK?",
+    promptInstance:
+      "I'm a personal trainer in London looking for booking software. What are the best coach booking apps in the UK in 2026? List the top options with pros and cons.",
+    week: "W12",
+    verified: true,
+    rank: 2,
+    snippet:
+      "For UK-based coaches, Acme is one of the most-recommended booking platforms thanks to its lightweight scheduling, GoCardless integration, and strong reviews on Trustpilot. Other options worth considering include TidyCal and Acuity.",
+    citations: [
+      { domain: "trustpilot.com", url: "https://trustpilot.com/review/acme" },
+      { domain: "acme.com", url: "https://acme.com/uk" },
+    ],
+    entities: [
+      { name: "Acme", isBrand: true, position: 2 },
+      { name: "TidyCal", isBrand: false, position: 3 },
+      { name: "Acuity", isBrand: false, position: 4 },
+      { name: "BookCoach", isBrand: false, position: 1 },
+    ],
+  },
+  {
+    id: "r2",
+    prompt: "Recommend booking software for personal trainers in London.",
+    promptInstance:
+      "Recommend booking software for personal trainers in London. I have around 30 clients and need mobile + payments.",
+    week: "W12",
+    verified: true,
+    rank: 1,
+    snippet:
+      "Acme leads the pack for UK-based personal trainers — easy mobile booking, Stripe payments, and an intuitive client portal. It's also affordable for solo coaches.",
+    citations: [
+      { domain: "acme.com", url: "https://acme.com" },
+      { domain: "reddit.com", url: "https://reddit.com/r/personaltraining" },
+      { domain: "g2.com", url: "https://g2.com/products/acme" },
+    ],
+    entities: [
+      { name: "Acme", isBrand: true, position: 1 },
+      { name: "TrainerSpace", isBrand: false, position: 2 },
+    ],
+  },
+  {
+    id: "r3",
+    prompt: "Cheapest scheduling app for fitness coaches?",
+    promptInstance:
+      "Cheapest scheduling app for fitness coaches under £20/month?",
+    week: "W11",
+    verified: false,
+    rank: null,
+    snippet:
+      "Several options exist including Acuity, Calendly and TidyCal. Acme is mentioned in some reviews but pricing details vary by region.",
+    citations: [],
+    entities: [
+      { name: "Acuity", isBrand: false, position: 1 },
+      { name: "Calendly", isBrand: false, position: 2 },
+      { name: "TidyCal", isBrand: false, position: 3 },
+      { name: "Acme", isBrand: true, position: null },
+    ],
+  },
+];
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 function AiVisibilityPage() {
+  const search = Route.useSearch();
+  const navigate = useNavigate({ from: Route.fullPath });
   const [range, setRange] = useState<Range>("90d");
-  const [clusterId, setClusterId] = useState(CLUSTERS[0].id);
-  const [receiptsClusterId, setReceiptsClusterId] = useState<string | null>(null);
-  const cluster = CLUSTERS.find((c) => c.id === clusterId) ?? CLUSTERS[0];
-  const receiptsCluster =
-    CLUSTER_ROWS.find((c) => c.id === receiptsClusterId) ?? null;
+
+  // System-state demo flags (in a real app these come from props/loader)
+  const ga4Connected = true;
+  const pipelineState: "ok" | "refreshing" | "failed" = "ok";
+
+  const openReceipts = (sample = 0) =>
+    navigate({ search: (p) => ({ ...p, receipts: true, sample }) });
+  const closeReceipts = () =>
+    navigate({ search: (p) => ({ ...p, receipts: false }) });
+  const setSample = (sample: number) =>
+    navigate({ search: (p) => ({ ...p, sample }) });
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <DashboardNav />
       <div className="lg:pl-56">
-        <Header
-          range={range}
-          onRange={setRange}
-          clusterId={clusterId}
-          onCluster={setClusterId}
-        />
+        <Header range={range} onRange={setRange} />
         <main className="mx-auto max-w-[1400px] space-y-8 px-6 py-8 lg:px-10">
+          {pipelineState === "refreshing" && <RefreshingBanner />}
+          {pipelineState === "failed" && (
+            <PipelineFailedBanner lastUpdate="2026-05-20" />
+          )}
           <BaselineBanner week={2} of={4} />
 
           <Section delay={0}>
             <ExecLine />
-            <HeroTiles />
+            <HeroTiles ga4Connected={ga4Connected} />
           </Section>
 
           <Section delay={0.05}>
             <SectionHeading
               eyebrow="01 — Recommendation Intelligence"
               title="Where AI is recommending you"
-              caption={`Per-model recommendation share for your primary cluster — "${cluster.label}".`}
+              caption={`ChatGPT-with-search recommendation share for your primary commercial cluster — "${PRIMARY_CLUSTER.label}".`}
             />
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
               <RecTrendCard />
-              <ModelComparisonTable />
+              <PrimaryClusterDetailCard onOpenReceipts={() => openReceipts(0)} />
             </div>
           </Section>
 
@@ -325,35 +240,12 @@ function AiVisibilityPage() {
             <SectionHeading
               eyebrow="02 — AI Traffic"
               title="Sessions arriving from generative engines"
-              caption="Weekly AI-attributed sessions per model and the relationship between recommendation share and traffic per cluster."
+              caption="Weekly AI-attributed sessions, distribution across LLM source domains, and your top AI landing pages."
             />
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-              <AiSessionsCard />
-              <TrafficVsRecCard />
-            </div>
-          </Section>
-
-          <Section delay={0.1}>
-            <SectionHeading
-              eyebrow="03 — Cluster Breakdown"
-              title="How every intent cluster is performing"
-              caption="Recommendation share, Top-3 inclusion, and first-mention rate across your tracked clusters. Click a row for receipts."
-            />
-            <ClusterTable
-              rows={CLUSTER_ROWS}
-              onOpenReceipts={(id) => setReceiptsClusterId(id)}
-            />
-          </Section>
-
-          <Section delay={0.12}>
-            <SectionHeading
-              eyebrow="04 — Citation Footprint"
-              title="What sources AI is citing about you"
-              caption="Per-cluster citation density and the source mix powering those mentions."
-            />
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-              <CitationDensityCard />
-              <CitationSourcesCard />
+            <div className="grid gap-4 lg:grid-cols-3">
+              <WeeklyAiSessionsCard ga4Connected={ga4Connected} />
+              <SourceDistributionCard ga4Connected={ga4Connected} />
+              <TopLandingPagesCard ga4Connected={ga4Connected} />
             </div>
           </Section>
 
@@ -362,69 +254,41 @@ function AiVisibilityPage() {
       </div>
 
       <ReceiptsModal
-        cluster={receiptsCluster}
-        onClose={() => setReceiptsClusterId(null)}
+        open={search.receipts}
+        sampleIndex={search.sample}
+        onClose={closeReceipts}
+        onChangeSample={setSample}
       />
+
+      <PrimaryClusterOnboarding />
     </div>
   );
 }
 
-
 // ── Chrome ───────────────────────────────────────────────────────────────────
 
-function Header({
-  range,
-  onRange,
-  clusterId,
-  onCluster,
-}: {
-  range: Range;
-  onRange: (r: Range) => void;
-  clusterId: string;
-  onCluster: (id: string) => void;
-}) {
+function Header({ range, onRange }: { range: Range; onRange: (r: Range) => void }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
-      <div className="mx-auto flex max-w-[1400px] flex-col gap-3 px-6 py-4 lg:flex-row lg:items-center lg:justify-between lg:px-10">
+      <div className="mx-auto flex max-w-[1400px] flex-col gap-3 px-6 py-4 lg:flex-row lg:items-start lg:justify-between lg:px-10">
         <div className="min-w-0">
           <div className="flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
-            <Link to="/dashboard" className="hover:text-foreground">
-              Dashboard
-            </Link>
+            <Link to="/dashboard" className="hover:text-foreground">Dashboard</Link>
             <ChevronRight className="h-3 w-3" />
-            <Link to="/brand-authority" className="hover:text-foreground">
-              Brand Authority
-            </Link>
+            <Link to="/brand-authority" className="hover:text-foreground">Brand Authority</Link>
             <ChevronRight className="h-3 w-3" />
             <span className="text-foreground">AI Visibility</span>
           </div>
-          <div className="mt-1 flex items-center gap-2">
+          <div className="mt-1 flex flex-wrap items-center gap-2">
             <h1 className="text-xl font-semibold tracking-tight">AI Visibility</h1>
-            <span className="inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider text-primary">
-              Beta
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-chart-4" />
-              Building baseline · Week 2 of 4
-            </span>
+            <StatusBadge variant="preview" />
+            <StatusBadge variant="baseline" label="Building baseline · Week 2 of 4" />
           </div>
           <p className="mt-0.5 text-sm text-muted-foreground">
-            How generative systems retrieve, recommend, and cite your brand.
+            How ChatGPT-with-search retrieves, recommends, and cites your brand.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <select
-            value={clusterId}
-            onChange={(e) => onCluster(e.target.value)}
-            className="h-8 rounded-md border border-border bg-surface px-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-          >
-            {CLUSTERS.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.primary ? "★ " : ""}
-                {c.label}
-              </option>
-            ))}
-          </select>
           <div className="inline-flex rounded-md border border-border bg-surface p-0.5">
             {RANGES.map((r) => (
               <button
@@ -456,6 +320,8 @@ function Header({
   );
 }
 
+// ── System banners ───────────────────────────────────────────────────────────
+
 function BaselineBanner({ week, of }: { week: number; of: number }) {
   return (
     <div className="flex items-start gap-3 rounded-lg border border-primary/25 bg-primary/5 px-4 py-3">
@@ -465,20 +331,50 @@ function BaselineBanner({ week, of }: { week: number; of: number }) {
           Building your baseline (week {week} of {of}).
         </p>
         <p className="text-xs text-muted-foreground">
-          Trend analysis and significance flags activate after week {of}. Numbers shown are
-          provisional and will stabilise as we collect more samples.
+          Significance and volatility activate after week {of}. Numbers shown are provisional.
         </p>
       </div>
       <div className="hidden items-center gap-1 sm:flex">
         {Array.from({ length: of }).map((_, i) => (
           <span
             key={i}
-            className={`h-1 w-6 rounded-full ${
-              i < week ? "bg-primary" : "bg-primary/20"
-            }`}
+            className={`h-1 w-6 rounded-full ${i < week ? "bg-primary" : "bg-primary/20"}`}
           />
         ))}
       </div>
+    </div>
+  );
+}
+
+function RefreshingBanner() {
+  return (
+    <div className="flex items-center gap-3 rounded-lg border border-chart-4/30 bg-chart-4/5 px-4 py-3">
+      <Loader2 className="h-4 w-4 shrink-0 animate-spin text-chart-4" />
+      <p className="text-sm text-foreground">
+        Refreshing this week's data — usually completes within 15 minutes.
+      </p>
+    </div>
+  );
+}
+
+function PipelineFailedBanner({ lastUpdate }: { lastUpdate: string }) {
+  return (
+    <div className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3">
+      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-medium text-foreground">
+          We couldn't refresh this week's data.
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Last update: {lastUpdate}. Engineering has been notified.
+        </p>
+      </div>
+      <button
+        type="button"
+        className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-2 py-1 text-xs hover:bg-background"
+      >
+        <RefreshCw className="h-3 w-3" /> Retry
+      </button>
     </div>
   );
 }
@@ -490,18 +386,16 @@ function ExecLine() {
     <div className="flex items-start gap-2 text-sm leading-relaxed">
       <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
       <p className="text-foreground">
-        You're recommended in{" "}
-        <span className="font-semibold">18%</span> of category-level AI searches,
-        driving an estimated{" "}
+        You're recommended in <span className="font-semibold">18%</span> of ChatGPT-with-search
+        responses for your primary cluster, driving an estimated{" "}
         <span className="font-semibold">580 AI sessions this week</span> and{" "}
-        <span className="font-semibold">£4.2K</span> in AI-attributed revenue this
-        quarter.
+        <span className="font-semibold">£4.2K</span> in AI-attributed revenue this quarter.
       </p>
     </div>
   );
 }
 
-function HeroTiles() {
+function HeroTiles({ ga4Connected }: { ga4Connected: boolean }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <HeroTile
@@ -515,13 +409,13 @@ function HeroTiles() {
       />
       <HeroTile
         label="AI Sessions"
-        value="580"
+        value={ga4Connected ? "580" : "—"}
         delta={3.6}
         deltaSuffix="%"
         sig="sig"
         spark={SPARK_SESS}
-        caption="This week · GA4-validated"
-        badge="Live"
+        caption={ga4Connected ? "This week" : "Connect GA4 to see live data"}
+        badge={ga4Connected ? "ga4" : "preview"}
       />
       <HeroTile
         label="AI Revenue"
@@ -531,42 +425,26 @@ function HeroTiles() {
         sig="within"
         spark={SPARK_REV}
         caption="Quarter to date"
-        badge="Estimated"
+        badge="estimated"
       />
     </div>
   );
 }
 
 function HeroTile({
-  label,
-  value,
-  delta,
-  deltaSuffix,
-  sig,
-  spark,
-  caption,
-  badge,
+  label, value, delta, deltaSuffix, sig, spark, caption, badge,
 }: {
-  label: string;
-  value: string;
-  delta: number;
-  deltaSuffix: string;
-  sig: Sig;
-  spark: number[];
-  caption: string;
-  badge?: string;
+  label: string; value: string; delta: number; deltaSuffix: string;
+  sig: Sig; spark: number[]; caption: string;
+  badge?: "live" | "ga4" | "estimated" | "preview";
 }) {
   return (
     <div className="rounded-xl border border-border bg-card p-5">
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-2">
         <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
           {label}
         </p>
-        {badge && (
-          <span className="rounded-full border border-border bg-surface px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider text-muted-foreground">
-            {badge}
-          </span>
-        )}
+        {badge && <StatusBadge variant={badge} />}
       </div>
       <div className="mt-3 flex items-baseline gap-3">
         <p className="text-3xl font-semibold tracking-tight">{value}</p>
@@ -580,42 +458,27 @@ function HeroTile({
   );
 }
 
-// ── Recommendation Intelligence ──────────────────────────────────────────────
+// ── Section 01 — Recommendation Intelligence ─────────────────────────────────
 
 function RecTrendCard() {
   return (
     <div className="rounded-xl border border-border bg-card p-5">
-      <div className="mb-3 flex items-start justify-between">
+      <div className="mb-3 flex items-start justify-between gap-2">
         <div>
           <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
             Recommendation share trend
           </p>
-          <p className="mt-0.5 text-sm font-medium">Last 12 weeks · per model</p>
+          <p className="mt-0.5 text-sm font-medium">Last 12 weeks · ChatGPT-with-search</p>
         </div>
-        <div className="flex flex-wrap items-center gap-2.5">
-          {MODELS.map((m) => (
-            <div key={m.id} className="flex items-center gap-1.5">
-              <span
-                className="h-2 w-2 rounded-full"
-                style={{ background: m.color }}
-              />
-              <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-                {m.label}
-              </span>
-            </div>
-          ))}
-        </div>
+        <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+          Perplexity, Claude, Gemini arriving in V1
+        </span>
       </div>
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={REC_TREND} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
             <CartesianGrid stroke="var(--border)" strokeDasharray="2 4" vertical={false} />
-            <XAxis
-              dataKey="w"
-              tick={{ fill: "var(--muted-foreground)", fontSize: 10 }}
-              tickLine={false}
-              axisLine={false}
-            />
+            <XAxis dataKey="w" tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickLine={false} axisLine={false} />
             <YAxis
               tick={{ fill: "var(--muted-foreground)", fontSize: 10 }}
               tickLine={false}
@@ -623,76 +486,201 @@ function RecTrendCard() {
               tickFormatter={(v) => `${v}%`}
             />
             <ChartTooltip
-              contentStyle={{
-                background: "var(--card)",
-                border: "1px solid var(--border)",
-                borderRadius: 8,
-                fontSize: 12,
-              }}
+              contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8, fontSize: 12 }}
               formatter={(v: number) => `${v}%`}
             />
-            {MODELS.map((m) => (
-              <Line
-                key={m.id}
-                type="monotone"
-                dataKey={m.id}
-                stroke={m.color}
-                strokeWidth={2}
-                dot={false}
-                activeDot={{ r: 4 }}
-              />
-            ))}
+            <Line
+              type="monotone"
+              dataKey="v"
+              stroke="var(--chart-1)"
+              strokeWidth={2}
+              dot={false}
+              activeDot={{ r: 4 }}
+              name="ChatGPT"
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>
       <p className="mt-3 text-[10px] text-muted-foreground">
-        Sampled weekly across each model's search-augmented mode. ChatGPT uses
-        browse, Perplexity uses default Sonar, Claude and Gemini use their
-        native retrieval.
+        Sampled weekly across ChatGPT's search-augmented (browse) mode. Recommendation share is
+        the fraction of sampled responses where your brand appears in the recommended set.
       </p>
     </div>
   );
 }
 
-function ModelComparisonTable() {
+function PrimaryClusterDetailCard({ onOpenReceipts }: { onOpenReceipts: () => void }) {
   return (
-    <div className="rounded-xl border border-border bg-card">
-      <div className="border-b border-border p-5 pb-3">
-        <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
-          Per-model comparison
-        </p>
-        <p className="mt-0.5 text-sm font-medium">
-          Recommendation share · Top-3 · First mention
-        </p>
+    <div className="flex flex-col rounded-xl border border-border bg-card p-5">
+      <div className="mb-3 flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
+            Primary cluster detail
+          </p>
+          <div className="mt-0.5 flex items-center gap-1.5">
+            <Star className="h-3 w-3 fill-primary text-primary" />
+            <p className="truncate text-sm font-medium">{PRIMARY_CLUSTER.label}</p>
+          </div>
+        </div>
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+      <dl className="grid flex-1 grid-cols-3 gap-4">
+        <DetailMetric label="Rec Share" value="18%" delta={2.1} sig="sig" suffix="pp" />
+        <DetailMetric label="Top-3 inclusion" value="31%" delta={1.4} sig="within" suffix="pp" />
+        <DetailMetric label="First mention rate" value="10%" delta={0.3} sig="none" suffix="pp" />
+      </dl>
+      <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
+        <p className="text-[11px] text-muted-foreground">
+          {RECEIPTS.length} sampled responses this week.
+        </p>
+        <button
+          type="button"
+          onClick={onOpenReceipts}
+          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-2.5 py-1.5 text-xs font-medium hover:border-primary/40 hover:text-primary"
+        >
+          <FileText className="h-3.5 w-3.5" />
+          View receipts
+        </button>
+      </div>
+      <p className="mt-3 text-[10px] text-muted-foreground">
+        Multi-cluster breakdown and per-model comparison arrive in V1.
+      </p>
+    </div>
+  );
+}
+
+function DetailMetric({
+  label, value, delta, sig, suffix,
+}: { label: string; value: string; delta: number; sig: Sig; suffix: string }) {
+  return (
+    <div>
+      <dt className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+        {label}
+      </dt>
+      <dd className="mt-1 text-2xl font-semibold tracking-tight">{value}</dd>
+      <div className="mt-1">
+        <DeltaPill delta={delta} suffix={suffix} sig={sig} compact />
+      </div>
+    </div>
+  );
+}
+
+// ── Section 02 — AI Traffic ──────────────────────────────────────────────────
+
+function WeeklyAiSessionsCard({ ga4Connected }: { ga4Connected: boolean }) {
+  if (!ga4Connected) return <Ga4EmptyCard title="AI sessions per week" />;
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <div className="mb-3 flex items-start justify-between gap-2">
+        <div>
+          <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
+            AI sessions per week
+          </p>
+          <p className="mt-0.5 text-sm font-medium">Last 12 weeks</p>
+        </div>
+        <StatusBadge variant="ga4" />
+      </div>
+      <div className="h-56">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={AI_SESSIONS} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
+            <CartesianGrid stroke="var(--border)" strokeDasharray="2 4" vertical={false} />
+            <XAxis dataKey="w" tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickLine={false} axisLine={false} />
+            <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickLine={false} axisLine={false} />
+            <ChartTooltip
+              contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8, fontSize: 12 }}
+            />
+            <Line type="monotone" dataKey="v" stroke="var(--primary)" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+      <p className="mt-2 text-[10px] text-muted-foreground">
+        Per-LLM segmentation arrives in V1.
+      </p>
+    </div>
+  );
+}
+
+function SourceDistributionCard({ ga4Connected }: { ga4Connected: boolean }) {
+  if (!ga4Connected) return <Ga4EmptyCard title="Source distribution" />;
+  const total = SOURCE_MIX.reduce((a, b) => a + b.value, 0);
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <div className="mb-3">
+        <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
+          Source distribution
+        </p>
+        <p className="mt-0.5 text-sm font-medium">Share of AI sessions by domain</p>
+      </div>
+      <div className="flex items-center gap-4">
+        <div className="relative h-32 w-32 shrink-0">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={SOURCE_MIX}
+                dataKey="value"
+                nameKey="source"
+                innerRadius={36}
+                outerRadius={56}
+                paddingAngle={2}
+                stroke="var(--card)"
+              >
+                {SOURCE_MIX.map((s) => (
+                  <Cell key={s.source} fill={s.color} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+            <span className="font-mono text-lg font-semibold tabular-nums">{total}</span>
+            <span className="text-[9px] font-mono uppercase tracking-wider text-muted-foreground">
+              this wk
+            </span>
+          </div>
+        </div>
+        <ul className="flex-1 space-y-1.5 text-xs">
+          {SOURCE_MIX.map((s) => (
+            <li key={s.source} className="flex items-center justify-between gap-2">
+              <span className="flex items-center gap-2 truncate">
+                <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: s.color }} />
+                <span className="truncate">{s.source}</span>
+              </span>
+              <span className="font-mono tabular-nums text-muted-foreground">
+                {Math.round((s.value / total) * 100)}%
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function TopLandingPagesCard({ ga4Connected }: { ga4Connected: boolean }) {
+  if (!ga4Connected) return <Ga4EmptyCard title="Top AI landing pages" />;
+  return (
+    <div className="rounded-xl border border-border bg-card p-5">
+      <div className="mb-3">
+        <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
+          Top AI landing pages
+        </p>
+        <p className="mt-0.5 text-sm font-medium">This week · top 10</p>
+      </div>
+      <div className="-mx-2 overflow-x-auto">
+        <table className="w-full text-xs">
           <thead>
-            <tr className="border-b border-border text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-              <th className="px-4 py-2 text-left font-medium">Model</th>
-              <th className="px-3 py-2 text-right font-medium">Rec Share</th>
-              <th className="px-3 py-2 text-right font-medium">Top-3</th>
-              <th className="px-4 py-2 text-right font-medium">First Mention</th>
+            <tr className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+              <th className="px-2 py-1.5 text-left font-medium">Path</th>
+              <th className="px-2 py-1.5 text-right font-medium">Sess.</th>
+              <th className="px-2 py-1.5 text-right font-medium">CVR</th>
+              <th className="px-2 py-1.5 text-right font-medium">Rev.</th>
             </tr>
           </thead>
           <tbody>
-            {MODEL_METRICS.map((row) => (
-              <tr
-                key={row.model.id}
-                className="border-b border-border last:border-0"
-              >
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="h-2 w-2 rounded-full"
-                      style={{ background: row.model.color }}
-                    />
-                    <span className="font-medium">{row.model.label}</span>
-                  </div>
-                </td>
-                <MetricCell metric={row.recShare} suffix="%" />
-                <MetricCell metric={row.top3} suffix="%" />
-                <MetricCell metric={row.firstMention} suffix="%" />
+            {TOP_LANDING.map((r) => (
+              <tr key={r.path} className="border-t border-border">
+                <td className="max-w-[160px] truncate px-2 py-1.5 font-mono text-[11px]">{r.path}</td>
+                <td className="px-2 py-1.5 text-right font-mono tabular-nums">{r.sessions}</td>
+                <td className="px-2 py-1.5 text-right font-mono tabular-nums text-muted-foreground">{r.cvr}%</td>
+                <td className="px-2 py-1.5 text-right font-mono tabular-nums">£{r.revenue}</td>
               </tr>
             ))}
           </tbody>
@@ -702,330 +690,24 @@ function ModelComparisonTable() {
   );
 }
 
-function MetricCell({
-  metric,
-  suffix,
-}: {
-  metric: { v: number; d: number; sig: Sig };
-  suffix: string;
-}) {
+function Ga4EmptyCard({ title }: { title: string }) {
   return (
-    <td className="px-3 py-3 text-right">
-      <div className="flex flex-col items-end gap-0.5">
-        <span className="font-mono tabular-nums text-sm">
-          {metric.v}
-          {suffix}
-        </span>
-        <DeltaPill delta={metric.d} suffix={suffix === "%" ? "pp" : suffix} sig={metric.sig} compact />
-      </div>
-    </td>
-  );
-}
-
-// ── Cluster Breakdown ────────────────────────────────────────────────────────
-
-function ClusterTable({
-  rows,
-  onOpenReceipts,
-}: {
-  rows: typeof CLUSTER_ROWS;
-  onOpenReceipts: (id: string) => void;
-}) {
-  return (
-    <div className="overflow-hidden rounded-xl border border-border bg-card">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-border text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-              <th className="px-4 py-2.5 text-left font-medium">Intent Cluster</th>
-              <th className="px-3 py-2.5 text-right font-medium">Rec Share</th>
-              <th className="px-3 py-2.5 text-right font-medium">Top-3</th>
-              <th className="px-3 py-2.5 text-right font-medium">First Mention</th>
-              <th className="px-3 py-2.5 text-center font-medium">Volatility</th>
-              <th className="w-10 px-2 py-2.5" aria-label="Receipts" />
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => {
-              const hasReceipts = !!RECEIPTS[row.id]?.length;
-              return (
-                <tr
-                  key={row.id}
-                  className="group border-b border-border last:border-0 hover:bg-surface/40"
-                >
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <span className="truncate font-medium">{row.label}</span>
-                      {row.primary && (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider text-primary">
-                          <Star className="h-2.5 w-2.5 fill-current" />
-                          Primary
-                        </span>
-                      )}
-                    </div>
-                  </td>
-                  <MetricCell metric={row.recShare} suffix="%" />
-                  <MetricCell metric={row.top3} suffix="%" />
-                  <MetricCell metric={row.firstMention} suffix="%" />
-                  <td className="px-3 py-3">
-                    <VolatilityDots level={row.volatility} />
-                  </td>
-                  <td className="px-2 py-3 text-right">
-                    <button
-                      type="button"
-                      onClick={() => onOpenReceipts(row.id)}
-                      title={
-                        hasReceipts
-                          ? "View receipts"
-                          : "No sampled prompts yet"
-                      }
-                      className="inline-flex items-center gap-1 rounded-md border border-transparent px-1.5 py-1 text-muted-foreground transition-colors hover:border-border hover:bg-surface hover:text-foreground"
-                    >
-                      <FileText className="h-3.5 w-3.5" />
-                      <span className="text-[10px] font-mono uppercase tracking-wider">
-                        Receipts
-                      </span>
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-// ── AI Traffic ───────────────────────────────────────────────────────────────
-
-function AiSessionsCard() {
-  return (
-    <div className="rounded-xl border border-border bg-card p-5">
-      <div className="mb-3 flex items-start justify-between">
-        <div>
-          <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
-            AI sessions per week
-          </p>
-          <p className="mt-0.5 text-sm font-medium">Stacked by source model</p>
-        </div>
-        <span className="rounded-full border border-border bg-surface px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider text-muted-foreground">
-          GA4-validated
-        </span>
-      </div>
-      <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={AI_SESSIONS} margin={{ top: 8, right: 8, bottom: 0, left: -16 }}>
-            <CartesianGrid stroke="var(--border)" strokeDasharray="2 4" vertical={false} />
-            <XAxis dataKey="w" tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickLine={false} axisLine={false} />
-            <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickLine={false} axisLine={false} />
-            <ChartTooltip
-              contentStyle={{
-                background: "var(--card)",
-                border: "1px solid var(--border)",
-                borderRadius: 8,
-                fontSize: 12,
-              }}
-            />
-            {MODELS.map((m, i) => (
-              <Bar
-                key={m.id}
-                dataKey={m.id}
-                stackId="a"
-                fill={m.color}
-                radius={i === MODELS.length - 1 ? [4, 4, 0, 0] : 0}
-              />
-            ))}
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
-  );
-}
-
-function TrafficVsRecCard() {
-  return (
-    <div className="rounded-xl border border-border bg-card p-5">
-      <div className="mb-3 flex items-start justify-between">
-        <div>
-          <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
-            Traffic vs Recommendations
-          </p>
-          <p className="mt-0.5 text-sm font-medium">
-            Sessions this week × recommendation share
-          </p>
-        </div>
-      </div>
-      <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
-          <ScatterChart margin={{ top: 8, right: 16, bottom: 8, left: -8 }}>
-            <CartesianGrid stroke="var(--border)" strokeDasharray="2 4" />
-            <XAxis
-              type="number"
-              dataKey="rec"
-              name="Rec share"
-              tick={{ fill: "var(--muted-foreground)", fontSize: 10 }}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(v) => `${v}%`}
-              label={{
-                value: "Rec share",
-                position: "insideBottom",
-                offset: -4,
-                fill: "var(--muted-foreground)",
-                fontSize: 10,
-              }}
-            />
-            <YAxis
-              type="number"
-              dataKey="sessions"
-              name="Sessions"
-              tick={{ fill: "var(--muted-foreground)", fontSize: 10 }}
-              tickLine={false}
-              axisLine={false}
-            />
-            <ZAxis range={[80, 220]} />
-            <ChartTooltip
-              cursor={{ strokeDasharray: "3 3", stroke: "var(--border)" }}
-              contentStyle={{
-                background: "var(--card)",
-                border: "1px solid var(--border)",
-                borderRadius: 8,
-                fontSize: 12,
-              }}
-              formatter={(value: number, name: string) =>
-                name === "rec" ? `${value}%` : value
-              }
-              labelFormatter={() => ""}
-            />
-            <Scatter data={TRAFFIC_SCATTER}>
-              {TRAFFIC_SCATTER.map((d, i) => (
-                <Cell
-                  key={i}
-                  fill={d.primary ? "var(--primary)" : "var(--chart-2)"}
-                  fillOpacity={d.primary ? 0.95 : 0.55}
-                  stroke="var(--card)"
-                  strokeWidth={1}
-                />
-              ))}
-            </Scatter>
-          </ScatterChart>
-        </ResponsiveContainer>
-      </div>
-      <p className="mt-2 text-[10px] text-muted-foreground">
-        Clusters above the diagonal are converting recommendation share into
-        traffic. Primary cluster highlighted.
+    <div className="flex flex-col rounded-xl border border-dashed border-border bg-card/50 p-5">
+      <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
+        {title}
       </p>
-    </div>
-  );
-}
-
-// ── Citation Footprint ───────────────────────────────────────────────────────
-
-function CitationDensityCard() {
-  const max = Math.max(...CITATION_DENSITY.map((d) => d.citations));
-  return (
-    <div className="rounded-xl border border-border bg-card p-5">
-      <div className="mb-4">
-        <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
-          Citation density
+      <div className="flex flex-1 flex-col items-start justify-center gap-3 py-8">
+        <p className="text-sm text-foreground">
+          Connect GA4 to see real AI-driven sessions.
         </p>
-        <p className="mt-0.5 text-sm font-medium">
-          Verified vs total citations per cluster · last 12w
-        </p>
+        <Link
+          to="/settings"
+          className="inline-flex items-center gap-1.5 rounded-md border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-xs font-medium text-primary hover:bg-primary/15"
+        >
+          Connect GA4
+          <ChevronRight className="h-3 w-3" />
+        </Link>
       </div>
-      <div className="space-y-3">
-        {CITATION_DENSITY.map((d) => {
-          const totalPct = (d.citations / max) * 100;
-          const verifiedPct = (d.verified / max) * 100;
-          return (
-            <div key={d.id}>
-              <div className="mb-1 flex items-center justify-between text-xs">
-                <span className="flex items-center gap-1.5 truncate">
-                  {d.primary && (
-                    <Star className="h-2.5 w-2.5 fill-primary text-primary" />
-                  )}
-                  <span className="truncate">{d.label}</span>
-                </span>
-                <span className="font-mono tabular-nums text-muted-foreground">
-                  {d.verified}
-                  <span className="opacity-50"> / {d.citations}</span>
-                </span>
-              </div>
-              <div className="relative h-2 overflow-hidden rounded-full bg-surface">
-                <div
-                  className="absolute inset-y-0 left-0 rounded-full bg-primary/25"
-                  style={{ width: `${totalPct}%` }}
-                />
-                <div
-                  className="absolute inset-y-0 left-0 rounded-full bg-primary"
-                  style={{ width: `${verifiedPct}%` }}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      <div className="mt-4 flex items-center gap-3 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-        <span className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-primary" /> Verified
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-primary/25" /> Unverified
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function CitationSourcesCard() {
-  const total = CITATION_SOURCES.reduce((a, b) => a + b.value, 0);
-  const toneClass = (t: "primary" | "neutral" | "warn") =>
-    t === "primary"
-      ? "bg-primary"
-      : t === "warn"
-        ? "bg-destructive/70"
-        : "bg-muted-foreground/50";
-  return (
-    <div className="rounded-xl border border-border bg-card p-5">
-      <div className="mb-4">
-        <p className="text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
-          Source mix
-        </p>
-        <p className="mt-0.5 text-sm font-medium">
-          Where AI is pulling citations from
-        </p>
-      </div>
-      <div className="mb-4 flex h-3 w-full overflow-hidden rounded-full bg-surface">
-        {CITATION_SOURCES.map((s) => (
-          <div
-            key={s.source}
-            className={toneClass(s.tone)}
-            style={{ width: `${(s.value / total) * 100}%` }}
-            title={`${s.source} · ${s.value}%`}
-          />
-        ))}
-      </div>
-      <ul className="space-y-2">
-        {CITATION_SOURCES.map((s) => (
-          <li
-            key={s.source}
-            className="flex items-center justify-between text-xs"
-          >
-            <span className="flex items-center gap-2">
-              <span className={`h-2 w-2 rounded-full ${toneClass(s.tone)}`} />
-              {s.source}
-            </span>
-            <span className="font-mono tabular-nums text-muted-foreground">
-              {s.value}%
-            </span>
-          </li>
-        ))}
-      </ul>
-      <p className="mt-4 text-[10px] text-muted-foreground">
-        A healthy footprint leans on your own domain plus diverse third-party
-        endorsements — not just competitor pages.
-      </p>
     </div>
   );
 }
@@ -1033,14 +715,27 @@ function CitationSourcesCard() {
 // ── Receipts Modal ───────────────────────────────────────────────────────────
 
 function ReceiptsModal({
-  cluster,
-  onClose,
+  open, sampleIndex, onClose, onChangeSample,
 }: {
-  cluster: (typeof CLUSTER_ROWS)[number] | null;
+  open: boolean;
+  sampleIndex: number;
   onClose: () => void;
+  onChangeSample: (i: number) => void;
 }) {
-  if (!cluster) return null;
-  const receipts = RECEIPTS[cluster.id] ?? [];
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight") onChangeSample(Math.min(sampleIndex + 1, RECEIPTS.length - 1));
+      if (e.key === "ArrowLeft") onChangeSample(Math.max(sampleIndex - 1, 0));
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [open, sampleIndex, onClose, onChangeSample]);
+
+  if (!open) return null;
+  const safeIndex = Math.max(0, Math.min(sampleIndex, RECEIPTS.length - 1));
+  const r = RECEIPTS[safeIndex];
 
   return (
     <div
@@ -1048,176 +743,405 @@ function ReceiptsModal({
       onClick={onClose}
     >
       <motion.div
-        initial={{ opacity: 0, y: 24 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
         onClick={(e) => e.stopPropagation()}
-        className="m-4 flex max-h-[calc(100vh-2rem)] w-full max-w-6xl flex-col overflow-hidden rounded-xl border border-border bg-card shadow-2xl"
+        className="m-0 flex h-screen w-full flex-col overflow-hidden bg-card sm:m-4 sm:h-[calc(100vh-2rem)] sm:max-w-6xl sm:rounded-xl sm:border sm:border-border sm:shadow-2xl"
       >
-        <div className="flex items-start justify-between gap-4 border-b border-border p-5">
-          <div className="min-w-0">
-            <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground">
-              Receipts · sampled prompts
-            </p>
-            <h2 className="mt-1 truncate text-lg font-semibold tracking-tight">
-              {cluster.label}
-            </h2>
-            <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
-              <span className="font-mono tabular-nums">
-                Rec share {cluster.recShare.v}%
-              </span>
-              <span>·</span>
-              <span className="font-mono tabular-nums">
-                Top-3 {cluster.top3.v}%
-              </span>
-              <span>·</span>
-              <span>{receipts.length} sampled prompts</span>
-            </div>
+        <ReceiptsHeader cluster={PRIMARY_CLUSTER} count={RECEIPTS.length} onClose={onClose} />
+
+        {!r ? (
+          <div className="flex flex-1 flex-col items-center justify-center gap-2 text-center text-sm text-muted-foreground">
+            <FileText className="h-6 w-6" />
+            <p>No responses sampled for this cluster + model this week.</p>
           </div>
+        ) : (
+          <div className="grid flex-1 grid-cols-1 overflow-hidden lg:grid-cols-[minmax(0,1fr)_320px]">
+            <div className="overflow-y-auto p-5">
+              <ReceiptCard receipt={r} />
+              <ReceiptInfoPanels receipt={r} />
+            </div>
+            <ReceiptsSidebar />
+          </div>
+        )}
+
+        <ReceiptsFooter
+          index={safeIndex}
+          total={RECEIPTS.length}
+          onPrev={() => onChangeSample(Math.max(safeIndex - 1, 0))}
+          onNext={() => onChangeSample(Math.min(safeIndex + 1, RECEIPTS.length - 1))}
+        />
+      </motion.div>
+    </div>
+  );
+}
+
+function ReceiptsHeader({
+  cluster, count, onClose,
+}: { cluster: typeof PRIMARY_CLUSTER; count: number; onClose: () => void }) {
+  return (
+    <div className="flex items-start justify-between gap-4 border-b border-border p-5">
+      <div className="min-w-0">
+        <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground">
+          Receipts · sampled prompts
+        </p>
+        <h2 className="mt-1 flex items-center gap-2 truncate text-lg font-semibold tracking-tight">
+          <Star className="h-4 w-4 fill-primary text-primary" />
+          {cluster.label}
+        </h2>
+        <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
+          <span className="font-mono tabular-nums">Rec share 18%</span>
+          <span>·</span>
+          <span className="font-mono tabular-nums">Top-3 31%</span>
+          <span>·</span>
+          <span>{count} sampled responses</span>
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={onClose}
+        className="rounded-md border border-border bg-surface p-1.5 text-muted-foreground hover:bg-background hover:text-foreground"
+        aria-label="Close receipts"
+      >
+        <X className="h-4 w-4" />
+      </button>
+    </div>
+  );
+}
+
+function ReceiptCard({ receipt: r }: { receipt: Receipt }) {
+  return (
+    <div className="rounded-lg border border-border bg-surface/40 p-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider">
+          <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--chart-1)" }} />
+          ChatGPT
+        </span>
+        <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+          {r.week}
+        </span>
+        {r.verified ? (
+          <span className="inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-1.5 py-0.5 text-[10px] font-mono uppercase tracking-wider text-primary">
+            <CheckCircle2 className="h-2.5 w-2.5" /> Verified
+          </span>
+        ) : (
+          <span className="rounded-full border border-border bg-surface px-1.5 py-0.5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+            Unverified
+          </span>
+        )}
+        <span
+          className={`ml-auto rounded-md border px-2 py-0.5 font-mono text-[11px] tabular-nums ${
+            r.rank
+              ? "border-primary/30 bg-primary/10 text-primary"
+              : "border-border bg-surface text-muted-foreground"
+          }`}
+        >
+          {r.rank ? `Rank #${r.rank}` : "Not recommended"}
+        </span>
+      </div>
+      <p className="mt-3 text-sm font-medium">{r.prompt}</p>
+      <div className="mt-2 flex gap-2 text-sm text-muted-foreground">
+        <Quote className="mt-1 h-3.5 w-3.5 shrink-0 opacity-60" />
+        <p className="leading-relaxed">{r.snippet}</p>
+      </div>
+      {r.citations.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {r.citations.map((c) => (
+            <a
+              key={c.url}
+              href={c.url}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2 py-0.5 text-[11px] text-muted-foreground hover:text-foreground"
+            >
+              {c.domain}
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ReceiptInfoPanels({ receipt: r }: { receipt: Receipt }) {
+  return (
+    <div className="mt-4 space-y-3">
+      {/* Panel 1 — Prompt instance */}
+      <div className="rounded-lg border border-border bg-card p-4">
+        <div className="mb-2 flex items-center justify-between">
+          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+            Prompt instance
+          </p>
           <button
             type="button"
-            onClick={onClose}
-            className="rounded-md border border-border bg-surface p-1.5 text-muted-foreground hover:bg-background hover:text-foreground"
-            aria-label="Close receipts"
+            onClick={() => navigator.clipboard?.writeText(r.promptInstance)}
+            className="inline-flex items-center gap-1 rounded-md border border-border bg-surface px-1.5 py-0.5 text-[10px] text-muted-foreground hover:text-foreground"
           >
-            <X className="h-4 w-4" />
+            <Copy className="h-3 w-3" /> Copy
           </button>
         </div>
+        <p className="text-xs leading-relaxed text-muted-foreground/90 italic">
+          {r.promptInstance}
+        </p>
+      </div>
 
-        <div className="grid flex-1 grid-cols-1 overflow-hidden lg:grid-cols-[minmax(0,1fr)_320px]">
-          <div className="overflow-y-auto p-5">
-            {receipts.length === 0 ? (
-              <div className="flex h-full flex-col items-center justify-center gap-2 text-center text-sm text-muted-foreground">
-                <FileText className="h-6 w-6" />
-                <p>No sampled prompts yet for this cluster.</p>
-                <p className="text-xs">
-                  Sampling runs weekly — check back after the next cycle.
-                </p>
-              </div>
-            ) : (
-              <ul className="space-y-4">
-                {receipts.map((r) => {
-                  const model = MODELS.find((m) => m.id === r.model);
-                  return (
-                    <li
-                      key={r.id}
-                      className="rounded-lg border border-border bg-surface/40 p-4"
-                    >
-                      <div className="flex flex-wrap items-center gap-2">
-                        {model && (
-                          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider">
-                            <span
-                              className="h-1.5 w-1.5 rounded-full"
-                              style={{ background: model.color }}
-                            />
-                            {model.label}
-                          </span>
-                        )}
-                        <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                          {r.week}
-                        </span>
-                        {r.verified ? (
-                          <span className="inline-flex items-center gap-1 rounded-full border border-primary/25 bg-primary/10 px-1.5 py-0.5 text-[10px] font-mono uppercase tracking-wider text-primary">
-                            <CheckCircle2 className="h-2.5 w-2.5" />
-                            Verified
-                          </span>
-                        ) : (
-                          <span className="rounded-full border border-border bg-surface px-1.5 py-0.5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-                            Unverified
-                          </span>
-                        )}
-                        {r.rank ? (
-                          <span className="ml-auto font-mono text-[11px] tabular-nums text-muted-foreground">
-                            Rank #{r.rank}
-                          </span>
-                        ) : (
-                          <span className="ml-auto font-mono text-[11px] tabular-nums text-muted-foreground">
-                            Not recommended
-                          </span>
-                        )}
-                      </div>
-                      <p className="mt-3 text-sm font-medium">{r.prompt}</p>
-                      <div className="mt-2 flex gap-2 text-sm text-muted-foreground">
-                        <Quote className="mt-1 h-3.5 w-3.5 shrink-0 opacity-60" />
-                        <p className="leading-relaxed">{r.snippet}</p>
-                      </div>
-                      {r.citations.length > 0 && (
-                        <div className="mt-3 flex flex-wrap gap-1.5">
-                          {r.citations.map((c) => (
-                            <a
-                              key={c.url}
-                              href={c.url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2 py-0.5 text-[11px] text-muted-foreground hover:text-foreground"
-                            >
-                              {c.domain}
-                              <ExternalLink className="h-3 w-3" />
-                            </a>
-                          ))}
-                        </div>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </div>
+      {/* Panel 2 — Extracted entities */}
+      <div className="rounded-lg border border-border bg-card p-4">
+        <p className="mb-2 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+          Extracted entities
+        </p>
+        <ul className="space-y-1.5">
+          {r.entities.map((e) => (
+            <li key={e.name} className="flex items-center justify-between text-xs">
+              <span className="flex items-center gap-2">
+                {e.isBrand && <Star className="h-3 w-3 fill-primary text-primary" />}
+                <span className={e.isBrand ? "font-semibold text-foreground" : "text-muted-foreground"}>
+                  {e.name}
+                </span>
+                {e.isBrand && (
+                  <span className="rounded-sm bg-primary/10 px-1 py-0 text-[9px] font-mono uppercase text-primary">
+                    Brand
+                  </span>
+                )}
+              </span>
+              <span className="font-mono tabular-nums text-muted-foreground">
+                {e.position ? `Rec #${e.position}` : "Not recommended"}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-          <aside className="border-t border-border bg-surface/30 p-5 lg:border-l lg:border-t-0">
+      {/* Panel 3 — Citations */}
+      <div className="rounded-lg border border-border bg-card p-4">
+        <p className="mb-2 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+          Citations
+        </p>
+        {r.citations.length === 0 ? (
+          <p className="text-xs text-muted-foreground">No citations in this response.</p>
+        ) : (
+          <ul className="space-y-1.5">
+            {r.citations.map((c) => (
+              <li key={c.url}>
+                <a
+                  href={c.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-between text-xs hover:text-foreground"
+                >
+                  <span className="font-mono text-foreground">{c.domain}</span>
+                  <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ReceiptsSidebar() {
+  return (
+    <aside className="border-t border-border bg-surface/30 p-5 lg:border-l lg:border-t-0">
+      <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground">
+        Insights
+      </p>
+      <h3 className="mt-1 text-sm font-semibold">Insights coming in V1.</h3>
+      <p className="mt-3 text-xs text-muted-foreground leading-relaxed">
+        For now, inspect the sampled responses on the left. Once the baseline period closes, the
+        Insights Engine will rank actions by expected lift on recommendation share.
+      </p>
+      <div className="mt-5 space-y-2">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-12 rounded-md border border-dashed border-border bg-card/40" />
+        ))}
+      </div>
+    </aside>
+  );
+}
+
+function ReceiptsFooter({
+  index, total, onPrev, onNext,
+}: { index: number; total: number; onPrev: () => void; onNext: () => void }) {
+  return (
+    <div className="flex items-center justify-between border-t border-border bg-surface/40 px-5 py-3 text-xs">
+      <span className="font-mono tabular-nums text-muted-foreground">
+        Sample {index + 1} of {total}
+      </span>
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onPrev}
+          disabled={index === 0}
+          className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2 py-1 text-xs disabled:opacity-40"
+        >
+          <ChevronLeft className="h-3 w-3" /> Prev
+        </button>
+        <button
+          type="button"
+          onClick={onNext}
+          disabled={index >= total - 1}
+          className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2 py-1 text-xs disabled:opacity-40"
+        >
+          Next <ChevronRight className="h-3 w-3" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Onboarding Addendum ──────────────────────────────────────────────────────
+
+function PrimaryClusterOnboarding() {
+  const STORAGE_KEY = "ai-visibility:primary-cluster";
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState(PRIMARY_CLUSTER.id);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const set = window.localStorage.getItem(STORAGE_KEY);
+    if (!set) setOpen(true);
+  }, []);
+
+  if (!open) return null;
+
+  const options = [
+    { id: "coach-booking", label: "best coach booking apps in the UK", impressions: 14200 },
+    { id: "scheduling-software", label: "online scheduling software", impressions: 9800 },
+    { id: "client-management", label: "client management for trainers", impressions: 6400 },
+    { id: "fitness-saas", label: "fitness studio SaaS", impressions: 3100 },
+    { id: "personal-trainer-tools", label: "personal trainer tools", impressions: 2700 },
+  ];
+
+  const save = () => {
+    window.localStorage.setItem(STORAGE_KEY, selected);
+    setOpen(false);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-background/70 backdrop-blur-sm">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2 }}
+        className="mx-4 w-full max-w-md overflow-hidden rounded-xl border border-border bg-card shadow-2xl"
+      >
+        <div className="border-b border-border p-5">
+          <div className="flex items-center gap-2">
+            <Star className="h-4 w-4 fill-primary text-primary" />
             <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground">
-              How to fix
+              First-run setup
             </p>
-            <h3 className="mt-1 text-sm font-semibold">
-              Lift recommendation share
-            </h3>
-            <ol className="mt-3 space-y-3 text-sm text-muted-foreground">
-              <li className="flex gap-2">
-                <span className="font-mono text-primary">01</span>
-                <span>
-                  Publish a comparison landing page targeting "{cluster.label}"
-                  with structured pros/cons.
-                </span>
+          </div>
+          <h2 className="mt-2 text-lg font-semibold tracking-tight">
+            Pick your primary commercial category
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            AI Visibility tracks recommendations across every category cluster you've configured,
+            but one is your primary commercial bet. Which is it?
+          </p>
+        </div>
+        <fieldset className="max-h-72 overflow-y-auto p-5">
+          <legend className="sr-only">Primary commercial category</legend>
+          <ul className="space-y-1">
+            {options.map((o) => (
+              <li key={o.id}>
+                <label
+                  className={`flex cursor-pointer items-center justify-between gap-3 rounded-md border px-3 py-2 text-sm transition-colors ${
+                    selected === o.id
+                      ? "border-primary/40 bg-primary/5"
+                      : "border-border hover:bg-surface/60"
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="primary-cluster"
+                      value={o.id}
+                      checked={selected === o.id}
+                      onChange={() => setSelected(o.id)}
+                      className="h-3.5 w-3.5 accent-primary"
+                    />
+                    <span className="truncate">{o.label}</span>
+                  </span>
+                  <span className="shrink-0 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                    {o.impressions.toLocaleString()} imp/mo
+                  </span>
+                </label>
               </li>
-              <li className="flex gap-2">
-                <span className="font-mono text-primary">02</span>
-                <span>
-                  Seed third-party reviews on Trustpilot, G2, and category-specific
-                  Reddit threads.
-                </span>
-              </li>
-              <li className="flex gap-2">
-                <span className="font-mono text-primary">03</span>
-                <span>
-                  Add FAQ schema with the exact phrasing of the sampled prompts.
-                </span>
-              </li>
-            </ol>
-            <div className="mt-5 rounded-md border border-border bg-card p-3 text-[11px] text-muted-foreground">
-              Actions are heuristic for V0.5. The Insights Engine will rank
-              these by expected lift once we have 4 weeks of baseline.
-            </div>
-          </aside>
+            ))}
+          </ul>
+        </fieldset>
+        <div className="flex items-center justify-between border-t border-border bg-surface/40 px-5 py-3">
+          <p className="text-[11px] text-muted-foreground">
+            Default = top by GSC impressions
+          </p>
+          <button
+            type="button"
+            onClick={save}
+            className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90"
+          >
+            Save primary
+          </button>
         </div>
       </motion.div>
     </div>
   );
 }
 
-
-
 // ── Primitives ───────────────────────────────────────────────────────────────
 
-function DeltaPill({
-  delta,
-  suffix,
-  sig,
-  compact,
+function StatusBadge({
+  variant, label,
 }: {
-  delta: number;
-  suffix: string;
-  sig: Sig;
-  compact?: boolean;
+  variant: "live" | "ga4" | "estimated" | "preview" | "baseline";
+  label?: string;
+}) {
+  const map = {
+    live: {
+      cls: "border-primary/30 bg-primary/10 text-primary",
+      dot: <span className="h-1.5 w-1.5 rounded-full bg-primary" />,
+      text: label ?? "Live",
+    },
+    ga4: {
+      cls: "border-primary/30 bg-primary/10 text-primary",
+      dot: <CheckCircle2 className="h-2.5 w-2.5" />,
+      text: label ?? "GA4-validated",
+    },
+    estimated: {
+      cls: "border-border bg-surface text-muted-foreground",
+      dot: null as React.ReactNode,
+      text: label ?? "Estimated",
+    },
+    preview: {
+      cls: "border-chart-4/30 bg-chart-4/10 text-chart-4",
+      dot: null,
+      text: label ?? "Preview",
+    },
+    baseline: {
+      cls: "border-border bg-surface text-muted-foreground",
+      dot: <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-chart-4" />,
+      text: label ?? "Building baseline",
+    },
+  } as const;
+  const v = map[variant];
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider ${v.cls}`}
+    >
+      {v.dot}
+      {v.text}
+    </span>
+  );
+}
+
+function DeltaPill({
+  delta, suffix, sig, compact,
+}: {
+  delta: number; suffix: string; sig: Sig; compact?: boolean;
 }) {
   if (delta === 0 || sig === "none") {
     return (
@@ -1247,43 +1171,13 @@ function DeltaPill({
       {sig === "sig" && (
         <span
           className={`ml-1 rounded-sm px-1 py-0 text-[9px] font-mono uppercase tracking-wider ${
-            positive
-              ? "bg-primary/15 text-primary"
-              : "bg-destructive/15 text-destructive"
+            positive ? "bg-primary/15 text-primary" : "bg-destructive/15 text-destructive"
           }`}
         >
           Sig
         </span>
       )}
     </span>
-  );
-}
-
-function VolatilityDots({ level }: { level: number }) {
-  const labels = ["Very stable", "Mostly stable", "Moderate", "Volatile", "Unpredictable"];
-  return (
-    <div
-      className="flex items-center justify-center gap-1"
-      title={labels[Math.min(Math.max(level - 1, 0), 4)]}
-    >
-      {Array.from({ length: 5 }).map((_, i) => {
-        const active = i < level;
-        return (
-          <span
-            key={i}
-            className={`h-1.5 w-1.5 rounded-full ${
-              active
-                ? level <= 2
-                  ? "bg-muted-foreground/60"
-                  : level === 3
-                    ? "bg-chart-4/80"
-                    : "bg-destructive/80"
-                : "bg-border"
-            }`}
-          />
-        );
-      })}
-    </div>
   );
 }
 
@@ -1312,14 +1206,8 @@ function Sparkline({ data, positive }: { data: number[]; positive: boolean }) {
 }
 
 function SectionHeading({
-  eyebrow,
-  title,
-  caption,
-}: {
-  eyebrow: string;
-  title: string;
-  caption: string;
-}) {
+  eyebrow, title, caption,
+}: { eyebrow: string; title: string; caption: string }) {
   return (
     <div className="mb-4">
       <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-muted-foreground">
@@ -1332,12 +1220,8 @@ function SectionHeading({
 }
 
 function Section({
-  children,
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  delay?: number;
-}) {
+  children, delay = 0,
+}: { children: React.ReactNode; delay?: number }) {
   return (
     <motion.section
       initial={{ opacity: 0, y: 12 }}
@@ -1351,35 +1235,26 @@ function Section({
 }
 
 function MethodologyFooter() {
-  const [open, setOpen] = useState(false);
   return (
-    <div className="rounded-lg border border-border bg-surface/40 px-4 py-3 text-xs text-muted-foreground">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center gap-2 text-left font-mono uppercase tracking-wider text-[10px]"
-      >
-        <Info className="h-3 w-3" />
-        Methodology
-        <ChevronRight
-          className={`h-3 w-3 transition-transform ${open ? "rotate-90" : ""}`}
-        />
-      </button>
-      {open && (
-        <div className="mt-2 space-y-1 leading-relaxed">
-          <p>
-            We sample 24 prompts × 4 models × 3 samples per cluster per week.
-            WoW changes within ±1.5pp are considered within normal variance and
-            shown without a significance badge.
-          </p>
-          <p>
-            ChatGPT responses use the search-augmented (browse) mode. Perplexity
-            uses default Sonar. Claude and Gemini use their native retrieval
-            paths. Recommendation share is computed as the share of sampled
-            responses where the brand appears in the recommended set.
-          </p>
-        </div>
-      )}
+    <div className="rounded-lg border border-border bg-surface/40 px-5 py-4 text-xs text-muted-foreground">
+      <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-foreground/80">
+        <Info className="h-3 w-3" /> Methodology
+      </div>
+      <div className="mt-2 grid gap-3 leading-relaxed lg:grid-cols-2">
+        <p>
+          <span className="font-medium text-foreground">Sampling cadence.</span> We sample 24
+          prompts × 3 responses per cluster per week through ChatGPT's search-augmented (browse)
+          mode. Recommendation share is the fraction of sampled responses in which your brand
+          appears in the recommended set.
+        </p>
+        <p>
+          <span className="font-medium text-foreground">Known limitations (V0.5).</span> Coverage
+          is ChatGPT-only and limited to your primary commercial cluster. Perplexity, Claude, and
+          Gemini coverage, multi-cluster breakdown, and the full citation footprint arrive in V1.
+          AI session attribution depends on GA4 referrer parsing and may undercount cloaked
+          referrers.
+        </p>
+      </div>
     </div>
   );
 }
