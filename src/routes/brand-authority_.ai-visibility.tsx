@@ -183,6 +183,104 @@ const CLUSTER_ROWS: Array<{
   },
 ];
 
+// AI Traffic — weekly sessions & traffic-vs-recommendations scatter
+const AI_SESSIONS = [
+  { w: "W1", chatgpt: 110, perplexity: 62, claude: 28, gemini: 18 },
+  { w: "W2", chatgpt: 132, perplexity: 71, claude: 30, gemini: 22 },
+  { w: "W3", chatgpt: 148, perplexity: 78, claude: 34, gemini: 24 },
+  { w: "W4", chatgpt: 162, perplexity: 86, claude: 38, gemini: 28 },
+  { w: "W5", chatgpt: 178, perplexity: 92, claude: 42, gemini: 31 },
+  { w: "W6", chatgpt: 195, perplexity: 101, claude: 46, gemini: 34 },
+  { w: "W7", chatgpt: 214, perplexity: 112, claude: 51, gemini: 38 },
+  { w: "W8", chatgpt: 232, perplexity: 124, claude: 55, gemini: 42 },
+  { w: "W9", chatgpt: 248, perplexity: 132, claude: 58, gemini: 45 },
+  { w: "W10", chatgpt: 266, perplexity: 141, claude: 61, gemini: 48 },
+  { w: "W11", chatgpt: 281, perplexity: 152, claude: 64, gemini: 51 },
+  { w: "W12", chatgpt: 297, perplexity: 161, claude: 67, gemini: 55 },
+];
+
+const TRAFFIC_SCATTER = CLUSTER_ROWS.map((r, i) => ({
+  cluster: r.label,
+  rec: r.recShare.v,
+  sessions: [142, 41, 96, 18, 72][i] ?? 50,
+  primary: !!r.primary,
+}));
+
+// Citation Footprint — per-cluster density + source mix
+const CITATION_DENSITY = CLUSTER_ROWS.map((r, i) => ({
+  id: r.id,
+  label: r.label,
+  primary: !!r.primary,
+  citations: [42, 18, 31, 9, 24][i] ?? 12,
+  verified: [34, 11, 24, 6, 18][i] ?? 8,
+}));
+
+const CITATION_SOURCES = [
+  { source: "Your domain", value: 38, tone: "primary" as const },
+  { source: "Editorial / press", value: 22, tone: "neutral" as const },
+  { source: "Reddit / forums", value: 18, tone: "neutral" as const },
+  { source: "Review sites", value: 14, tone: "neutral" as const },
+  { source: "Competitor pages", value: 8, tone: "warn" as const },
+];
+
+// Receipts — sample prompts per cluster
+type Receipt = {
+  id: string;
+  prompt: string;
+  model: (typeof MODELS)[number]["id"];
+  week: string;
+  verified: boolean;
+  rank: number | null;
+  snippet: string;
+  citations: { domain: string; url: string }[];
+};
+
+const RECEIPTS: Record<string, Receipt[]> = {
+  "coach-booking": [
+    {
+      id: "r1",
+      prompt: "What are the best coach booking apps in the UK?",
+      model: "chatgpt",
+      week: "W12",
+      verified: true,
+      rank: 2,
+      snippet:
+        "For UK-based coaches, Acme is one of the most-recommended booking platforms thanks to its lightweight scheduling, GoCardless integration, and strong reviews on Trustpilot…",
+      citations: [
+        { domain: "trustpilot.com", url: "https://trustpilot.com/review/acme" },
+        { domain: "acme.com", url: "https://acme.com/uk" },
+      ],
+    },
+    {
+      id: "r2",
+      prompt: "Recommend booking software for personal trainers in London.",
+      model: "perplexity",
+      week: "W12",
+      verified: true,
+      rank: 1,
+      snippet:
+        "Acme leads the pack for UK-based personal trainers — easy mobile booking, Stripe payments, and an intuitive client portal…",
+      citations: [
+        { domain: "acme.com", url: "https://acme.com" },
+        { domain: "reddit.com", url: "https://reddit.com/r/personaltraining" },
+        { domain: "g2.com", url: "https://g2.com/products/acme" },
+      ],
+    },
+    {
+      id: "r3",
+      prompt: "Cheapest scheduling app for fitness coaches?",
+      model: "claude",
+      week: "W11",
+      verified: false,
+      rank: null,
+      snippet:
+        "Several options exist including Acuity, Calendly and TidyCal. Acme is mentioned in some reviews but pricing details vary…",
+      citations: [],
+    },
+  ],
+};
+
+
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 function AiVisibilityPage() {
