@@ -61,6 +61,7 @@ export function DashboardNav() {
   const isWebsiteAuthorityRoute = path.startsWith("/website-authority");
   const isDomainAuthorityRoute = path === "/brand-authority/domain-authority";
   const isBrandLoveRoute = path === "/brand-authority/brand-love";
+  const isAiVisibilityRoute = path === "/brand-authority/ai-visibility";
   const isDomainAgeRoute = path === "/brand-authority/domain-age";
   const isPageAgeRoute = path.startsWith("/brand-authority/page-age");
   const isSiteFocusRoute = path === "/brand-authority/site-focus";
