@@ -16,6 +16,7 @@ import { Route as RequestDemoRouteImport } from './routes/request-demo'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as EarlyAccessRouteImport } from './routes/early-access'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CrawlerRouteImport } from './routes/crawler'
 import { Route as BrandAuthorityRouteImport } from './routes/brand-authority'
 import { Route as AuditRunsRouteImport } from './routes/audit-runs'
 import { Route as AccountSettingsRouteImport } from './routes/account-settings'
@@ -74,6 +75,11 @@ const EarlyAccessRoute = EarlyAccessRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CrawlerRoute = CrawlerRouteImport.update({
+  id: '/crawler',
+  path: '/crawler',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BrandAuthorityRoute = BrandAuthorityRouteImport.update({
@@ -210,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/account-settings': typeof AccountSettingsRoute
   '/audit-runs': typeof AuditRunsRoute
   '/brand-authority': typeof BrandAuthorityRoute
+  '/crawler': typeof CrawlerRoute
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
@@ -243,6 +250,7 @@ export interface FileRoutesByTo {
   '/account-settings': typeof AccountSettingsRoute
   '/audit-runs': typeof AuditRunsRoute
   '/brand-authority': typeof BrandAuthorityRoute
+  '/crawler': typeof CrawlerRoute
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
@@ -275,6 +283,7 @@ export interface FileRoutesById {
   '/account-settings': typeof AccountSettingsRoute
   '/audit-runs': typeof AuditRunsRoute
   '/brand-authority': typeof BrandAuthorityRoute
+  '/crawler': typeof CrawlerRoute
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
@@ -310,6 +319,7 @@ export interface FileRouteTypes {
     | '/account-settings'
     | '/audit-runs'
     | '/brand-authority'
+    | '/crawler'
     | '/dashboard'
     | '/early-access'
     | '/onboarding'
@@ -343,6 +353,7 @@ export interface FileRouteTypes {
     | '/account-settings'
     | '/audit-runs'
     | '/brand-authority'
+    | '/crawler'
     | '/dashboard'
     | '/early-access'
     | '/onboarding'
@@ -374,6 +385,7 @@ export interface FileRouteTypes {
     | '/account-settings'
     | '/audit-runs'
     | '/brand-authority'
+    | '/crawler'
     | '/dashboard'
     | '/early-access'
     | '/onboarding'
@@ -408,6 +420,7 @@ export interface RootRouteChildren {
   AccountSettingsRoute: typeof AccountSettingsRoute
   AuditRunsRoute: typeof AuditRunsRoute
   BrandAuthorityRoute: typeof BrandAuthorityRoute
+  CrawlerRoute: typeof CrawlerRoute
   DashboardRoute: typeof DashboardRoute
   EarlyAccessRoute: typeof EarlyAccessRoute
   OnboardingRoute: typeof OnboardingRoute
@@ -479,6 +492,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/crawler': {
+      id: '/crawler'
+      path: '/crawler'
+      fullPath: '/crawler'
+      preLoaderRoute: typeof CrawlerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/brand-authority': {
@@ -710,6 +730,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountSettingsRoute: AccountSettingsRoute,
   AuditRunsRoute: AuditRunsRoute,
   BrandAuthorityRoute: BrandAuthorityRoute,
+  CrawlerRoute: CrawlerRoute,
   DashboardRoute: DashboardRoute,
   EarlyAccessRoute: EarlyAccessRoute,
   OnboardingRoute: OnboardingRoute,
@@ -734,12 +755,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
