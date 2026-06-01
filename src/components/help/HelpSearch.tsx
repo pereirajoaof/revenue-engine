@@ -50,6 +50,7 @@ export function HelpSearch({
           )}
         />
         <input
+          data-help-search-input
           type="search"
           value={value}
           onChange={(e) => setValue(e.target.value)}
