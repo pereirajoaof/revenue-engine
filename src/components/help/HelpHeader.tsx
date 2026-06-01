@@ -125,7 +125,7 @@ export function HelpHeader() {
       {/* Bottom row — primary nav */}
       <div className="hidden lg:block">
         <div className="mx-auto max-w-6xl px-6">
-          <nav className="-mb-px flex items-center gap-1 overflow-x-auto">
+          <nav className="-mb-px flex items-center gap-1">
             {NAV.map((item) => {
               const active = item.match(pathname);
               return (
