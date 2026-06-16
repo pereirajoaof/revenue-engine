@@ -30,7 +30,6 @@ import {
   ChevronRight,
   Download,
   Heart,
-  Megaphone,
   ShieldCheck,
   Sparkles,
   Target,
