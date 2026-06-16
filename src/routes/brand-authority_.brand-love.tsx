@@ -5,9 +5,10 @@ import {
   Area,
   AreaChart,
   Bar,
-  BarChart,
+  
   CartesianGrid,
   Cell,
+  ComposedChart,
   Legend,
   Line,
   LineChart,
@@ -29,7 +30,6 @@ import {
   ChevronRight,
   Download,
   Heart,
-  Megaphone,
   ShieldCheck,
   Sparkles,
   Target,
@@ -131,35 +131,21 @@ const DIRECT_TRAFFIC = [
   { m: "Mar", direct: 121, returning: 84, branded: 181 },
 ];
 
-const REFERRING_TREND = [
-  { m: "Jul", v: 8420 },
-  { m: "Aug", v: 8590 },
-  { m: "Sep", v: 8780 },
-  { m: "Oct", v: 8960 },
-  { m: "Nov", v: 9120 },
-  { m: "Dec", v: 9320 },
-  { m: "Jan", v: 9510 },
-  { m: "Feb", v: 9640 },
-  { m: "Mar", v: 9740 },
-  { m: "Apr", v: 9810 },
-  { m: "May", v: 9842 },
+
+// Monthly net flow of referring domains — gained vs lost.
+// `bar` is signed (negative = net loss). `total` is the trailing line.
+const REFERRING_FLOW = [
+  { m: "Oct 25", bar: 1300, total: 7050 },
+  { m: "Nov 25", bar: 4200, total: 7200 },
+  { m: "Dec 25", bar: -3400, total: 7100 },
+  { m: "Jan 26", bar: -4100, total: 6950 },
+  { m: "Feb 26", bar: 6800, total: 7250 },
+  { m: "Mar 26", bar: -300, total: 7180 },
+  { m: "Apr 26", bar: 3500, total: 7220 },
+  { m: "Jun 15", bar: 6900, total: 7300 },
 ];
 
-const MENTIONS_BY_SOURCE = [
-  { source: "News", value: 6420 },
-  { source: "Reddit", value: 5810 },
-  { source: "YouTube", value: 4720 },
-  { source: "Forums", value: 3940 },
-  { source: "Social", value: 3360 },
-  { source: "Blogs", value: 3068 },
-];
 
-const DR_BUCKETS = [
-  { bucket: "DR 70+", value: 412, tone: "primary" },
-  { bucket: "DR 50–69", value: 1840, tone: "primary" },
-  { bucket: "DR 30–49", value: 3920, tone: "muted" },
-  { bucket: "DR 0–29", value: 3670, tone: "muted" },
-];
 
 const RADAR = [
   { axis: "Awareness", you: 78, avg: 64, leader: 82 },
@@ -272,16 +258,16 @@ function BrandLovePage() {
 
           <Section delay={0.1}>
             <SectionHeading
-              eyebrow="03 — Authority & Mentions"
-              title="Earned distribution and link equity"
-              caption="Quality and source mix of brand mentions across the open web."
+              eyebrow="03 — Brand Recognition"
+              title="Earned distribution"
+              caption="Whether your earned authority is strong enough to win this market."
             />
             <div className="grid gap-4 lg:grid-cols-2">
-              <ReferringDomainsCard />
-              <MentionsBySource />
+              <AuthorityMoatCard />
+              <CitationTrendCard />
             </div>
-            <DrBuckets />
           </Section>
+
 
           <Section delay={0.1}>
             <SectionHeading
@@ -676,94 +662,168 @@ function DirectTrafficCard() {
   );
 }
 
-function ReferringDomainsCard() {
+function AuthorityMoatCard() {
+  const you = 58;
+  const median = 52;
+  const leader = 60;
+  const min = 40;
+  const max = 70;
+  const pct = (v: number) => ((v - min) / (max - min)) * 100;
+
   return (
-    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
-      <div className="mb-4 flex items-center justify-between">
-        <div>
-          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Authority graph</p>
-          <p className="text-sm font-medium">Referring domains trend</p>
+    <div className="flex h-full flex-col rounded-xl border border-border bg-card p-5 shadow-sm">
+      <div className="flex items-start justify-between">
+        <div className="space-y-3">
+          <div>
+            <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Authority moat</p>
+            <span className="mt-1.5 inline-flex rounded-md border border-primary/25 bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+              Competitive moat
+            </span>
+          </div>
         </div>
         <ShieldCheck className="h-4 w-4 text-primary" />
       </div>
-      <ResponsiveContainer width="100%" height={240}>
-        <AreaChart data={REFERRING_TREND} margin={{ top: 8, right: 16, bottom: 0, left: 0 }}>
-          <defs>
-            <linearGradient id="rd" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid stroke="var(--border)" strokeDasharray="2 4" vertical={false} />
-          <XAxis dataKey="m" tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} />
-          <YAxis tickLine={false} axisLine={false} width={42} tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} />
-          <ChartTooltip content={<MiniTooltip />} />
-          <Area type="monotone" dataKey="v" stroke="var(--primary)" strokeWidth={2.5} fill="url(#rd)" />
-        </AreaChart>
-      </ResponsiveContainer>
+
+      <div className="mt-5">
+        <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Authority strength</p>
+        <div className="mt-1 flex items-end gap-2">
+          <span className="font-mono text-5xl font-semibold leading-none tabular-nums text-primary">{you}</span>
+          <span className="mb-1 font-mono text-sm text-muted-foreground">/100</span>
+          <span className="mb-1 ml-2 font-mono text-[11px] text-muted-foreground">— No change</span>
+        </div>
+        <p className="mt-3 max-w-md text-sm text-foreground/90">
+          You are above the market median and in the race — with room still to the leader.
+        </p>
+      </div>
+
+      <div className="mt-6">
+        <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Market position</p>
+        <div className="relative mt-3 h-1.5 rounded-full bg-surface">
+          <div
+            className="absolute top-0 h-1.5 rounded-full bg-primary/30"
+            style={{ left: `${pct(median)}%`, width: `${pct(leader) - pct(median)}%` }}
+          />
+          <div
+            className="absolute -top-1 h-3.5 w-px bg-muted-foreground/60"
+            style={{ left: `${pct(median)}%` }}
+            title={`Market median ${median}`}
+          />
+          <div
+            className="absolute -top-1 h-3.5 w-px bg-muted-foreground/60"
+            style={{ left: `${pct(leader)}%` }}
+            title={`Leader ${leader}`}
+          />
+          <div
+            className="absolute -top-[5px] -ml-2 h-4 w-4 rounded-full border-2 border-card bg-primary shadow"
+            style={{ left: `${pct(you)}%` }}
+            title={`You ${you}`}
+          />
+        </div>
+        <div className="mt-2 flex justify-between font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+          <span><span className="font-semibold text-foreground">{you}</span> You</span>
+          <span><span className="font-semibold text-foreground">{median}</span> Market median</span>
+          <span><span className="font-semibold text-foreground">{leader}</span> Leader</span>
+        </div>
+      </div>
+
+      <div className="mt-auto pt-6">
+        <div className="flex items-start justify-between gap-4 border-t border-border pt-4">
+          <div>
+            <p className="text-sm font-medium">Quality risk: <span className="text-foreground">moderate</span></p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              Some authority may come from weaker domains — treat the score as directional.
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="font-mono text-2xl font-semibold tabular-nums">5,996</p>
+            <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Referring domains</p>
+          </div>
+        </div>
+        <p className="mt-3 text-[11px] text-muted-foreground">
+          Quality-adjusted &amp; directional — earned authority discounted for low-quality links, not a raw link count.
+        </p>
+      </div>
     </div>
   );
 }
 
-function MentionsBySource() {
-  const total = MENTIONS_BY_SOURCE.reduce((a, b) => a + b.value, 0);
+function CitationTrendCard() {
   return (
-    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="flex h-full flex-col rounded-xl border border-border bg-card p-5 shadow-sm">
+      <div className="flex items-start justify-between">
         <div>
-          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Mention mix</p>
-          <p className="text-sm font-medium">Brand mentions by source</p>
+          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Citation recognition</p>
+          <p className="text-sm font-medium">Referring domains trend</p>
         </div>
-        <Megaphone className="h-4 w-4 text-primary" />
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[11px] text-muted-foreground">7,300 total</span>
+          <ShieldCheck className="h-4 w-4 text-primary" />
+        </div>
       </div>
-      <div className="space-y-3">
-        {MENTIONS_BY_SOURCE.map((s) => {
-          const pct = (s.value / total) * 100;
-          return (
-            <div key={s.source}>
-              <div className="mb-1 flex items-center justify-between text-xs">
-                <span>{s.source}</span>
-                <span className="font-mono tabular-nums text-muted-foreground">
-                  {s.value.toLocaleString()} · {pct.toFixed(1)}%
-                </span>
-              </div>
-              <div className="h-2 overflow-hidden rounded-full bg-surface">
-                <div className="h-full rounded-full bg-primary/80" style={{ width: `${pct}%` }} />
-              </div>
-            </div>
-          );
-        })}
+
+      <div className="mt-4 flex-1">
+        <ResponsiveContainer width="100%" height="100%" minHeight={300}>
+          <ComposedChart data={REFERRING_FLOW} margin={{ top: 12, right: 12, bottom: 0, left: 0 }}>
+            <defs>
+              <linearGradient id="cit-line" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.25} />
+                <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid stroke="var(--border)" strokeDasharray="2 4" vertical={false} />
+            <XAxis
+              dataKey="m"
+              tickLine={false}
+              axisLine={false}
+              tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+            />
+            <YAxis
+              yAxisId="bar"
+              orientation="left"
+              tickLine={false}
+              axisLine={false}
+              width={36}
+              tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+              tickFormatter={(v) => `${Math.abs(v) >= 1000 ? `${Math.abs(v) / 1000}K` : Math.abs(v)}`}
+            />
+            <YAxis yAxisId="line" orientation="right" hide domain={[6500, 8000]} />
+            <ChartTooltip content={<MiniTooltip />} />
+            <Area
+              yAxisId="line"
+              type="monotone"
+              dataKey="total"
+              stroke="var(--primary)"
+              strokeWidth={2}
+              fill="url(#cit-line)"
+            />
+            <Bar yAxisId="bar" dataKey="bar" radius={[3, 3, 3, 3]} barSize={10}>
+              {REFERRING_FLOW.map((d, i) => (
+                <Cell
+                  key={i}
+                  fill={d.bar >= 0 ? "var(--primary)" : "var(--destructive)"}
+                  fillOpacity={0.85}
+                />
+              ))}
+            </Bar>
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
+
+      <div className="mt-4 flex items-center gap-4 border-t border-border pt-3 text-[11px] text-muted-foreground">
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-sm bg-primary/80" /> Net gained
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-sm bg-destructive/80" /> Net lost
+        </span>
+        <span className="ml-auto inline-flex items-center gap-1.5">
+          <span className="h-px w-4 bg-primary" /> Trailing total
+        </span>
       </div>
     </div>
   );
 }
 
-function DrBuckets() {
-  return (
-    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
-      <div className="mb-4 flex items-center justify-between">
-        <div>
-          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Quality breakdown</p>
-          <p className="text-sm font-medium">Authority of referring domains</p>
-        </div>
-        <span className="font-mono text-[11px] text-muted-foreground">9,842 RDs total</span>
-      </div>
-      <ResponsiveContainer width="100%" height={180}>
-        <BarChart data={DR_BUCKETS} margin={{ top: 8, right: 16, bottom: 0, left: 0 }}>
-          <CartesianGrid stroke="var(--border)" strokeDasharray="2 4" vertical={false} />
-          <XAxis dataKey="bucket" tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} />
-          <YAxis tickLine={false} axisLine={false} width={42} tick={{ fontSize: 11, fill: "var(--muted-foreground)" }} />
-          <ChartTooltip content={<MiniTooltip />} />
-          <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-            {DR_BUCKETS.map((b, i) => (
-              <Cell key={i} fill={b.tone === "primary" ? "var(--primary)" : "var(--muted-foreground)"} fillOpacity={b.tone === "primary" ? 0.85 : 0.35} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  );
-}
 
 function RadarCard() {
   return (
