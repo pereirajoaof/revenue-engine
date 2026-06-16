@@ -287,16 +287,16 @@ function BrandLovePage() {
 
           <Section delay={0.1}>
             <SectionHeading
-              eyebrow="03 — Authority & Mentions"
-              title="Earned distribution and link equity"
-              caption="Quality and source mix of brand mentions across the open web."
+              eyebrow="03 — Brand Recognition"
+              title="Earned distribution"
+              caption="Whether your earned authority is strong enough to win this market."
             />
             <div className="grid gap-4 lg:grid-cols-2">
-              <ReferringDomainsCard />
-              <MentionsBySource />
+              <AuthorityMoatCard />
+              <CitationTrendCard />
             </div>
-            <DrBuckets />
           </Section>
+
 
           <Section delay={0.1}>
             <SectionHeading
