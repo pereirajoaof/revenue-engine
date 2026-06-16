@@ -146,6 +146,19 @@ const REFERRING_TREND = [
   { m: "May", v: 9842 },
 ];
 
+// Monthly net flow of referring domains — gained vs lost.
+// `bar` is signed (negative = net loss). `total` is the trailing line.
+const REFERRING_FLOW = [
+  { m: "Oct 25", bar: 1300, total: 7050 },
+  { m: "Nov 25", bar: 4200, total: 7200 },
+  { m: "Dec 25", bar: -3400, total: 7100 },
+  { m: "Jan 26", bar: -4100, total: 6950 },
+  { m: "Feb 26", bar: 6800, total: 7250 },
+  { m: "Mar 26", bar: -300, total: 7180 },
+  { m: "Apr 26", bar: 3500, total: 7220 },
+  { m: "Jun 15", bar: 6900, total: 7300 },
+];
+
 const MENTIONS_BY_SOURCE = [
   { source: "News", value: 6420 },
   { source: "Reddit", value: 5810 },
@@ -161,6 +174,7 @@ const DR_BUCKETS = [
   { bucket: "DR 30–49", value: 3920, tone: "muted" },
   { bucket: "DR 0–29", value: 3670, tone: "muted" },
 ];
+
 
 const RADAR = [
   { axis: "Awareness", you: 78, avg: 64, leader: 82 },
