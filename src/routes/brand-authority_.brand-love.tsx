@@ -720,7 +720,7 @@ function AuthorityMoatCard() {
           />
         </div>
         <div className="mt-2 flex justify-between font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-          <span><span className="font-semibold text-foreground">{you}</span> You</span>
+          <span className="font-semibold text-foreground">{you}</span>
           <span><span className="font-semibold text-foreground">{median}</span> Market median</span>
           <span><span className="font-semibold text-foreground">{leader}</span> Leader</span>
         </div>
