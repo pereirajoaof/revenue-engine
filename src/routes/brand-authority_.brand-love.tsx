@@ -718,6 +718,12 @@ function AuthorityMoatCard() {
             style={{ left: `${pct(you)}%` }}
             title={`You ${you}`}
           />
+          <span
+            className="absolute top-4 -translate-x-1/2 font-mono text-[10px] font-semibold uppercase tracking-wider text-primary"
+            style={{ left: `${pct(you)}%` }}
+          >
+            You
+          </span>
         </div>
         <div className="mt-2 flex justify-between font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
           <span />
