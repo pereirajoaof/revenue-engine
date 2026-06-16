@@ -158,21 +158,6 @@ const REFERRING_FLOW = [
   { m: "Jun 15", bar: 6900, total: 7300 },
 ];
 
-const MENTIONS_BY_SOURCE = [
-  { source: "News", value: 6420 },
-  { source: "Reddit", value: 5810 },
-  { source: "YouTube", value: 4720 },
-  { source: "Forums", value: 3940 },
-  { source: "Social", value: 3360 },
-  { source: "Blogs", value: 3068 },
-];
-
-const DR_BUCKETS = [
-  { bucket: "DR 70+", value: 412, tone: "primary" },
-  { bucket: "DR 50–69", value: 1840, tone: "primary" },
-  { bucket: "DR 30–49", value: 3920, tone: "muted" },
-  { bucket: "DR 0–29", value: 3670, tone: "muted" },
-];
 
 
 const RADAR = [
