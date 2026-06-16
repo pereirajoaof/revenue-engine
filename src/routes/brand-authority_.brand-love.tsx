@@ -131,19 +131,6 @@ const DIRECT_TRAFFIC = [
   { m: "Mar", direct: 121, returning: 84, branded: 181 },
 ];
 
-const REFERRING_TREND = [
-  { m: "Jul", v: 8420 },
-  { m: "Aug", v: 8590 },
-  { m: "Sep", v: 8780 },
-  { m: "Oct", v: 8960 },
-  { m: "Nov", v: 9120 },
-  { m: "Dec", v: 9320 },
-  { m: "Jan", v: 9510 },
-  { m: "Feb", v: 9640 },
-  { m: "Mar", v: 9740 },
-  { m: "Apr", v: 9810 },
-  { m: "May", v: 9842 },
-];
 
 // Monthly net flow of referring domains — gained vs lost.
 // `bar` is signed (negative = net loss). `total` is the trailing line.
