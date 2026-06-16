@@ -5,7 +5,7 @@ import {
   Area,
   AreaChart,
   Bar,
-  BarChart,
+  
   CartesianGrid,
   Cell,
   ComposedChart,
