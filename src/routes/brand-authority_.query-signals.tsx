@@ -146,6 +146,8 @@ const ACTIONS = [
     effort: "Medium",
     confidence: "High",
     impact: "Protect reputation",
+    revenueType: "risk" as const,
+    revenueValue: "$48k / mo",
     tone: "risk" as const,
   },
   {
@@ -157,6 +159,8 @@ const ACTIONS = [
     effort: "Low",
     confidence: "Medium",
     impact: "Control social narrative",
+    revenueType: "opportunity" as const,
+    revenueValue: "$22k / mo",
     tone: "warn" as const,
   },
   {
@@ -168,9 +172,12 @@ const ACTIONS = [
     effort: "High",
     confidence: "High",
     impact: "Defend against competitors",
+    revenueType: "opportunity" as const,
+    revenueValue: "$65k / mo",
     tone: "risk" as const,
   },
 ];
+
 
 const CATEGORIES: {
   key: Category;
