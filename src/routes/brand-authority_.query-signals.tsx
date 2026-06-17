@@ -400,37 +400,6 @@ function QuerySignalsPage() {
           {/* 1. Hero — Brand Demand Control */}
           <HeroCard />
 
-          {/* 2. Action summary strip */}
-          <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            <ActionCard
-              tone="risk"
-              icon={Shield}
-              title="Protect reputation"
-              body="3 trust-related queries are growing and Reddit appears on page 1 for 2 of them."
-              cta="Review reputation actions"
-            />
-            <ActionCard
-              tone="warn"
-              icon={Sparkles}
-              title="Strengthen owned results"
-              body="Your site is missing from page 1 for 6 branded discovery queries."
-              cta="Create owned content"
-            />
-            <ActionCard
-              tone="warn"
-              icon={Users}
-              title="Control social narrative"
-              body="Social and community platforms appear across 42% of your branded SERPs."
-              cta="Review social platforms"
-            />
-            <ActionCard
-              tone="risk"
-              icon={Swords}
-              title="Defend against competitors"
-              body="Competitors appear on page 1 for 4 branded comparison queries."
-              cta="Review competitor pressure"
-            />
-          </section>
 
           {/* 3. Brand SERP Ownership Map */}
           <OwnershipCard />
