@@ -606,43 +606,6 @@ function HeroStat({
   );
 }
 
-// ── Action strip ────────────────────────────────────────────────────────────
-
-function ActionCard({
-  tone,
-  icon: Icon,
-  title,
-  body,
-  cta,
-}: {
-  tone: "risk" | "warn" | "good";
-  icon: typeof Shield;
-  title: string;
-  body: string;
-  cta: string;
-}) {
-  const ring =
-    tone === "risk"
-      ? "border-destructive/30 bg-destructive/[0.04]"
-      : tone === "warn"
-        ? "border-border bg-surface/40"
-        : "border-primary/25 bg-primary/[0.04]";
-  const iconColor =
-    tone === "risk" ? "text-destructive" : tone === "warn" ? "text-foreground" : "text-primary";
-  return (
-    <div className={`flex h-full flex-col rounded-xl border p-4 shadow-sm ${ring}`}>
-      <div className="flex items-center gap-2">
-        <Icon className={`h-4 w-4 ${iconColor}`} />
-        <p className="text-sm font-semibold">{title}</p>
-      </div>
-      <p className="mt-2 flex-1 text-xs text-muted-foreground">{body}</p>
-      <button className="mt-3 inline-flex items-center gap-1 self-start text-xs font-medium text-primary hover:underline">
-        {cta}
-        <ChevronRight className="h-3 w-3" />
-      </button>
-    </div>
-  );
-}
 
 // ── Ownership map ───────────────────────────────────────────────────────────
 
