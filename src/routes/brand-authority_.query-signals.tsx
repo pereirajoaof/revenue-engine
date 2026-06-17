@@ -465,7 +465,7 @@ function QuerySignalsPage() {
             </div>
             <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
               {CATEGORIES.map((c) => (
-                <CategoryCard key={c.key} {...c} onClick={() => setFilterCategory(c.key)} />
+                <CategoryCard key={c.key} data={c} onClick={() => setFilterCategory(c.key)} />
               ))}
             </div>
           </section>
