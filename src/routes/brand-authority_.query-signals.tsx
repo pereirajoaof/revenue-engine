@@ -752,9 +752,8 @@ function PlatformsCard() {
                     )}
                   </td>
                   <td className="px-3 py-3"><RiskPill v={p.risk} /></td>
-
-                  <td className="px-3 py-3 text-xs text-foreground/90">{p.action}</td>
                 </tr>
+
               );
             })}
           </tbody>
