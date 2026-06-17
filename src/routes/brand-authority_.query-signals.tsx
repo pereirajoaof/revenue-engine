@@ -780,6 +780,8 @@ function RecommendedAction({
   effort,
   confidence,
   impact,
+  revenueType,
+  revenueValue,
   tone,
 }: {
   title: string;
@@ -789,6 +791,8 @@ function RecommendedAction({
   effort: string;
   confidence: string;
   impact: string;
+  revenueType: "opportunity" | "risk";
+  revenueValue: string;
   tone: "risk" | "warn" | "good";
 }) {
   const accent =
@@ -797,6 +801,7 @@ function RecommendedAction({
       : tone === "warn"
         ? "border-border"
         : "border-primary/25";
+  const isRisk = revenueType === "risk";
   return (
     <div className={`flex h-full flex-col rounded-xl border bg-card p-5 shadow-sm ${accent}`}>
       <div className="flex items-start justify-between gap-3">
@@ -806,6 +811,29 @@ function RecommendedAction({
         </span>
       </div>
       <p className="mt-2 text-xs text-muted-foreground">{why}</p>
+
+      <div
+        className={`mt-3 flex items-center justify-between rounded-lg border px-3 py-2 ${
+          isRisk
+            ? "border-destructive/30 bg-destructive/[0.06]"
+            : "border-primary/25 bg-primary/[0.06]"
+        }`}
+      >
+        <span
+          className={`text-[10px] font-mono uppercase tracking-wider ${
+            isRisk ? "text-destructive" : "text-primary"
+          }`}
+        >
+          Revenue {isRisk ? "at risk" : "opportunity"}
+        </span>
+        <span
+          className={`font-mono text-sm font-semibold tabular-nums ${
+            isRisk ? "text-destructive" : "text-primary"
+          }`}
+        >
+          {revenueValue}
+        </span>
+      </div>
 
       <div className="mt-3 rounded-lg border border-border bg-surface/40 p-3">
         <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Evidence</p>
@@ -833,6 +861,7 @@ function RecommendedAction({
     </div>
   );
 }
+
 
 // ── Category card ──────────────────────────────────────────────────────────
 
