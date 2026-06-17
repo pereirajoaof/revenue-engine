@@ -548,7 +548,7 @@ function QuerySignalsPage() {
 function HeroCard() {
   return (
     <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+      <div className="flex flex-col gap-5">
         <div className="max-w-2xl">
           <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
             Brand Demand Control
@@ -562,27 +562,16 @@ function HeroCard() {
             to do next.
           </p>
         </div>
-        <div className="flex shrink-0 items-center gap-3 rounded-lg border border-primary/25 bg-primary/5 px-4 py-3">
-          <ShieldCheck className="h-5 w-5 text-primary" />
-          <div>
-            <p className="text-[10px] font-mono uppercase tracking-wider text-primary">
-              Narrative control score
-            </p>
-            <p className="font-mono text-3xl font-semibold leading-none tabular-nums text-primary">
-              {HERO.narrativeControl}
-              <span className="ml-1 text-sm text-muted-foreground">/100</span>
-            </p>
-          </div>
-        </div>
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-5">
         <HeroStat label="Branded queries analysed" value={HERO.totalQueries.toLocaleString()} />
-        <HeroStat label="Positive demand share" value={`${HERO.positiveShare}%`} tone="good" delta="+4 pts" />
-        <HeroStat label="Negative signals" value={String(HERO.negativeSignals)} tone="risk" delta="+3" />
-        <HeroStat label="External domains competing" value={String(HERO.externalDomains)} delta="+6" />
-        <HeroStat label="Owned page-1 share" value="52%" tone="good" delta="+2 pts" />
+        <HeroStat label="Positive demand share" value={`${HERO.positiveShare}%`} tone="good" delta="+4 pts WoW" />
+        <HeroStat label="Negative signals" value={String(HERO.negativeSignals)} tone="risk" delta="+3 WoW" />
+        <HeroStat label="External domains competing" value={String(HERO.externalDomains)} delta="+6 WoW" />
+        <HeroStat label="Owned page-1 share" value="52%" tone="good" delta="+2 pts WoW" />
       </div>
+
     </section>
   );
 }
