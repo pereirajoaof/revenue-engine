@@ -495,8 +495,8 @@ function QuerySignalsPage() {
                     <th className="px-3 py-2.5">You?</th>
                     <th className="px-3 py-2.5">Top external</th>
                     <th className="px-3 py-2.5">Control</th>
-                    <th className="px-3 py-2.5">Action</th>
                     <th className="w-8 px-2 py-2.5" />
+
                   </tr>
                 </thead>
                 <tbody>
