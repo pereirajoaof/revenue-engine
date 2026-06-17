@@ -525,7 +525,7 @@ function QuerySignalsPage() {
                       </td>
                       <td className="px-3 py-3 font-mono text-xs text-muted-foreground">{q.topExternal}</td>
                       <td className="px-3 py-3"><ControlPill v={q.control} /></td>
-                      <td className="px-3 py-3 text-xs text-foreground/90">{q.action}</td>
+
                       <td className="px-2 py-3 text-muted-foreground">
                         <ChevronRight className="h-4 w-4" />
                       </td>
