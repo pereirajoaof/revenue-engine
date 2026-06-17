@@ -868,8 +868,8 @@ function RecommendedAction({
 
 // ── Category card ──────────────────────────────────────────────────────────
 
-function CategoryCard(props: (typeof CATEGORIES)[number] & { onClick: () => void }) {
-  const { key: title, blurb, queries, impressions, growth, risk, action, direction, onClick } = props;
+function CategoryCard({ data, onClick }: { data: (typeof CATEGORIES)[number]; onClick: () => void }) {
+  const { key: title, blurb, queries, impressions, growth, risk, action, direction } = data;
   return (
     <button
       onClick={onClick}
