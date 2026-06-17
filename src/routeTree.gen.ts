@@ -28,6 +28,7 @@ import { Route as WebsiteAuthorityInternalEquityRouteImport } from './routes/web
 import { Route as TechnicalHealthCwvRouteImport } from './routes/technical-health.cwv'
 import { Route as HelpSlugRouteImport } from './routes/help.$slug'
 import { Route as BrandAuthoritySiteFocusRouteImport } from './routes/brand-authority_.site-focus'
+import { Route as BrandAuthorityQuerySignalsRouteImport } from './routes/brand-authority_.query-signals'
 import { Route as BrandAuthorityPageAgeRouteImport } from './routes/brand-authority_.page-age'
 import { Route as BrandAuthorityDomainAuthorityRouteImport } from './routes/brand-authority_.domain-authority'
 import { Route as BrandAuthorityDomainAgeRouteImport } from './routes/brand-authority_.domain-age'
@@ -140,6 +141,12 @@ const BrandAuthoritySiteFocusRoute = BrandAuthoritySiteFocusRouteImport.update({
   path: '/brand-authority/site-focus',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrandAuthorityQuerySignalsRoute =
+  BrandAuthorityQuerySignalsRouteImport.update({
+    id: '/brand-authority_/query-signals',
+    path: '/brand-authority/query-signals',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const BrandAuthorityPageAgeRoute = BrandAuthorityPageAgeRouteImport.update({
   id: '/brand-authority_/page-age',
   path: '/brand-authority/page-age',
@@ -242,6 +249,7 @@ export interface FileRoutesByFullPath {
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority/domain-authority': typeof BrandAuthorityDomainAuthorityRoute
   '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
+  '/brand-authority/query-signals': typeof BrandAuthorityQuerySignalsRoute
   '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/help/$slug': typeof HelpSlugRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
@@ -276,6 +284,7 @@ export interface FileRoutesByTo {
   '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority/domain-authority': typeof BrandAuthorityDomainAuthorityRoute
   '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
+  '/brand-authority/query-signals': typeof BrandAuthorityQuerySignalsRoute
   '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/help/$slug': typeof HelpSlugRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
@@ -313,6 +322,7 @@ export interface FileRoutesById {
   '/brand-authority_/domain-age': typeof BrandAuthorityDomainAgeRoute
   '/brand-authority_/domain-authority': typeof BrandAuthorityDomainAuthorityRoute
   '/brand-authority_/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
+  '/brand-authority_/query-signals': typeof BrandAuthorityQuerySignalsRoute
   '/brand-authority_/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/help/$slug': typeof HelpSlugRoute
   '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
@@ -351,6 +361,7 @@ export interface FileRouteTypes {
     | '/brand-authority/domain-age'
     | '/brand-authority/domain-authority'
     | '/brand-authority/page-age'
+    | '/brand-authority/query-signals'
     | '/brand-authority/site-focus'
     | '/help/$slug'
     | '/technical-health/cwv'
@@ -385,6 +396,7 @@ export interface FileRouteTypes {
     | '/brand-authority/domain-age'
     | '/brand-authority/domain-authority'
     | '/brand-authority/page-age'
+    | '/brand-authority/query-signals'
     | '/brand-authority/site-focus'
     | '/help/$slug'
     | '/technical-health/cwv'
@@ -421,6 +433,7 @@ export interface FileRouteTypes {
     | '/brand-authority_/domain-age'
     | '/brand-authority_/domain-authority'
     | '/brand-authority_/page-age'
+    | '/brand-authority_/query-signals'
     | '/brand-authority_/site-focus'
     | '/help/$slug'
     | '/technical-health/cwv'
@@ -458,6 +471,7 @@ export interface RootRouteChildren {
   BrandAuthorityDomainAgeRoute: typeof BrandAuthorityDomainAgeRoute
   BrandAuthorityDomainAuthorityRoute: typeof BrandAuthorityDomainAuthorityRoute
   BrandAuthorityPageAgeRoute: typeof BrandAuthorityPageAgeRouteWithChildren
+  BrandAuthorityQuerySignalsRoute: typeof BrandAuthorityQuerySignalsRoute
   BrandAuthoritySiteFocusRoute: typeof BrandAuthoritySiteFocusRoute
   HelpSlugRoute: typeof HelpSlugRoute
   HelpIndexRoute: typeof HelpIndexRoute
@@ -602,6 +616,13 @@ declare module '@tanstack/react-router' {
       path: '/brand-authority/site-focus'
       fullPath: '/brand-authority/site-focus'
       preLoaderRoute: typeof BrandAuthoritySiteFocusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand-authority_/query-signals': {
+      id: '/brand-authority_/query-signals'
+      path: '/brand-authority/query-signals'
+      fullPath: '/brand-authority/query-signals'
+      preLoaderRoute: typeof BrandAuthorityQuerySignalsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/brand-authority_/page-age': {
@@ -784,6 +805,7 @@ const rootRouteChildren: RootRouteChildren = {
   BrandAuthorityDomainAgeRoute: BrandAuthorityDomainAgeRoute,
   BrandAuthorityDomainAuthorityRoute: BrandAuthorityDomainAuthorityRoute,
   BrandAuthorityPageAgeRoute: BrandAuthorityPageAgeRouteWithChildren,
+  BrandAuthorityQuerySignalsRoute: BrandAuthorityQuerySignalsRoute,
   BrandAuthoritySiteFocusRoute: BrandAuthoritySiteFocusRoute,
   HelpSlugRoute: HelpSlugRoute,
   HelpIndexRoute: HelpIndexRoute,

@@ -61,6 +61,7 @@ export function DashboardNav() {
   const isWebsiteAuthorityRoute = path.startsWith("/website-authority");
   const isDomainAuthorityRoute = path === "/brand-authority/domain-authority";
   const isBrandLoveRoute = path === "/brand-authority/brand-love";
+  const isQuerySignalsRoute = path === "/brand-authority/query-signals";
   const isAiVisibilityRoute = path === "/brand-authority/ai-visibility";
   const isDomainAgeRoute = path === "/brand-authority/domain-age";
   const isPageAgeRoute = path.startsWith("/brand-authority/page-age");
@@ -183,6 +184,17 @@ export function DashboardNav() {
                           >
                             <Sparkles className="w-3 h-3 shrink-0" />
                             <span className="truncate">Brand Love</span>
+                          </Link>
+                          <Link
+                            to="/brand-authority/query-signals"
+                            className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                              isQuerySignalsRoute
+                                ? "bg-primary/10 text-primary border border-primary/20"
+                                : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
+                            }`}
+                          >
+                            <Search className="w-3 h-3 shrink-0" />
+                            <span className="truncate">Query Signals</span>
                           </Link>
                           <Link
                             to="/brand-authority/ai-visibility"
