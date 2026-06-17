@@ -722,17 +722,20 @@ function PlatformsCard() {
               <th className="px-3 py-2.5 text-right">Avg pos.</th>
               <th className="px-3 py-2.5">Direction</th>
               <th className="px-3 py-2.5">Risk</th>
-              <th className="px-3 py-2.5">Recommended action</th>
             </tr>
           </thead>
           <tbody>
             {PLATFORMS.map((p) => {
-              const Icon = p.icon;
               return (
                 <tr key={p.domain} className="border-b border-border/60 hover:bg-surface/40">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+                      <img
+                        src={`https://www.google.com/s2/favicons?sz=32&domain=${p.domain}`}
+                        alt=""
+                        loading="lazy"
+                        className="h-4 w-4 rounded-sm"
+                      />
                       <span className="font-medium">{p.domain}</span>
                     </div>
                   </td>
@@ -749,6 +752,7 @@ function PlatformsCard() {
                     )}
                   </td>
                   <td className="px-3 py-3"><RiskPill v={p.risk} /></td>
+
                   <td className="px-3 py-3 text-xs text-foreground/90">{p.action}</td>
                 </tr>
               );
