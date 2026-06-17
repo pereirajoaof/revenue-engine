@@ -10,8 +10,6 @@ import {
   Globe,
   MessageSquare,
   Search,
-  Shield,
-  ShieldCheck,
   Sparkles,
   Star,
   Swords,
@@ -19,6 +17,7 @@ import {
   X,
   Youtube,
 } from "lucide-react";
+
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
