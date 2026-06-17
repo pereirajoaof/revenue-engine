@@ -866,7 +866,7 @@ function RecommendedAction({
 // ── Category card ──────────────────────────────────────────────────────────
 
 function CategoryCard({ data, onClick }: { data: (typeof CATEGORIES)[number]; onClick: () => void }) {
-  const { key: title, blurb, queries, impressions, growth, risk, action, direction } = data;
+  const { key: title, blurb, queries, impressions, growth, action, direction } = data;
   return (
     <button
       onClick={onClick}
@@ -882,18 +882,15 @@ function CategoryCard({ data, onClick }: { data: (typeof CATEGORIES)[number]; on
         <Mini label="Impressions" v={impressions.toLocaleString()} />
         <Mini label="Growth" v={`${growth > 0 ? "+" : ""}${growth}%`} tone={growth > 0 ? "good" : "neutral"} />
       </div>
-      <p className="mt-3 text-[11px] text-muted-foreground">
-        <span className="font-mono uppercase tracking-wider text-muted-foreground/80">High-risk domains</span>
-        <span className="ml-1 font-mono tabular-nums text-foreground">{risk}</span>
-      </p>
-      <p className="mt-2 flex-1 text-xs text-foreground/90">{action}</p>
+      <p className="mt-3 flex-1 text-xs text-foreground/90">{action}</p>
       <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-medium text-primary">
-        Open {title} queries
+        {title} queries
         <ChevronRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
       </span>
     </button>
   );
 }
+
 
 function Mini({ label, v, tone }: { label: string; v: string; tone?: "good" | "neutral" }) {
   return (
