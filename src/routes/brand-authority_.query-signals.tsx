@@ -10,8 +10,6 @@ import {
   Globe,
   MessageSquare,
   Search,
-  Shield,
-  ShieldCheck,
   Sparkles,
   Star,
   Swords,
@@ -19,6 +17,7 @@ import {
   X,
   Youtube,
 } from "lucide-react";
+
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -146,6 +145,8 @@ const ACTIONS = [
     effort: "Medium",
     confidence: "High",
     impact: "Protect reputation",
+    revenueType: "risk" as const,
+    revenueValue: "$48k / mo",
     tone: "risk" as const,
   },
   {
@@ -157,6 +158,8 @@ const ACTIONS = [
     effort: "Low",
     confidence: "Medium",
     impact: "Control social narrative",
+    revenueType: "opportunity" as const,
+    revenueValue: "$22k / mo",
     tone: "warn" as const,
   },
   {
@@ -168,9 +171,12 @@ const ACTIONS = [
     effort: "High",
     confidence: "High",
     impact: "Defend against competitors",
+    revenueType: "opportunity" as const,
+    revenueValue: "$65k / mo",
     tone: "risk" as const,
   },
 ];
+
 
 const CATEGORIES: {
   key: Category;
@@ -400,37 +406,6 @@ function QuerySignalsPage() {
           {/* 1. Hero — Brand Demand Control */}
           <HeroCard />
 
-          {/* 2. Action summary strip */}
-          <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            <ActionCard
-              tone="risk"
-              icon={Shield}
-              title="Protect reputation"
-              body="3 trust-related queries are growing and Reddit appears on page 1 for 2 of them."
-              cta="Review reputation actions"
-            />
-            <ActionCard
-              tone="warn"
-              icon={Sparkles}
-              title="Strengthen owned results"
-              body="Your site is missing from page 1 for 6 branded discovery queries."
-              cta="Create owned content"
-            />
-            <ActionCard
-              tone="warn"
-              icon={Users}
-              title="Control social narrative"
-              body="Social and community platforms appear across 42% of your branded SERPs."
-              cta="Review social platforms"
-            />
-            <ActionCard
-              tone="risk"
-              icon={Swords}
-              title="Defend against competitors"
-              body="Competitors appear on page 1 for 4 branded comparison queries."
-              cta="Review competitor pressure"
-            />
-          </section>
 
           {/* 3. Brand SERP Ownership Map */}
           <OwnershipCard />
@@ -519,8 +494,8 @@ function QuerySignalsPage() {
                     <th className="px-3 py-2.5">You?</th>
                     <th className="px-3 py-2.5">Top external</th>
                     <th className="px-3 py-2.5">Control</th>
-                    <th className="px-3 py-2.5">Action</th>
                     <th className="w-8 px-2 py-2.5" />
+
                   </tr>
                 </thead>
                 <tbody>
@@ -549,7 +524,7 @@ function QuerySignalsPage() {
                       </td>
                       <td className="px-3 py-3 font-mono text-xs text-muted-foreground">{q.topExternal}</td>
                       <td className="px-3 py-3"><ControlPill v={q.control} /></td>
-                      <td className="px-3 py-3 text-xs text-foreground/90">{q.action}</td>
+
                       <td className="px-2 py-3 text-muted-foreground">
                         <ChevronRight className="h-4 w-4" />
                       </td>
@@ -557,7 +532,7 @@ function QuerySignalsPage() {
                   ))}
                   {rows.length === 0 && (
                     <tr>
-                      <td colSpan={11} className="px-4 py-10 text-center text-sm text-muted-foreground">
+                      <td colSpan={10} className="px-4 py-10 text-center text-sm text-muted-foreground">
                         No queries match these filters.
                       </td>
                     </tr>
@@ -579,7 +554,7 @@ function QuerySignalsPage() {
 function HeroCard() {
   return (
     <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+      <div className="flex flex-col gap-5">
         <div className="max-w-2xl">
           <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
             Brand Demand Control
@@ -593,27 +568,16 @@ function HeroCard() {
             to do next.
           </p>
         </div>
-        <div className="flex shrink-0 items-center gap-3 rounded-lg border border-primary/25 bg-primary/5 px-4 py-3">
-          <ShieldCheck className="h-5 w-5 text-primary" />
-          <div>
-            <p className="text-[10px] font-mono uppercase tracking-wider text-primary">
-              Narrative control score
-            </p>
-            <p className="font-mono text-3xl font-semibold leading-none tabular-nums text-primary">
-              {HERO.narrativeControl}
-              <span className="ml-1 text-sm text-muted-foreground">/100</span>
-            </p>
-          </div>
-        </div>
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-5">
         <HeroStat label="Branded queries analysed" value={HERO.totalQueries.toLocaleString()} />
-        <HeroStat label="Positive demand share" value={`${HERO.positiveShare}%`} tone="good" delta="+4 pts" />
-        <HeroStat label="Negative signals" value={String(HERO.negativeSignals)} tone="risk" delta="+3" />
-        <HeroStat label="External domains competing" value={String(HERO.externalDomains)} delta="+6" />
-        <HeroStat label="Owned page-1 share" value="52%" tone="good" delta="+2 pts" />
+        <HeroStat label="Positive demand share" value={`${HERO.positiveShare}%`} tone="good" delta="+4 pts WoW" />
+        <HeroStat label="Negative signals" value={String(HERO.negativeSignals)} tone="risk" delta="+3 WoW" />
+        <HeroStat label="External domains competing" value={String(HERO.externalDomains)} delta="+6 WoW" />
+        <HeroStat label="Owned page-1 share" value="52%" tone="good" delta="+2 pts WoW" />
       </div>
+
     </section>
   );
 }
@@ -641,43 +605,6 @@ function HeroStat({
   );
 }
 
-// ── Action strip ────────────────────────────────────────────────────────────
-
-function ActionCard({
-  tone,
-  icon: Icon,
-  title,
-  body,
-  cta,
-}: {
-  tone: "risk" | "warn" | "good";
-  icon: typeof Shield;
-  title: string;
-  body: string;
-  cta: string;
-}) {
-  const ring =
-    tone === "risk"
-      ? "border-destructive/30 bg-destructive/[0.04]"
-      : tone === "warn"
-        ? "border-border bg-surface/40"
-        : "border-primary/25 bg-primary/[0.04]";
-  const iconColor =
-    tone === "risk" ? "text-destructive" : tone === "warn" ? "text-foreground" : "text-primary";
-  return (
-    <div className={`flex h-full flex-col rounded-xl border p-4 shadow-sm ${ring}`}>
-      <div className="flex items-center gap-2">
-        <Icon className={`h-4 w-4 ${iconColor}`} />
-        <p className="text-sm font-semibold">{title}</p>
-      </div>
-      <p className="mt-2 flex-1 text-xs text-muted-foreground">{body}</p>
-      <button className="mt-3 inline-flex items-center gap-1 self-start text-xs font-medium text-primary hover:underline">
-        {cta}
-        <ChevronRight className="h-3 w-3" />
-      </button>
-    </div>
-  );
-}
 
 // ── Ownership map ───────────────────────────────────────────────────────────
 
@@ -764,17 +691,20 @@ function PlatformsCard() {
               <th className="px-3 py-2.5 text-right">Avg pos.</th>
               <th className="px-3 py-2.5">Direction</th>
               <th className="px-3 py-2.5">Risk</th>
-              <th className="px-3 py-2.5">Recommended action</th>
             </tr>
           </thead>
           <tbody>
             {PLATFORMS.map((p) => {
-              const Icon = p.icon;
               return (
                 <tr key={p.domain} className="border-b border-border/60 hover:bg-surface/40">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
-                      <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+                      <img
+                        src={`https://www.google.com/s2/favicons?sz=32&domain=${p.domain}`}
+                        alt=""
+                        loading="lazy"
+                        className="h-4 w-4 rounded-sm"
+                      />
                       <span className="font-medium">{p.domain}</span>
                     </div>
                   </td>
@@ -791,8 +721,8 @@ function PlatformsCard() {
                     )}
                   </td>
                   <td className="px-3 py-3"><RiskPill v={p.risk} /></td>
-                  <td className="px-3 py-3 text-xs text-foreground/90">{p.action}</td>
                 </tr>
+
               );
             })}
           </tbody>
@@ -812,6 +742,8 @@ function RecommendedAction({
   effort,
   confidence,
   impact,
+  revenueType,
+  revenueValue,
   tone,
 }: {
   title: string;
@@ -821,6 +753,8 @@ function RecommendedAction({
   effort: string;
   confidence: string;
   impact: string;
+  revenueType: "opportunity" | "risk";
+  revenueValue: string;
   tone: "risk" | "warn" | "good";
 }) {
   const accent =
@@ -829,6 +763,7 @@ function RecommendedAction({
       : tone === "warn"
         ? "border-border"
         : "border-primary/25";
+  const isRisk = revenueType === "risk";
   return (
     <div className={`flex h-full flex-col rounded-xl border bg-card p-5 shadow-sm ${accent}`}>
       <div className="flex items-start justify-between gap-3">
@@ -838,6 +773,29 @@ function RecommendedAction({
         </span>
       </div>
       <p className="mt-2 text-xs text-muted-foreground">{why}</p>
+
+      <div
+        className={`mt-3 flex items-center justify-between rounded-lg border px-3 py-2 ${
+          isRisk
+            ? "border-destructive/30 bg-destructive/[0.06]"
+            : "border-primary/25 bg-primary/[0.06]"
+        }`}
+      >
+        <span
+          className={`text-[10px] font-mono uppercase tracking-wider ${
+            isRisk ? "text-destructive" : "text-primary"
+          }`}
+        >
+          Revenue {isRisk ? "at risk" : "opportunity"}
+        </span>
+        <span
+          className={`font-mono text-sm font-semibold tabular-nums ${
+            isRisk ? "text-destructive" : "text-primary"
+          }`}
+        >
+          {revenueValue}
+        </span>
+      </div>
 
       <div className="mt-3 rounded-lg border border-border bg-surface/40 p-3">
         <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Evidence</p>
@@ -866,10 +824,11 @@ function RecommendedAction({
   );
 }
 
+
 // ── Category card ──────────────────────────────────────────────────────────
 
 function CategoryCard({ data, onClick }: { data: (typeof CATEGORIES)[number]; onClick: () => void }) {
-  const { key: title, blurb, queries, impressions, growth, risk, action, direction } = data;
+  const { key: title, blurb, queries, impressions, growth, action, direction } = data;
   return (
     <button
       onClick={onClick}
@@ -885,18 +844,15 @@ function CategoryCard({ data, onClick }: { data: (typeof CATEGORIES)[number]; on
         <Mini label="Impressions" v={impressions.toLocaleString()} />
         <Mini label="Growth" v={`${growth > 0 ? "+" : ""}${growth}%`} tone={growth > 0 ? "good" : "neutral"} />
       </div>
-      <p className="mt-3 text-[11px] text-muted-foreground">
-        <span className="font-mono uppercase tracking-wider text-muted-foreground/80">High-risk domains</span>
-        <span className="ml-1 font-mono tabular-nums text-foreground">{risk}</span>
-      </p>
-      <p className="mt-2 flex-1 text-xs text-foreground/90">{action}</p>
+      <p className="mt-3 flex-1 text-xs text-foreground/90">{action}</p>
       <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-medium text-primary">
-        Open {title} queries
+        {title} queries
         <ChevronRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
       </span>
     </button>
   );
 }
+
 
 function Mini({ label, v, tone }: { label: string; v: string; tone?: "good" | "neutral" }) {
   return (
