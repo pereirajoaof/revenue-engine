@@ -1066,9 +1066,6 @@ function QueryDrawer({ query, onClose }: { query: Query | null; onClose: () => v
             <SheetHeader>
               <div className="flex items-center justify-between">
                 <SheetTitle className="text-base">{query.query}</SheetTitle>
-                <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
-                  <X className="h-4 w-4" />
-                </button>
               </div>
               <div className="mt-2 flex flex-wrap items-center gap-2">
                 <span className="rounded-md border border-border bg-surface px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
