@@ -8,6 +8,7 @@ import {
   ExternalLink,
   Eye,
   Globe,
+  Info,
   MessageSquare,
   Search,
   Sparkles,
@@ -20,6 +21,7 @@ import {
 
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/brand-authority_/query-signals")({
