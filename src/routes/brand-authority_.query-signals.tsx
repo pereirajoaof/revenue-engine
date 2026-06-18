@@ -820,7 +820,7 @@ function RecommendedAction({
 // ── Category card ──────────────────────────────────────────────────────────
 
 function CategoryCard({ data, onClick }: { data: (typeof CATEGORIES)[number]; onClick: () => void }) {
-  const { key: title, blurb, queries, impressions, growth, action, direction } = data;
+  const { key: title, blurb, queries, impressions, growth, direction } = data;
   return (
     <button
       onClick={onClick}
@@ -836,8 +836,7 @@ function CategoryCard({ data, onClick }: { data: (typeof CATEGORIES)[number]; on
         <Mini label="Impressions" v={impressions.toLocaleString()} />
         <Mini label="Growth" v={`${growth > 0 ? "+" : ""}${growth}%`} tone={growth > 0 ? "good" : "neutral"} />
       </div>
-      <p className="mt-3 flex-1 text-xs text-foreground/90">{action}</p>
-      <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-medium text-primary">
+      <span className="mt-auto inline-flex items-center gap-1 pt-3 text-[11px] font-medium text-primary">
         {title} queries
         <ChevronRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
       </span>
