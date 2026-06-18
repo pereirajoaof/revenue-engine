@@ -474,22 +474,9 @@ function QuerySignalsPage() {
           {/* 4. External platforms */}
           <PlatformsCard />
 
-          {/* 5. Recommended actions */}
-          <section className="space-y-3">
-            <div className="flex items-end justify-between">
-              <div>
-                <h2 className="text-lg font-semibold tracking-tight">Recommended actions</h2>
-                <p className="text-sm text-muted-foreground">
-                  Where your branded search results need an owner response.
-                </p>
-              </div>
-            </div>
-            <div className="grid gap-4 lg:grid-cols-3">
-              {ACTIONS.map((a) => (
-                <RecommendedAction key={a.id} {...a} />
-              ))}
-            </div>
-          </section>
+          {/* 5. Calculated actions */}
+          <CalculatedActionsSection />
+
 
           {/* 6. Query category cards */}
           <section className="space-y-3">
