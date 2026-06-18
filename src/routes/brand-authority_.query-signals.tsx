@@ -135,47 +135,108 @@ const PLATFORMS: {
   { domain: "techradar.com", type: "News / media", queries: 2, avgPos: 4.4, trend: -1, risk: "Low", action: "Build relationship for accurate coverage", icon: Globe },
 ];
 
-const ACTIONS = [
+type CalculatedAction = {
+  id: string;
+  title: string;
+  label: string;
+  revenueType: "risk" | "opportunity";
+  revenueValue: string;
+  revenueNumeric: number;
+  why: string;
+  metrics: { label: string; value: string }[];
+  control: { label: string; pct: number; tone: "good" | "warn" | "risk" | "neutral" }[];
+  trigger: string;
+  next: string;
+  effort: "Low" | "Medium" | "High";
+  confidence: "Low" | "Medium" | "High";
+};
+
+const ACTIONS: CalculatedAction[] = [
   {
-    id: "reddit",
-    title: "Strengthen your Reddit narrative",
-    why: "Reddit appears on page 1 for 5 branded trust and comparison queries. These pages shape how users evaluate your brand before they click.",
-    evidence: ["5 branded queries affected", "Avg ranking position: 4.6", "12,400 monthly impressions", "Risk tier: High"],
-    next: "Create or improve official responses, ensure common concerns are answered on your own site, and monitor recurring themes.",
+    id: "community",
+    title: "Reduce community-controlled branded traffic",
+    label: "Community control gap",
+    revenueType: "risk",
+    revenueValue: "$48k / mo",
+    revenueNumeric: 48000,
+    why: "Community domains control an estimated 3,180 monthly clicks across branded trust and comparison queries. Your owned domain ranks #1 for most of these queries, so this is treated as revenue at risk rather than ranking upside.",
+    metrics: [
+      { label: "Affected queries", value: "5" },
+      { label: "Community domains", value: "reddit.com" },
+      { label: "Uncontrolled clicks", value: "3,180 / mo" },
+      { label: "Avg community position", value: "4.6" },
+      { label: "Operator best position", value: "#1" },
+      { label: "First-page impressions", value: "12,400 / mo" },
+      { label: "Third-party dependency", value: "31%" },
+    ],
+    control: [
+      { label: "Owned / official", pct: 69, tone: "good" },
+      { label: "Uncontrolled community", pct: 31, tone: "risk" },
+    ],
+    trigger: "Community domains capture >25% of estimated clicks across high-risk branded queries.",
+    next: "Create or improve owned trust/comparison content and monitor the specific community pages driving the largest uncontrolled click share.",
     effort: "Medium",
     confidence: "High",
-    impact: "Protect reputation",
-    revenueType: "risk" as const,
-    revenueValue: "$48k / mo",
-    tone: "risk" as const,
   },
   {
-    id: "instagram",
-    title: "Improve official Instagram presence",
-    why: "Instagram appears repeatedly for branded discovery searches. Users may use it to validate your brand before buying or contacting you.",
-    evidence: ["4 branded discovery queries affected", "Avg ranking position: 5.1", "Positive demand category"],
-    next: "Ensure the profile bio, link, highlights, and recent posts clearly explain the brand, product, proof points, and next step.",
+    id: "social",
+    title: "Increase official social control",
+    label: "Social control gap",
+    revenueType: "opportunity",
+    revenueValue: "$22k / mo",
+    revenueNumeric: 22000,
+    why: "Generic or non-owned social results capture more estimated branded-search clicks than official social profiles across discovery queries.",
+    metrics: [
+      { label: "Affected queries", value: "4" },
+      { label: "Generic social clicks", value: "1,640 / mo" },
+      { label: "Official social clicks", value: "420 / mo" },
+      { label: "Social control gap", value: "1,220 / mo" },
+      { label: "Avg non-owned position", value: "5.1" },
+      { label: "Official profile coverage", value: "50%" },
+    ],
+    control: [
+      { label: "Official social", pct: 20, tone: "good" },
+      { label: "Generic social", pct: 80, tone: "warn" },
+    ],
+    trigger: "Non-owned social results capture more estimated clicks than official social profiles for branded discovery demand.",
+    next: "Verify official social profiles and improve the profiles most likely to rank for the affected branded discovery queries.",
     effort: "Low",
     confidence: "Medium",
-    impact: "Control social narrative",
-    revenueType: "opportunity" as const,
-    revenueValue: "$22k / mo",
-    tone: "warn" as const,
   },
   {
-    id: "comparison",
-    title: "Create owned content for comparison queries",
-    why: "Users are searching for your brand against alternatives, but competitor and third-party domains control part of the SERP.",
-    evidence: ["3 competitive pressure queries", "2 competitor domains visible", "Opportunity tier: High"],
-    next: "Create comparison, alternatives, or decision-support content that helps users evaluate the brand on your own domain.",
+    id: "competitor",
+    title: "Recover branded clicks from competitors",
+    label: "Competitor control gap",
+    revenueType: "opportunity",
+    revenueValue: "$65k / mo",
+    revenueNumeric: 65000,
+    why: "Competitor domains rank on page 1 for branded comparison queries and capture estimated clicks that could be recovered if the operator improved owned visibility.",
+    metrics: [
+      { label: "Affected queries", value: "3" },
+      { label: "Competitor domains", value: "2" },
+      { label: "Competitor clicks", value: "2,740 / mo" },
+      { label: "Competitor > operator", value: "2 queries" },
+      { label: "Operator avg position", value: "4.2" },
+      { label: "Click opportunity to #1", value: "4,860 / mo" },
+    ],
+    control: [
+      { label: "Owned", pct: 42, tone: "good" },
+      { label: "Competitor", pct: 38, tone: "risk" },
+      { label: "Other external", pct: 20, tone: "warn" },
+    ],
+    trigger: "Competitor domains appear above or near the operator for high-opportunity branded comparison queries.",
+    next: "Create or improve owned comparison and decision-support pages for the affected queries.",
     effort: "High",
     confidence: "High",
-    impact: "Defend against competitors",
-    revenueType: "opportunity" as const,
-    revenueValue: "$65k / mo",
-    tone: "risk" as const,
   },
 ];
+
+const CONF_ORDER: Record<CalculatedAction["confidence"], number> = { High: 0, Medium: 1, Low: 2 };
+const SORTED_ACTIONS = [...ACTIONS].sort((a, b) => {
+  if (a.revenueType !== b.revenueType) return a.revenueType === "risk" ? -1 : 1;
+  if (b.revenueNumeric !== a.revenueNumeric) return b.revenueNumeric - a.revenueNumeric;
+  return CONF_ORDER[a.confidence] - CONF_ORDER[b.confidence];
+});
 
 
 const CATEGORIES: {
