@@ -447,20 +447,21 @@ function QuerySignalsPage() {
         <header className="border-b border-border bg-card/40">
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
             <div>
-              <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-                Brand Authority
-              </p>
-              <h1 className="mt-0.5 text-xl font-semibold tracking-tight">
+              <Link
+                to="/brand-authority/brand-love"
+                className="inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-foreground"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" />
+                Back to Brand Love
+              </Link>
+              <h1 className="mt-1 text-xl font-semibold tracking-tight">
                 Brand Demand Intelligence
               </h1>
+              <p className="mt-0.5 text-sm text-muted-foreground">
+                Branded search signals classified by intent and scored by weighted growth
+              </p>
             </div>
             <div className="flex items-center gap-2">
-              <Link
-                to="/brand-authority"
-                className="hidden rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-surface/60 hover:text-foreground md:inline-flex"
-              >
-                Back to Brand Authority
-              </Link>
               <ThemeToggle />
             </div>
           </div>
