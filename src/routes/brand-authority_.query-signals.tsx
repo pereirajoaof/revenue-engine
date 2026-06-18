@@ -491,7 +491,6 @@ function QuerySignalsPage() {
                     <th className="px-3 py-2.5 text-right">Impr.</th>
                     <th className="px-3 py-2.5 text-right">Growth</th>
                     <th className="px-3 py-2.5">Risk</th>
-                    <th className="px-3 py-2.5">You?</th>
                     <th className="px-3 py-2.5">Top external</th>
                     <th className="px-3 py-2.5">Control</th>
                     <th className="w-8 px-2 py-2.5" />
@@ -515,13 +514,6 @@ function QuerySignalsPage() {
                         </span>
                       </td>
                       <td className="px-3 py-3"><RiskPill v={q.risk} /></td>
-                      <td className="px-3 py-3 text-xs">
-                        {q.operatorPresent ? (
-                          <span className="font-mono text-primary">Yes</span>
-                        ) : (
-                          <span className="font-mono text-destructive">No</span>
-                        )}
-                      </td>
                       <td className="px-3 py-3 font-mono text-xs text-muted-foreground">{q.topExternal}</td>
                       <td className="px-3 py-3"><ControlPill v={q.control} /></td>
 
@@ -532,7 +524,7 @@ function QuerySignalsPage() {
                   ))}
                   {rows.length === 0 && (
                     <tr>
-                      <td colSpan={10} className="px-4 py-10 text-center text-sm text-muted-foreground">
+                      <td colSpan={9} className="px-4 py-10 text-center text-sm text-muted-foreground">
                         No queries match these filters.
                       </td>
                     </tr>
