@@ -8,6 +8,7 @@ import {
   ExternalLink,
   Eye,
   Globe,
+  Info,
   MessageSquare,
   Search,
   Sparkles,
@@ -20,6 +21,7 @@ import {
 
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/brand-authority_/query-signals")({
@@ -135,47 +137,108 @@ const PLATFORMS: {
   { domain: "techradar.com", type: "News / media", queries: 2, avgPos: 4.4, trend: -1, risk: "Low", action: "Build relationship for accurate coverage", icon: Globe },
 ];
 
-const ACTIONS = [
+type CalculatedAction = {
+  id: string;
+  title: string;
+  label: string;
+  revenueType: "risk" | "opportunity";
+  revenueValue: string;
+  revenueNumeric: number;
+  why: string;
+  metrics: { label: string; value: string }[];
+  control: { label: string; pct: number; tone: "good" | "warn" | "risk" | "neutral" }[];
+  trigger: string;
+  next: string;
+  effort: "Low" | "Medium" | "High";
+  confidence: "Low" | "Medium" | "High";
+};
+
+const ACTIONS: CalculatedAction[] = [
   {
-    id: "reddit",
-    title: "Strengthen your Reddit narrative",
-    why: "Reddit appears on page 1 for 5 branded trust and comparison queries. These pages shape how users evaluate your brand before they click.",
-    evidence: ["5 branded queries affected", "Avg ranking position: 4.6", "12,400 monthly impressions", "Risk tier: High"],
-    next: "Create or improve official responses, ensure common concerns are answered on your own site, and monitor recurring themes.",
+    id: "community",
+    title: "Reduce community-controlled branded traffic",
+    label: "Community control gap",
+    revenueType: "risk",
+    revenueValue: "$48k / mo",
+    revenueNumeric: 48000,
+    why: "Community domains control an estimated 3,180 monthly clicks across branded trust and comparison queries. Your owned domain ranks #1 for most of these queries, so this is treated as revenue at risk rather than ranking upside.",
+    metrics: [
+      { label: "Affected queries", value: "5" },
+      { label: "Community domains", value: "reddit.com" },
+      { label: "Uncontrolled clicks", value: "3,180 / mo" },
+      { label: "Avg community position", value: "4.6" },
+      { label: "Operator best position", value: "#1" },
+      { label: "First-page impressions", value: "12,400 / mo" },
+      { label: "Third-party dependency", value: "31%" },
+    ],
+    control: [
+      { label: "Owned / official", pct: 69, tone: "good" },
+      { label: "Uncontrolled community", pct: 31, tone: "risk" },
+    ],
+    trigger: "Community domains capture >25% of estimated clicks across high-risk branded queries.",
+    next: "Create or improve owned trust/comparison content and monitor the specific community pages driving the largest uncontrolled click share.",
     effort: "Medium",
     confidence: "High",
-    impact: "Protect reputation",
-    revenueType: "risk" as const,
-    revenueValue: "$48k / mo",
-    tone: "risk" as const,
   },
   {
-    id: "instagram",
-    title: "Improve official Instagram presence",
-    why: "Instagram appears repeatedly for branded discovery searches. Users may use it to validate your brand before buying or contacting you.",
-    evidence: ["4 branded discovery queries affected", "Avg ranking position: 5.1", "Positive demand category"],
-    next: "Ensure the profile bio, link, highlights, and recent posts clearly explain the brand, product, proof points, and next step.",
+    id: "social",
+    title: "Increase official social control",
+    label: "Social control gap",
+    revenueType: "opportunity",
+    revenueValue: "$22k / mo",
+    revenueNumeric: 22000,
+    why: "Generic or non-owned social results capture more estimated branded-search clicks than official social profiles across discovery queries.",
+    metrics: [
+      { label: "Affected queries", value: "4" },
+      { label: "Generic social clicks", value: "1,640 / mo" },
+      { label: "Official social clicks", value: "420 / mo" },
+      { label: "Social control gap", value: "1,220 / mo" },
+      { label: "Avg non-owned position", value: "5.1" },
+      { label: "Official profile coverage", value: "50%" },
+    ],
+    control: [
+      { label: "Official social", pct: 20, tone: "good" },
+      { label: "Generic social", pct: 80, tone: "warn" },
+    ],
+    trigger: "Non-owned social results capture more estimated clicks than official social profiles for branded discovery demand.",
+    next: "Verify official social profiles and improve the profiles most likely to rank for the affected branded discovery queries.",
     effort: "Low",
     confidence: "Medium",
-    impact: "Control social narrative",
-    revenueType: "opportunity" as const,
-    revenueValue: "$22k / mo",
-    tone: "warn" as const,
   },
   {
-    id: "comparison",
-    title: "Create owned content for comparison queries",
-    why: "Users are searching for your brand against alternatives, but competitor and third-party domains control part of the SERP.",
-    evidence: ["3 competitive pressure queries", "2 competitor domains visible", "Opportunity tier: High"],
-    next: "Create comparison, alternatives, or decision-support content that helps users evaluate the brand on your own domain.",
+    id: "competitor",
+    title: "Recover branded clicks from competitors",
+    label: "Competitor control gap",
+    revenueType: "opportunity",
+    revenueValue: "$65k / mo",
+    revenueNumeric: 65000,
+    why: "Competitor domains rank on page 1 for branded comparison queries and capture estimated clicks that could be recovered if the operator improved owned visibility.",
+    metrics: [
+      { label: "Affected queries", value: "3" },
+      { label: "Competitor domains", value: "2" },
+      { label: "Competitor clicks", value: "2,740 / mo" },
+      { label: "Competitor > operator", value: "2 queries" },
+      { label: "Operator avg position", value: "4.2" },
+      { label: "Click opportunity to #1", value: "4,860 / mo" },
+    ],
+    control: [
+      { label: "Owned", pct: 42, tone: "good" },
+      { label: "Competitor", pct: 38, tone: "risk" },
+      { label: "Other external", pct: 20, tone: "warn" },
+    ],
+    trigger: "Competitor domains appear above or near the operator for high-opportunity branded comparison queries.",
+    next: "Create or improve owned comparison and decision-support pages for the affected queries.",
     effort: "High",
     confidence: "High",
-    impact: "Defend against competitors",
-    revenueType: "opportunity" as const,
-    revenueValue: "$65k / mo",
-    tone: "risk" as const,
   },
 ];
+
+const CONF_ORDER: Record<CalculatedAction["confidence"], number> = { High: 0, Medium: 1, Low: 2 };
+const SORTED_ACTIONS = [...ACTIONS].sort((a, b) => {
+  if (a.revenueType !== b.revenueType) return a.revenueType === "risk" ? -1 : 1;
+  if (b.revenueNumeric !== a.revenueNumeric) return b.revenueNumeric - a.revenueNumeric;
+  return CONF_ORDER[a.confidence] - CONF_ORDER[b.confidence];
+});
 
 
 const CATEGORIES: {
@@ -413,22 +476,9 @@ function QuerySignalsPage() {
           {/* 4. External platforms */}
           <PlatformsCard />
 
-          {/* 5. Recommended actions */}
-          <section className="space-y-3">
-            <div className="flex items-end justify-between">
-              <div>
-                <h2 className="text-lg font-semibold tracking-tight">Recommended actions</h2>
-                <p className="text-sm text-muted-foreground">
-                  Where your branded search results need an owner response.
-                </p>
-              </div>
-            </div>
-            <div className="grid gap-4 lg:grid-cols-3">
-              {ACTIONS.map((a) => (
-                <RecommendedAction key={a.id} {...a} />
-              ))}
-            </div>
-          </section>
+          {/* 5. Calculated actions */}
+          <CalculatedActionsSection />
+
 
           {/* 6. Query category cards */}
           <section className="space-y-3">
@@ -724,89 +774,181 @@ function PlatformsCard() {
   );
 }
 
-// ── Recommended action ─────────────────────────────────────────────────────
+// ── Calculated actions ─────────────────────────────────────────────────────
 
-function RecommendedAction({
-  title,
-  why,
-  evidence,
-  next,
-  effort,
-  confidence,
-  impact,
-  revenueType,
-  revenueValue,
-  tone,
-}: {
-  title: string;
-  why: string;
-  evidence: string[];
-  next: string;
-  effort: string;
-  confidence: string;
-  impact: string;
-  revenueType: "opportunity" | "risk";
-  revenueValue: string;
-  tone: "risk" | "warn" | "good";
-}) {
-  const accent =
-    tone === "risk"
-      ? "border-destructive/30"
-      : tone === "warn"
-        ? "border-border"
-        : "border-primary/25";
-  const isRisk = revenueType === "risk";
+function CalculatedActionsSection() {
+  if (SORTED_ACTIONS.length === 0) {
+    return (
+      <section className="space-y-3">
+        <CalculatedActionsHeader />
+        <div className="rounded-xl border border-border bg-card p-8 text-center shadow-sm">
+          <h3 className="text-sm font-semibold">No calculated brand-demand actions this week</h3>
+          <p className="mx-auto mt-1 max-w-xl text-xs text-muted-foreground">
+            Your owned and official results control most measurable branded search traffic. Continue
+            monitoring as new branded queries and first-page results appear.
+          </p>
+        </div>
+      </section>
+    );
+  }
+  return (
+    <section className="space-y-3">
+      <CalculatedActionsHeader />
+      <div className="grid gap-4 lg:grid-cols-3">
+        {SORTED_ACTIONS.map((a) => (
+          <CalculatedActionCard key={a.id} action={a} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CalculatedActionsHeader() {
+  return (
+    <div className="flex items-end justify-between gap-4">
+      <div>
+        <h2 className="text-lg font-semibold tracking-tight">Calculated actions</h2>
+        <p className="text-sm text-muted-foreground">
+          Prioritized from branded SERP ownership, estimated click control, and revenue impact.
+        </p>
+      </div>
+      <HoverCard openDelay={80} closeDelay={80}>
+        <HoverCardTrigger asChild>
+          <button
+            type="button"
+            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface/40 px-2.5 py-1 text-[11px] font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground"
+          >
+            <Info className="h-3 w-3" />
+            How this is calculated
+          </button>
+        </HoverCardTrigger>
+        <HoverCardContent className="w-80 text-xs leading-relaxed">
+          Actions are calculated from branded query impressions, first-page ranking positions, CTR
+          curve estimates, domain ownership, and revenue-per-click. No content quality or sentiment
+          analysis is used.
+        </HoverCardContent>
+      </HoverCard>
+    </div>
+  );
+}
+
+function CalculatedActionCard({ action }: { action: CalculatedAction }) {
+  const isRisk = action.revenueType === "risk";
+  const accent = isRisk ? "border-destructive/30" : "border-primary/25";
   return (
     <div className={`flex h-full flex-col rounded-xl border bg-card p-5 shadow-sm ${accent}`}>
+      {/* Top row */}
       <div className="flex items-start justify-between gap-3">
-        <h3 className="text-sm font-semibold">{title}</h3>
-        <span className="rounded-md border border-border bg-surface/60 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-          {impact}
-        </span>
-      </div>
-      <p className="mt-2 text-xs text-muted-foreground">{why}</p>
-
-      <div
-        className={`mt-3 flex items-center justify-between rounded-lg border px-3 py-2 ${
-          isRisk
-            ? "border-destructive/30 bg-destructive/[0.06]"
-            : "border-primary/25 bg-primary/[0.06]"
-        }`}
-      >
-        <span
-          className={`text-[10px] font-mono uppercase tracking-wider ${
-            isRisk ? "text-destructive" : "text-primary"
-          }`}
-        >
-          Revenue {isRisk ? "at risk" : "opportunity"}
-        </span>
-        <span
-          className={`font-mono text-sm font-semibold tabular-nums ${
-            isRisk ? "text-destructive" : "text-primary"
-          }`}
-        >
-          {revenueValue}
-        </span>
+        <div className="min-w-0">
+          <h3 className="text-sm font-semibold leading-snug">{action.title}</h3>
+          <span className="mt-1.5 inline-block rounded-md border border-border bg-surface/60 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+            {action.label}
+          </span>
+        </div>
+        <div className="shrink-0 text-right">
+          <p
+            className={`text-[10px] font-mono uppercase tracking-wider ${
+              isRisk ? "text-destructive" : "text-primary"
+            }`}
+          >
+            Revenue {isRisk ? "at risk" : "opportunity"}
+          </p>
+          <p
+            className={`font-mono text-base font-semibold tabular-nums ${
+              isRisk ? "text-destructive" : "text-primary"
+            }`}
+          >
+            {action.revenueValue}
+          </p>
+        </div>
       </div>
 
-      <div className="mt-3 rounded-lg border border-border bg-surface/40 p-3">
-        <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Evidence</p>
-        <ul className="mt-1.5 space-y-1 text-xs">
-          {evidence.map((e) => (
-            <li key={e} className="flex items-start gap-1.5">
-              <span className="mt-1.5 inline-block h-1 w-1 rounded-full bg-muted-foreground/60" />
-              <span>{e}</span>
-            </li>
+      <p className="mt-3 text-xs text-muted-foreground">{action.why}</p>
+
+      {/* Evidence chips */}
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {action.metrics.map((m) => (
+          <span
+            key={m.label}
+            className="inline-flex items-center gap-1 rounded-md border border-border bg-surface/40 px-2 py-1 text-[11px] text-muted-foreground"
+          >
+            <span>{m.label}:</span>
+            <span className="font-mono tabular-nums text-foreground">{m.value}</span>
+          </span>
+        ))}
+      </div>
+
+      {/* Click control mini-bar */}
+      <div className="mt-4">
+        <div className="flex items-center justify-between">
+          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+            Estimated click control
+          </p>
+        </div>
+        <div className="mt-1.5 flex h-2 w-full overflow-hidden rounded-full border border-border bg-surface/60">
+          {action.control.map((seg) => (
+            <div
+              key={seg.label}
+              className={
+                seg.tone === "good"
+                  ? "bg-primary"
+                  : seg.tone === "risk"
+                    ? "bg-destructive"
+                    : seg.tone === "warn"
+                      ? "bg-amber-500"
+                      : "bg-muted-foreground/40"
+              }
+              style={{ width: `${seg.pct}%` }}
+              title={`${seg.label}: ${seg.pct}%`}
+            />
           ))}
-        </ul>
+        </div>
+        <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+          {action.control.map((seg) => (
+            <span key={seg.label} className="inline-flex items-center gap-1.5">
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${
+                  seg.tone === "good"
+                    ? "bg-primary"
+                    : seg.tone === "risk"
+                      ? "bg-destructive"
+                      : seg.tone === "warn"
+                        ? "bg-amber-500"
+                        : "bg-muted-foreground/40"
+                }`}
+              />
+              <span>{seg.label}</span>
+              <span className="font-mono tabular-nums text-foreground">{seg.pct}%</span>
+            </span>
+          ))}
+        </div>
       </div>
 
-      <p className="mt-3 text-xs text-foreground/90"><span className="font-medium">Next step. </span>{next}</p>
+      {/* Why triggered */}
+      <div className="mt-4 rounded-lg border border-border bg-surface/40 p-3">
+        <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+          Why this was triggered
+        </p>
+        <p className="mt-1 text-xs text-foreground/90">{action.trigger}</p>
+      </div>
 
-      <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
-        <div className="flex gap-3 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-          <span>Effort: <span className="text-foreground">{effort}</span></span>
-          <span>Conf: <span className="text-foreground">{confidence}</span></span>
+      {/* Next step */}
+      <div className="mt-3">
+        <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+          Suggested next step
+        </p>
+        <p className="mt-1 text-xs text-foreground/90">{action.next}</p>
+      </div>
+
+      {/* Footer */}
+      <div className="mt-auto flex items-center justify-between border-t border-border pt-3">
+        <div className="flex gap-3 pt-1 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+          <span>
+            Effort: <span className="text-foreground">{action.effort}</span>
+          </span>
+          <span>
+            Conf: <span className="text-foreground">{action.confidence}</span>
+          </span>
         </div>
         <button className="inline-flex items-center gap-1 rounded-md bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground hover:opacity-90">
           Create action <ChevronRight className="h-3 w-3" />
@@ -815,6 +957,7 @@ function RecommendedAction({
     </div>
   );
 }
+
 
 
 // ── Category card ──────────────────────────────────────────────────────────
