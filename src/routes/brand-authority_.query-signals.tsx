@@ -772,89 +772,181 @@ function PlatformsCard() {
   );
 }
 
-// ── Recommended action ─────────────────────────────────────────────────────
+// ── Calculated actions ─────────────────────────────────────────────────────
 
-function RecommendedAction({
-  title,
-  why,
-  evidence,
-  next,
-  effort,
-  confidence,
-  impact,
-  revenueType,
-  revenueValue,
-  tone,
-}: {
-  title: string;
-  why: string;
-  evidence: string[];
-  next: string;
-  effort: string;
-  confidence: string;
-  impact: string;
-  revenueType: "opportunity" | "risk";
-  revenueValue: string;
-  tone: "risk" | "warn" | "good";
-}) {
-  const accent =
-    tone === "risk"
-      ? "border-destructive/30"
-      : tone === "warn"
-        ? "border-border"
-        : "border-primary/25";
-  const isRisk = revenueType === "risk";
+function CalculatedActionsSection() {
+  if (SORTED_ACTIONS.length === 0) {
+    return (
+      <section className="space-y-3">
+        <CalculatedActionsHeader />
+        <div className="rounded-xl border border-border bg-card p-8 text-center shadow-sm">
+          <h3 className="text-sm font-semibold">No calculated brand-demand actions this week</h3>
+          <p className="mx-auto mt-1 max-w-xl text-xs text-muted-foreground">
+            Your owned and official results control most measurable branded search traffic. Continue
+            monitoring as new branded queries and first-page results appear.
+          </p>
+        </div>
+      </section>
+    );
+  }
+  return (
+    <section className="space-y-3">
+      <CalculatedActionsHeader />
+      <div className="grid gap-4 lg:grid-cols-3">
+        {SORTED_ACTIONS.map((a) => (
+          <CalculatedActionCard key={a.id} action={a} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CalculatedActionsHeader() {
+  return (
+    <div className="flex items-end justify-between gap-4">
+      <div>
+        <h2 className="text-lg font-semibold tracking-tight">Calculated actions</h2>
+        <p className="text-sm text-muted-foreground">
+          Prioritized from branded SERP ownership, estimated click control, and revenue impact.
+        </p>
+      </div>
+      <HoverCard openDelay={80} closeDelay={80}>
+        <HoverCardTrigger asChild>
+          <button
+            type="button"
+            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface/40 px-2.5 py-1 text-[11px] font-mono uppercase tracking-wider text-muted-foreground hover:text-foreground"
+          >
+            <Info className="h-3 w-3" />
+            How this is calculated
+          </button>
+        </HoverCardTrigger>
+        <HoverCardContent className="w-80 text-xs leading-relaxed">
+          Actions are calculated from branded query impressions, first-page ranking positions, CTR
+          curve estimates, domain ownership, and revenue-per-click. No content quality or sentiment
+          analysis is used.
+        </HoverCardContent>
+      </HoverCard>
+    </div>
+  );
+}
+
+function CalculatedActionCard({ action }: { action: CalculatedAction }) {
+  const isRisk = action.revenueType === "risk";
+  const accent = isRisk ? "border-destructive/30" : "border-primary/25";
   return (
     <div className={`flex h-full flex-col rounded-xl border bg-card p-5 shadow-sm ${accent}`}>
+      {/* Top row */}
       <div className="flex items-start justify-between gap-3">
-        <h3 className="text-sm font-semibold">{title}</h3>
-        <span className="rounded-md border border-border bg-surface/60 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-          {impact}
-        </span>
-      </div>
-      <p className="mt-2 text-xs text-muted-foreground">{why}</p>
-
-      <div
-        className={`mt-3 flex items-center justify-between rounded-lg border px-3 py-2 ${
-          isRisk
-            ? "border-destructive/30 bg-destructive/[0.06]"
-            : "border-primary/25 bg-primary/[0.06]"
-        }`}
-      >
-        <span
-          className={`text-[10px] font-mono uppercase tracking-wider ${
-            isRisk ? "text-destructive" : "text-primary"
-          }`}
-        >
-          Revenue {isRisk ? "at risk" : "opportunity"}
-        </span>
-        <span
-          className={`font-mono text-sm font-semibold tabular-nums ${
-            isRisk ? "text-destructive" : "text-primary"
-          }`}
-        >
-          {revenueValue}
-        </span>
+        <div className="min-w-0">
+          <h3 className="text-sm font-semibold leading-snug">{action.title}</h3>
+          <span className="mt-1.5 inline-block rounded-md border border-border bg-surface/60 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+            {action.label}
+          </span>
+        </div>
+        <div className="shrink-0 text-right">
+          <p
+            className={`text-[10px] font-mono uppercase tracking-wider ${
+              isRisk ? "text-destructive" : "text-primary"
+            }`}
+          >
+            Revenue {isRisk ? "at risk" : "opportunity"}
+          </p>
+          <p
+            className={`font-mono text-base font-semibold tabular-nums ${
+              isRisk ? "text-destructive" : "text-primary"
+            }`}
+          >
+            {action.revenueValue}
+          </p>
+        </div>
       </div>
 
-      <div className="mt-3 rounded-lg border border-border bg-surface/40 p-3">
-        <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Evidence</p>
-        <ul className="mt-1.5 space-y-1 text-xs">
-          {evidence.map((e) => (
-            <li key={e} className="flex items-start gap-1.5">
-              <span className="mt-1.5 inline-block h-1 w-1 rounded-full bg-muted-foreground/60" />
-              <span>{e}</span>
-            </li>
+      <p className="mt-3 text-xs text-muted-foreground">{action.why}</p>
+
+      {/* Evidence chips */}
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {action.metrics.map((m) => (
+          <span
+            key={m.label}
+            className="inline-flex items-center gap-1 rounded-md border border-border bg-surface/40 px-2 py-1 text-[11px] text-muted-foreground"
+          >
+            <span>{m.label}:</span>
+            <span className="font-mono tabular-nums text-foreground">{m.value}</span>
+          </span>
+        ))}
+      </div>
+
+      {/* Click control mini-bar */}
+      <div className="mt-4">
+        <div className="flex items-center justify-between">
+          <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+            Estimated click control
+          </p>
+        </div>
+        <div className="mt-1.5 flex h-2 w-full overflow-hidden rounded-full border border-border bg-surface/60">
+          {action.control.map((seg) => (
+            <div
+              key={seg.label}
+              className={
+                seg.tone === "good"
+                  ? "bg-primary"
+                  : seg.tone === "risk"
+                    ? "bg-destructive"
+                    : seg.tone === "warn"
+                      ? "bg-amber-500"
+                      : "bg-muted-foreground/40"
+              }
+              style={{ width: `${seg.pct}%` }}
+              title={`${seg.label}: ${seg.pct}%`}
+            />
           ))}
-        </ul>
+        </div>
+        <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+          {action.control.map((seg) => (
+            <span key={seg.label} className="inline-flex items-center gap-1.5">
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${
+                  seg.tone === "good"
+                    ? "bg-primary"
+                    : seg.tone === "risk"
+                      ? "bg-destructive"
+                      : seg.tone === "warn"
+                        ? "bg-amber-500"
+                        : "bg-muted-foreground/40"
+                }`}
+              />
+              <span>{seg.label}</span>
+              <span className="font-mono tabular-nums text-foreground">{seg.pct}%</span>
+            </span>
+          ))}
+        </div>
       </div>
 
-      <p className="mt-3 text-xs text-foreground/90"><span className="font-medium">Next step. </span>{next}</p>
+      {/* Why triggered */}
+      <div className="mt-4 rounded-lg border border-border bg-surface/40 p-3">
+        <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+          Why this was triggered
+        </p>
+        <p className="mt-1 text-xs text-foreground/90">{action.trigger}</p>
+      </div>
 
-      <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
-        <div className="flex gap-3 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-          <span>Effort: <span className="text-foreground">{effort}</span></span>
-          <span>Conf: <span className="text-foreground">{confidence}</span></span>
+      {/* Next step */}
+      <div className="mt-3">
+        <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+          Suggested next step
+        </p>
+        <p className="mt-1 text-xs text-foreground/90">{action.next}</p>
+      </div>
+
+      {/* Footer */}
+      <div className="mt-auto flex items-center justify-between border-t border-border pt-3">
+        <div className="flex gap-3 pt-1 text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+          <span>
+            Effort: <span className="text-foreground">{action.effort}</span>
+          </span>
+          <span>
+            Conf: <span className="text-foreground">{action.confidence}</span>
+          </span>
         </div>
         <button className="inline-flex items-center gap-1 rounded-md bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground hover:opacity-90">
           Create action <ChevronRight className="h-3 w-3" />
@@ -863,6 +955,7 @@ function RecommendedAction({
     </div>
   );
 }
+
 
 
 // ── Category card ──────────────────────────────────────────────────────────
