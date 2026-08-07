@@ -14,7 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      calculator_leads: {
+        Row: {
+          created_at: string
+          currency: string
+          email: string
+          id: string
+          job_json: Json
+          recommended_price: number
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          email: string
+          id?: string
+          job_json?: Json
+          recommended_price?: number
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          email?: string
+          id?: string
+          job_json?: Json
+          recommended_price?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
