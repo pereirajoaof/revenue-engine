@@ -148,10 +148,11 @@ function PricingCalculatorPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Nav />
+      <DashboardNav />
 
-      {/* Hero */}
-      <header className="px-6 pb-10 pt-28">
+      <div className="lg:pl-56">
+        {/* Hero */}
+        <header className="px-6 pb-10 pt-10">
         <div className="mx-auto max-w-6xl">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
             <Sparkles className="h-3 w-3 text-primary" /> Free tool
@@ -489,8 +490,6 @@ function PricingCalculatorPage() {
           </span>
         </button>
       </div>
-
-      <Footer />
     </div>
   );
 }
