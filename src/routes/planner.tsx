@@ -14,8 +14,7 @@ import {
   TrendingDown,
   Zap,
 } from "lucide-react";
-import { Nav } from "@/components/Nav";
-import { Footer } from "@/components/Footer";
+import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { MarginGauge } from "@/components/calculator/MarginGauge";
 import { AnimatedMoney, AnimatedPercent } from "@/components/calculator/AnimatedNumber";
 import { supabase } from "@/integrations/supabase/client";
@@ -59,7 +58,7 @@ export const Route = createFileRoute("/planner")({
 });
 
 let uid = 0;
-const newId = () => `line-${++uid}-${Math.random().toString(36).slice(2, 7)}`;
+const newId = () => `line-${++uid}`;
 
 const VERDICT_STYLE: Record<Verdict, string> = {
   healthy: "bg-primary/10 text-primary border-primary/30",
