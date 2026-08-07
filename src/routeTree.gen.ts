@@ -13,6 +13,7 @@ import { Route as WebsiteAuthorityRouteImport } from './routes/website-authority
 import { Route as TechnicalHealthRouteImport } from './routes/technical-health'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RequestDemoRouteImport } from './routes/request-demo'
+import { Route as PricingCalculatorRouteImport } from './routes/pricing-calculator'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as EarlyAccessRouteImport } from './routes/early-access'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -63,6 +64,11 @@ const SettingsRoute = SettingsRouteImport.update({
 const RequestDemoRoute = RequestDemoRouteImport.update({
   id: '/request-demo',
   path: '/request-demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingCalculatorRoute = PricingCalculatorRouteImport.update({
+  id: '/pricing-calculator',
+  path: '/pricing-calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -239,6 +245,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
+  '/pricing-calculator': typeof PricingCalculatorRoute
   '/request-demo': typeof RequestDemoRoute
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
@@ -276,6 +283,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
+  '/pricing-calculator': typeof PricingCalculatorRoute
   '/request-demo': typeof RequestDemoRoute
   '/settings': typeof SettingsRoute
   '/audit-runs/$runId': typeof AuditRunsRunIdRoute
@@ -312,6 +320,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
+  '/pricing-calculator': typeof PricingCalculatorRoute
   '/request-demo': typeof RequestDemoRoute
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
@@ -351,6 +360,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/early-access'
     | '/onboarding'
+    | '/pricing-calculator'
     | '/request-demo'
     | '/settings'
     | '/technical-health'
@@ -388,6 +398,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/early-access'
     | '/onboarding'
+    | '/pricing-calculator'
     | '/request-demo'
     | '/settings'
     | '/audit-runs/$runId'
@@ -423,6 +434,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/early-access'
     | '/onboarding'
+    | '/pricing-calculator'
     | '/request-demo'
     | '/settings'
     | '/technical-health'
@@ -461,6 +473,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   EarlyAccessRoute: typeof EarlyAccessRoute
   OnboardingRoute: typeof OnboardingRoute
+  PricingCalculatorRoute: typeof PricingCalculatorRoute
   RequestDemoRoute: typeof RequestDemoRoute
   SettingsRoute: typeof SettingsRoute
   TechnicalHealthRoute: typeof TechnicalHealthRouteWithChildren
@@ -511,6 +524,13 @@ declare module '@tanstack/react-router' {
       path: '/request-demo'
       fullPath: '/request-demo'
       preLoaderRoute: typeof RequestDemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing-calculator': {
+      id: '/pricing-calculator'
+      path: '/pricing-calculator'
+      fullPath: '/pricing-calculator'
+      preLoaderRoute: typeof PricingCalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -795,6 +815,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   EarlyAccessRoute: EarlyAccessRoute,
   OnboardingRoute: OnboardingRoute,
+  PricingCalculatorRoute: PricingCalculatorRoute,
   RequestDemoRoute: RequestDemoRoute,
   SettingsRoute: SettingsRoute,
   TechnicalHealthRoute: TechnicalHealthRouteWithChildren,

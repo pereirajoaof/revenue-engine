@@ -197,7 +197,7 @@ function SiteFocusTablePage() {
         <header className="border-b border-border bg-background/80 backdrop-blur">
           <div className="px-6 py-6 lg:px-8">
             <Link
-              to="/brand-authority_/site-focus"
+              to="/brand-authority/site-focus"
               className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground"
             >
               <ArrowLeft className="h-3 w-3" /> Back to Site Focus
