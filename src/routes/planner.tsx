@@ -39,17 +39,17 @@ export const Route = createFileRoute("/planner")({
   component: PricingCalculatorPage,
   head: () => ({
     meta: [
-      { title: "AI vs Manual: SEO & Content Pricing Calculator | OrganicOS" },
+      { title: "Planner — OrganicOS" },
       {
         name: "description",
         content:
-          "Free calculator for agencies and freelancers: see what SEO and content deliverables cost manually, what they cost you with AI, and the sweet-spot price to quote.",
+          "Plan pricing and scope for AI-assisted SEO and content work. Compare manual vs automated delivery costs and find the right price to quote.",
       },
-      { property: "og:title", content: "AI vs Manual: SEO & Content Pricing Calculator" },
+      { property: "og:title", content: "Planner — OrganicOS" },
       {
         property: "og:description",
         content:
-          "Price AI-assisted SEO and content so the work stays profitable for you and competitive for your client. Free, no signup.",
+          "Plan pricing and scope for AI-assisted SEO and content work. Compare manual vs automated delivery costs and find the right price to quote.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
