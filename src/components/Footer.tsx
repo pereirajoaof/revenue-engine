@@ -11,9 +11,6 @@ export function Footer() {
           <span className="font-semibold text-sm">OrganicOS</span>
         </div>
         <nav className="flex items-center gap-5 text-sm text-muted-foreground">
-          <Link to="/pricing-calculator" className="hover:text-foreground transition-colors">
-            Pricing calculator
-          </Link>
           <Link to="/help" className="hover:text-foreground transition-colors">
             Help centre
           </Link>

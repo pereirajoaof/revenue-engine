@@ -24,6 +24,7 @@ import {
   Target,
   GitCompare,
   Boxes,
+  Calculator,
 } from "lucide-react";
 import {
   DropdownMenu,
