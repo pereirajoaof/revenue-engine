@@ -24,6 +24,7 @@ import {
   Target,
   GitCompare,
   Boxes,
+  Calculator,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -386,6 +387,12 @@ export function DashboardNav() {
             </Link>
           </div>
         )}
+        <NavItem
+          to="/planner"
+          icon={<Calculator className="w-4 h-4" />}
+          label="Planner"
+          active={path === "/planner"}
+        />
         <NavItem icon={<Search className="w-4 h-4" />} label="Keyword Demand" />
         <NavItem icon={<Bell className="w-4 h-4" />} label="Alerts" />
         <NavItem
@@ -473,7 +480,7 @@ function NavItem({
   icon: React.ReactNode;
   label: string;
   active?: boolean;
-  to?: "/dashboard" | "/settings" | "/audit-runs";
+  to?: "/dashboard" | "/settings" | "/audit-runs" | "/planner";
 }) {
   const className = `w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-sm transition-colors ${
     active

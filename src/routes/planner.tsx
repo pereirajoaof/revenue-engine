@@ -14,8 +14,7 @@ import {
   TrendingDown,
   Zap,
 } from "lucide-react";
-import { Nav } from "@/components/Nav";
-import { Footer } from "@/components/Footer";
+import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { MarginGauge } from "@/components/calculator/MarginGauge";
 import { AnimatedMoney, AnimatedPercent } from "@/components/calculator/AnimatedNumber";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,21 +35,21 @@ import {
   type Verdict,
 } from "@/lib/pricing-calculator";
 
-export const Route = createFileRoute("/pricing-calculator")({
+export const Route = createFileRoute("/planner")({
   component: PricingCalculatorPage,
   head: () => ({
     meta: [
-      { title: "AI vs Manual: SEO & Content Pricing Calculator | OrganicOS" },
+      { title: "Planner — OrganicOS" },
       {
         name: "description",
         content:
-          "Free calculator for agencies and freelancers: see what SEO and content deliverables cost manually, what they cost you with AI, and the sweet-spot price to quote.",
+          "Plan pricing and scope for AI-assisted SEO and content work. Compare manual vs automated delivery costs and find the right price to quote.",
       },
-      { property: "og:title", content: "AI vs Manual: SEO & Content Pricing Calculator" },
+      { property: "og:title", content: "Planner — OrganicOS" },
       {
         property: "og:description",
         content:
-          "Price AI-assisted SEO and content so the work stays profitable for you and competitive for your client. Free, no signup.",
+          "Plan pricing and scope for AI-assisted SEO and content work. Compare manual vs automated delivery costs and find the right price to quote.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -59,7 +58,7 @@ export const Route = createFileRoute("/pricing-calculator")({
 });
 
 let uid = 0;
-const newId = () => `line-${++uid}-${Math.random().toString(36).slice(2, 7)}`;
+const newId = () => `line-${++uid}`;
 
 const VERDICT_STYLE: Record<Verdict, string> = {
   healthy: "bg-primary/10 text-primary border-primary/30",
@@ -149,10 +148,11 @@ function PricingCalculatorPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Nav />
+      <DashboardNav />
 
-      {/* Hero */}
-      <header className="px-6 pb-10 pt-28">
+      <div className="lg:pl-56">
+        {/* Hero */}
+        <header className="px-6 pb-10 pt-10">
         <div className="mx-auto max-w-6xl">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
             <Sparkles className="h-3 w-3 text-primary" /> Free tool
@@ -490,9 +490,8 @@ function PricingCalculatorPage() {
           </span>
         </button>
       </div>
-
-      <Footer />
     </div>
+  </div>
   );
 }
 
