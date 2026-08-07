@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 export function Footer() {
   return (
     <footer className="px-6 py-12 border-t border-border">
@@ -8,8 +10,17 @@ export function Footer() {
           </div>
           <span className="font-semibold text-sm">OrganicOS</span>
         </div>
+        <nav className="flex items-center gap-5 text-sm text-muted-foreground">
+          <Link to="/pricing-calculator" className="hover:text-foreground transition-colors">
+            Pricing calculator
+          </Link>
+          <Link to="/help" className="hover:text-foreground transition-colors">
+            Help centre
+          </Link>
+        </nav>
         <p className="text-sm text-muted-foreground">© 2026 OrganicOS. All rights reserved.</p>
       </div>
     </footer>
   );
 }
+
