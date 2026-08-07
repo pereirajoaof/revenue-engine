@@ -491,6 +491,7 @@ function PricingCalculatorPage() {
         </button>
       </div>
     </div>
+  </div>
   );
 }
 
