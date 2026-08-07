@@ -36,7 +36,7 @@ import {
   type Verdict,
 } from "@/lib/pricing-calculator";
 
-export const Route = createFileRoute("/pricing-calculator")({
+export const Route = createFileRoute("/planner")({
   component: PricingCalculatorPage,
   head: () => ({
     meta: [

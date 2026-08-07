@@ -13,7 +13,7 @@ import { Route as WebsiteAuthorityRouteImport } from './routes/website-authority
 import { Route as TechnicalHealthRouteImport } from './routes/technical-health'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RequestDemoRouteImport } from './routes/request-demo'
-import { Route as PricingCalculatorRouteImport } from './routes/pricing-calculator'
+import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as EarlyAccessRouteImport } from './routes/early-access'
 import { Route as DashboardRouteImport } from './routes/dashboard'
@@ -66,9 +66,9 @@ const RequestDemoRoute = RequestDemoRouteImport.update({
   path: '/request-demo',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PricingCalculatorRoute = PricingCalculatorRouteImport.update({
-  id: '/pricing-calculator',
-  path: '/pricing-calculator',
+const PlannerRoute = PlannerRouteImport.update({
+  id: '/planner',
+  path: '/planner',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -245,7 +245,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
-  '/pricing-calculator': typeof PricingCalculatorRoute
+  '/planner': typeof PlannerRoute
   '/request-demo': typeof RequestDemoRoute
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
@@ -283,7 +283,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
-  '/pricing-calculator': typeof PricingCalculatorRoute
+  '/planner': typeof PlannerRoute
   '/request-demo': typeof RequestDemoRoute
   '/settings': typeof SettingsRoute
   '/audit-runs/$runId': typeof AuditRunsRunIdRoute
@@ -320,7 +320,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
-  '/pricing-calculator': typeof PricingCalculatorRoute
+  '/planner': typeof PlannerRoute
   '/request-demo': typeof RequestDemoRoute
   '/settings': typeof SettingsRoute
   '/technical-health': typeof TechnicalHealthRouteWithChildren
@@ -360,7 +360,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/early-access'
     | '/onboarding'
-    | '/pricing-calculator'
+    | '/planner'
     | '/request-demo'
     | '/settings'
     | '/technical-health'
@@ -398,7 +398,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/early-access'
     | '/onboarding'
-    | '/pricing-calculator'
+    | '/planner'
     | '/request-demo'
     | '/settings'
     | '/audit-runs/$runId'
@@ -434,7 +434,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/early-access'
     | '/onboarding'
-    | '/pricing-calculator'
+    | '/planner'
     | '/request-demo'
     | '/settings'
     | '/technical-health'
@@ -473,7 +473,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   EarlyAccessRoute: typeof EarlyAccessRoute
   OnboardingRoute: typeof OnboardingRoute
-  PricingCalculatorRoute: typeof PricingCalculatorRoute
+  PlannerRoute: typeof PlannerRoute
   RequestDemoRoute: typeof RequestDemoRoute
   SettingsRoute: typeof SettingsRoute
   TechnicalHealthRoute: typeof TechnicalHealthRouteWithChildren
@@ -526,11 +526,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RequestDemoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/pricing-calculator': {
-      id: '/pricing-calculator'
-      path: '/pricing-calculator'
-      fullPath: '/pricing-calculator'
-      preLoaderRoute: typeof PricingCalculatorRouteImport
+    '/planner': {
+      id: '/planner'
+      path: '/planner'
+      fullPath: '/planner'
+      preLoaderRoute: typeof PlannerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -815,7 +815,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   EarlyAccessRoute: EarlyAccessRoute,
   OnboardingRoute: OnboardingRoute,
-  PricingCalculatorRoute: PricingCalculatorRoute,
+  PlannerRoute: PlannerRoute,
   RequestDemoRoute: RequestDemoRoute,
   SettingsRoute: SettingsRoute,
   TechnicalHealthRoute: TechnicalHealthRouteWithChildren,
@@ -840,12 +840,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
