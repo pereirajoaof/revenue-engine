@@ -317,16 +317,6 @@ function AuditErrorsRoute() {
     });
   }, [query, category, sortKey, desc]);
 
-  const totals = useMemo(
-    () => ({
-      reports: rows.length,
-      urls: rows.reduce((sum, r) => sum + r.total, 0),
-      added: rows.reduce((sum, r) => sum + r.added, 0),
-      missing: rows.reduce((sum, r) => sum + r.missing, 0),
-    }),
-    [rows],
-  );
-
   const toggleSort = (key: SortKey) => {
     if (key === sortKey) setDesc((v) => !v);
     else {
@@ -590,24 +580,3 @@ function Sparkline({ data, up }: { data: number[]; up: boolean }) {
   );
 }
 
-function SummaryTile({
-  label,
-  value,
-  hint,
-  tone = "neutral",
-}: {
-  label: string;
-  value: string;
-  hint: string;
-  tone?: "neutral" | "good" | "danger";
-}) {
-  const toneClass =
-    tone === "good" ? "text-primary" : tone === "danger" ? "text-destructive" : "text-foreground";
-  return (
-    <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
-      <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{label}</p>
-      <p className={`mt-1.5 font-mono text-2xl font-semibold tabular-nums ${toneClass}`}>{value}</p>
-      <p className="mt-0.5 text-[11px] text-muted-foreground">{hint}</p>
-    </div>
-  );
-}
