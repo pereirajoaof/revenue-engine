@@ -397,13 +397,7 @@ function AuditErrorsRoute() {
         </header>
 
         <main className="space-y-6 px-6 py-6 lg:px-8">
-          {/* Summary strip */}
-          <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <SummaryTile label="Error reports" value={fmt(totals.reports)} hint="in current view" />
-            <SummaryTile label="URLs affected" value={fmt(totals.urls)} hint="across all error reports" />
-            <SummaryTile label="Newly added" value={`+${fmt(totals.added)}`} hint="vs previous crawl" tone="danger" />
-            <SummaryTile label="Resolved / missing" value={fmt(totals.missing)} hint="no longer failing" tone="good" />
-          </section>
+
 
           {/* Toolbar */}
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
