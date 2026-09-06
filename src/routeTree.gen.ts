@@ -43,6 +43,7 @@ import { Route as BrandAuthorityPageAgeOutliersRouteImport } from './routes/bran
 import { Route as AuditRunsRunIdUrlsRouteImport } from './routes/audit-runs_.$runId_.urls'
 import { Route as AuditRunsRunIdSettingsRouteImport } from './routes/audit-runs_.$runId_.settings'
 import { Route as AuditRunsRunIdInventoryRouteImport } from './routes/audit-runs_.$runId_.inventory'
+import { Route as AuditRunsRunIdErrorsRouteImport } from './routes/audit-runs_.$runId_.errors'
 import { Route as AuditRunsRunIdChangesRouteImport } from './routes/audit-runs_.$runId_.changes'
 import { Route as AuditRunsRunIdIssuesIssueIdRouteImport } from './routes/audit-runs_.$runId_.issues.$issueId'
 
@@ -224,6 +225,11 @@ const AuditRunsRunIdInventoryRoute = AuditRunsRunIdInventoryRouteImport.update({
   path: '/audit-runs/$runId/inventory',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuditRunsRunIdErrorsRoute = AuditRunsRunIdErrorsRouteImport.update({
+  id: '/audit-runs_/$runId_/errors',
+  path: '/audit-runs/$runId/errors',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuditRunsRunIdChangesRoute = AuditRunsRunIdChangesRouteImport.update({
   id: '/audit-runs_/$runId_/changes',
   path: '/audit-runs/$runId/changes',
@@ -265,6 +271,7 @@ export interface FileRoutesByFullPath {
   '/technical-health/': typeof TechnicalHealthIndexRoute
   '/website-authority/': typeof WebsiteAuthorityIndexRoute
   '/audit-runs/$runId/changes': typeof AuditRunsRunIdChangesRoute
+  '/audit-runs/$runId/errors': typeof AuditRunsRunIdErrorsRoute
   '/audit-runs/$runId/inventory': typeof AuditRunsRunIdInventoryRoute
   '/audit-runs/$runId/settings': typeof AuditRunsRunIdSettingsRoute
   '/audit-runs/$runId/urls': typeof AuditRunsRunIdUrlsRoute
@@ -301,6 +308,7 @@ export interface FileRoutesByTo {
   '/technical-health': typeof TechnicalHealthIndexRoute
   '/website-authority': typeof WebsiteAuthorityIndexRoute
   '/audit-runs/$runId/changes': typeof AuditRunsRunIdChangesRoute
+  '/audit-runs/$runId/errors': typeof AuditRunsRunIdErrorsRoute
   '/audit-runs/$runId/inventory': typeof AuditRunsRunIdInventoryRoute
   '/audit-runs/$runId/settings': typeof AuditRunsRunIdSettingsRoute
   '/audit-runs/$runId/urls': typeof AuditRunsRunIdUrlsRoute
@@ -340,6 +348,7 @@ export interface FileRoutesById {
   '/technical-health/': typeof TechnicalHealthIndexRoute
   '/website-authority/': typeof WebsiteAuthorityIndexRoute
   '/audit-runs_/$runId_/changes': typeof AuditRunsRunIdChangesRoute
+  '/audit-runs_/$runId_/errors': typeof AuditRunsRunIdErrorsRoute
   '/audit-runs_/$runId_/inventory': typeof AuditRunsRunIdInventoryRoute
   '/audit-runs_/$runId_/settings': typeof AuditRunsRunIdSettingsRoute
   '/audit-runs_/$runId_/urls': typeof AuditRunsRunIdUrlsRoute
@@ -380,6 +389,7 @@ export interface FileRouteTypes {
     | '/technical-health/'
     | '/website-authority/'
     | '/audit-runs/$runId/changes'
+    | '/audit-runs/$runId/errors'
     | '/audit-runs/$runId/inventory'
     | '/audit-runs/$runId/settings'
     | '/audit-runs/$runId/urls'
@@ -416,6 +426,7 @@ export interface FileRouteTypes {
     | '/technical-health'
     | '/website-authority'
     | '/audit-runs/$runId/changes'
+    | '/audit-runs/$runId/errors'
     | '/audit-runs/$runId/inventory'
     | '/audit-runs/$runId/settings'
     | '/audit-runs/$runId/urls'
@@ -454,6 +465,7 @@ export interface FileRouteTypes {
     | '/technical-health/'
     | '/website-authority/'
     | '/audit-runs_/$runId_/changes'
+    | '/audit-runs_/$runId_/errors'
     | '/audit-runs_/$runId_/inventory'
     | '/audit-runs_/$runId_/settings'
     | '/audit-runs_/$runId_/urls'
@@ -489,6 +501,7 @@ export interface RootRouteChildren {
   HelpSlugRoute: typeof HelpSlugRoute
   HelpIndexRoute: typeof HelpIndexRoute
   AuditRunsRunIdChangesRoute: typeof AuditRunsRunIdChangesRoute
+  AuditRunsRunIdErrorsRoute: typeof AuditRunsRunIdErrorsRoute
   AuditRunsRunIdInventoryRoute: typeof AuditRunsRunIdInventoryRoute
   AuditRunsRunIdSettingsRoute: typeof AuditRunsRunIdSettingsRoute
   AuditRunsRunIdUrlsRoute: typeof AuditRunsRunIdUrlsRoute
@@ -736,6 +749,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuditRunsRunIdInventoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/audit-runs_/$runId_/errors': {
+      id: '/audit-runs_/$runId_/errors'
+      path: '/audit-runs/$runId/errors'
+      fullPath: '/audit-runs/$runId/errors'
+      preLoaderRoute: typeof AuditRunsRunIdErrorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/audit-runs_/$runId_/changes': {
       id: '/audit-runs_/$runId_/changes'
       path: '/audit-runs/$runId/changes'
@@ -831,6 +851,7 @@ const rootRouteChildren: RootRouteChildren = {
   HelpSlugRoute: HelpSlugRoute,
   HelpIndexRoute: HelpIndexRoute,
   AuditRunsRunIdChangesRoute: AuditRunsRunIdChangesRoute,
+  AuditRunsRunIdErrorsRoute: AuditRunsRunIdErrorsRoute,
   AuditRunsRunIdInventoryRoute: AuditRunsRunIdInventoryRoute,
   AuditRunsRunIdSettingsRoute: AuditRunsRunIdSettingsRoute,
   AuditRunsRunIdUrlsRoute: AuditRunsRunIdUrlsRoute,

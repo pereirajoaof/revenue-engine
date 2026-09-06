@@ -25,6 +25,7 @@ import {
   GitCompare,
   Boxes,
   Calculator,
+  AlertTriangle,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -74,8 +75,9 @@ export function DashboardNav() {
   const isAuditUrlExplorerRoute = path === `/audit-runs/${auditRunId}/urls`;
   const isAuditChangesRoute = path === `/audit-runs/${auditRunId}/changes`;
   const isAuditInventoryRoute = path === `/audit-runs/${auditRunId}/inventory`;
+  const isAuditErrorsRoute = path === `/audit-runs/${auditRunId}/errors`;
   const isAuditOverviewRoute =
-    isAuditRunDetailRoute && !isAuditSetupRoute && !isAuditUrlExplorerRoute && !isAuditChangesRoute && !isAuditInventoryRoute;
+    isAuditRunDetailRoute && !isAuditSetupRoute && !isAuditUrlExplorerRoute && !isAuditChangesRoute && !isAuditInventoryRoute && !isAuditErrorsRoute;
   const activeDriver = isTechRoute
     ? "technical-health"
     : isBrandRoute
@@ -372,6 +374,18 @@ export function DashboardNav() {
             >
               <Boxes className="h-3 w-3 shrink-0" />
               <span className="truncate">Inventory</span>
+            </Link>
+            <Link
+              to="/audit-runs/$runId/errors"
+              params={{ runId: auditRunId }}
+              className={`mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                isAuditErrorsRoute
+                  ? "border border-primary/20 bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
+              }`}
+            >
+              <AlertTriangle className="h-3 w-3 shrink-0" />
+              <span className="truncate">Errors</span>
             </Link>
             <Link
               to="/audit-runs/$runId/settings"
