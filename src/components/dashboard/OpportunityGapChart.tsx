@@ -29,6 +29,19 @@ export function OpportunityGapChart({ opportunity }: { opportunity: PageTypeOppo
           <p className="mt-1 text-xs text-muted-foreground">
             Weekly figures. Everything else on this page is annual.
           </p>
+          <div className="mt-2 flex items-center gap-4 font-mono text-[11px] text-muted-foreground">
+            <span className="inline-flex items-center gap-2">
+              <span className="inline-block h-[2px] w-6 bg-primary" />
+              Actual
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <span
+                className="inline-block w-6"
+                style={{ borderTop: "2px dashed var(--muted-foreground)" }}
+              />
+              Potential
+            </span>
+          </div>
         </div>
 
         <div className="flex items-center rounded-md border border-border bg-surface p-0.5">
