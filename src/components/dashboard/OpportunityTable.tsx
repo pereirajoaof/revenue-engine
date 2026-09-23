@@ -1,22 +1,6 @@
 import { ArrowRight } from "lucide-react";
-
-type Row = {
-  pageType: string;
-  current: string;
-  potential: string;
-  gap: string;
-  priority: number;
-  effort: "Low" | "Medium" | "High";
-};
-
-const ROWS: Row[] = [
-  { pageType: "Routes", current: "£412k", potential: "£1.21M", gap: "£798k", priority: 94, effort: "Medium" },
-  { pageType: "Cities", current: "£308k", potential: "£842k", gap: "£534k", priority: 88, effort: "Low" },
-  { pageType: "Blog", current: "£186k", potential: "£412k", gap: "£226k", priority: 71, effort: "Low" },
-  { pageType: "Category", current: "£524k", potential: "£790k", gap: "£266k", priority: 64, effort: "High" },
-  { pageType: "Comparison", current: "£94k", potential: "£312k", gap: "£218k", priority: 58, effort: "Medium" },
-  { pageType: "Glossary", current: "£42k", potential: "£128k", gap: "£86k", priority: 41, effort: "Low" },
-];
+import { AppLink as Link } from "@/lib/app-link";
+import { OPPORTUNITIES, gapOf, money, type Effort } from "@/lib/opportunity-data";
 
 export function OpportunityTable() {
   return (
@@ -45,34 +29,47 @@ export function OpportunityTable() {
             </tr>
           </thead>
           <tbody>
-            {ROWS.map((row) => (
-              <tr
-                key={row.pageType}
-                className="border-b border-border last:border-0 hover:bg-surface/60 transition-colors group cursor-pointer"
-              >
-                <td className="px-5 py-3.5">
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                    <span className="font-medium">/{row.pageType.toLowerCase()}/</span>
-                  </div>
-                </td>
-                <td className="px-3 py-3.5 text-right font-mono text-muted-foreground">{row.current}</td>
-                <td className="px-3 py-3.5 text-right font-mono text-foreground">{row.potential}</td>
-                <td className="px-3 py-3.5 text-right font-mono font-semibold text-primary">{row.gap}</td>
-                <td className="px-3 py-3.5">
-                  <PriorityBar score={row.priority} />
-                </td>
-                <td className="px-3 py-3.5">
-                  <EffortPill level={row.effort} />
-                </td>
-                <td className="px-5 py-3.5 text-right">
-                  <button className="inline-flex items-center gap-1 text-xs font-mono text-muted-foreground group-hover:text-primary transition-colors">
-                    Create Task
-                    <ArrowRight className="w-3 h-3" />
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {OPPORTUNITIES.map((row) => {
+              const gap = gapOf(row);
+              return (
+                <tr
+                  key={row.slug}
+                  className="border-b border-border last:border-0 hover:bg-surface/60 transition-colors group"
+                >
+                  <td className="px-5 py-3.5">
+                    <Link
+                      to="/dashboard/opportunity/$pageType"
+                      params={{ pageType: row.slug }}
+                      className="flex items-center gap-2 hover:text-primary transition-colors"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                      <span className="font-medium">{row.path}</span>
+                    </Link>
+                  </td>
+                  <td className="px-3 py-3.5 text-right font-mono text-muted-foreground">{money(row.current)}</td>
+                  <td className="px-3 py-3.5 text-right font-mono text-foreground">{money(row.potential)}</td>
+                  <td className="px-3 py-3.5 text-right font-mono font-semibold text-primary">
+                    {gap > 0 ? money(gap) : "—"}
+                  </td>
+                  <td className="px-3 py-3.5">
+                    <PriorityBar score={row.priority} />
+                  </td>
+                  <td className="px-3 py-3.5">
+                    <EffortPill level={row.effort} />
+                  </td>
+                  <td className="px-5 py-3.5 text-right">
+                    <Link
+                      to="/dashboard/opportunity/$pageType"
+                      params={{ pageType: row.slug }}
+                      className="inline-flex items-center gap-1 text-xs font-mono text-muted-foreground group-hover:text-primary transition-colors"
+                    >
+                      View breakdown
+                      <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -84,17 +81,14 @@ function PriorityBar({ score }: { score: number }) {
   return (
     <div className="flex items-center gap-2 w-32">
       <div className="flex-1 h-1.5 rounded-full bg-surface overflow-hidden">
-        <div
-          className="h-full rounded-full bg-primary"
-          style={{ width: `${score}%` }}
-        />
+        <div className="h-full rounded-full bg-primary" style={{ width: `${score}%` }} />
       </div>
       <span className="text-xs font-mono text-muted-foreground w-7 text-right">{score}</span>
     </div>
   );
 }
 
-function EffortPill({ level }: { level: "Low" | "Medium" | "High" }) {
+function EffortPill({ level }: { level: Effort }) {
   const styles = {
     Low: "border-primary/30 text-primary bg-primary/10",
     Medium: "border-chart-4/30 text-chart-4 bg-chart-4/10",
