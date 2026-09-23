@@ -1,4 +1,5 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { useAppNavigate } from "@/lib/app-link";
 import { AppLink as Link } from "@/lib/app-link";
 import { format } from "date-fns";
 import { useMemo, useState, type ReactNode } from "react";
