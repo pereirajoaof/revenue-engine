@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Link } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import { ArrowLeft, ArrowRight, Play, Settings2 } from "lucide-react";
 import {
   Area,

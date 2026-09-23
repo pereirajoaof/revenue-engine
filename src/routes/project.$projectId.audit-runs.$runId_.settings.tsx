@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import { useMemo, useState, type ReactNode } from "react";
 import {
   AlertTriangle,
@@ -37,7 +38,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export const Route = createFileRoute("/audit-runs_/$runId_/settings")({
+export const Route = createFileRoute("/project/$projectId/audit-runs/$runId_/settings")({
   component: AuditSettingsRoute,
   head: () => ({
     meta: [

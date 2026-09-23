@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import { useMemo, useState } from "react";
 import {
   AlertTriangle,
@@ -25,7 +26,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
-export const Route = createFileRoute("/brand-authority_/query-signals")({
+export const Route = createFileRoute("/project/$projectId/dashboard/brand-authority/query-signals")({
   component: QuerySignalsPage,
   head: () => ({
     meta: [

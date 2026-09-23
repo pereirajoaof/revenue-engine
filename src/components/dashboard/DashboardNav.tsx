@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "@tanstack/react-router";
+import { useNavigate, useLocation } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
+import { useProjectId } from "@/lib/app-link";
 import {
   LayoutDashboard,
   Search,
@@ -22,7 +24,6 @@ import {
   MapPin,
   Clock,
   Target,
-  GitCompare,
   Boxes,
   Calculator,
   AlertTriangle,
@@ -42,52 +43,76 @@ const PROFILES = [
   { initials: "MR", name: "Marco Rossi", domain: "northwind.io" },
 ];
 
-const GROWTH_DRIVERS = [
-  { key: "brand-authority", label: "Brand Authority", icon: Sparkles },
-  { key: "user-experience", label: "User Experience", icon: MousePointer2 },
-  { key: "website-authority", label: "Website Authority", icon: Globe },
-  { key: "content-quality", label: "Content Quality", icon: FileText },
-  { key: "technical-health", label: "Technical Health", icon: Activity },
-  { key: "links", label: "Links", icon: Link2 },
-  { key: "geo-locale", label: "Geo / Locale", icon: MapPin },
+type SubLink = { to: string; label: string; icon: typeof Gauge; badge?: string };
+
+const GROWTH_DRIVERS: {
+  key: string;
+  label: string;
+  icon: typeof Sparkles;
+  to: string;
+  soon?: boolean;
+  children?: SubLink[];
+}[] = [
+  {
+    key: "brand-authority",
+    label: "Brand Authority",
+    icon: Sparkles,
+    to: "/brand-authority",
+    children: [
+      { to: "/brand-authority/domain-authority", label: "HostPageRank", icon: Gauge },
+      { to: "/brand-authority/domain-age", label: "Domain Age", icon: Clock },
+      { to: "/brand-authority/page-age", label: "Page Age", icon: FileText },
+      { to: "/brand-authority/site-focus", label: "Site Focus", icon: Target },
+      { to: "/brand-authority/brand-love", label: "Brand Love", icon: Sparkles },
+      { to: "/brand-authority/ai-visibility", label: "AI Visibility", icon: Bot, badge: "Preview" },
+    ],
+  },
+  { key: "user-experience", label: "User Experience", icon: MousePointer2, to: "/dashboard/user-experience", soon: true },
+  {
+    key: "website-authority",
+    label: "Website Authority",
+    icon: Globe,
+    to: "/website-authority",
+    children: [{ to: "/website-authority/internal-equity", label: "Internal Equity", icon: Link2 }],
+  },
+  { key: "content-quality", label: "Content Quality", icon: FileText, to: "/dashboard/content-quality", soon: true },
+  {
+    key: "technical-health",
+    label: "Technical Health",
+    icon: Activity,
+    to: "/technical-health",
+    children: [{ to: "/technical-health/cwv", label: "Core Web Vitals", icon: Gauge }],
+  },
+  { key: "links", label: "Links", icon: Link2, to: "/dashboard/links", soon: true },
+  { key: "geo-locale", label: "Geo / Locale", icon: MapPin, to: "/dashboard/geo-locale", soon: true },
 ];
 
 export function DashboardNav() {
   const navigate = useNavigate();
   const location = useLocation();
+  const projectId = useProjectId();
   const active = PROFILES[0];
-  const path = location.pathname;
-  const search = location.search as Record<string, string> | undefined;
-  const isTechRoute = path.startsWith("/technical-health");
-  const isBrandRoute = path.startsWith("/brand-authority");
-  const isWebsiteAuthorityRoute = path.startsWith("/website-authority");
-  const isDomainAuthorityRoute = path === "/brand-authority/domain-authority";
-  const isBrandLoveRoute = path === "/brand-authority/brand-love";
-  const isQuerySignalsRoute = path === "/brand-authority/query-signals";
-  const isAiVisibilityRoute = path === "/brand-authority/ai-visibility";
-  const isDomainAgeRoute = path === "/brand-authority/domain-age";
-  const isPageAgeRoute = path.startsWith("/brand-authority/page-age");
-  const isSiteFocusRoute = path === "/brand-authority/site-focus";
+  // Path relative to the project workspace, e.g. "/dashboard/brand-authority".
+  const path = location.pathname.replace(/^\/project\/[^/]+/, "") || "/dashboard";
+  const driverPath = path.replace(/^\/dashboard/, "") || "/";
+
   const isAuditRunsRoute = path.startsWith("/audit-runs");
-  const isAuditRunDetailRoute = path.startsWith("/audit-runs/");
+  const isAuditRunDetailRoute = /^\/audit-runs\/[^/]+/.test(path);
   const auditRunId = isAuditRunDetailRoute ? path.split("/")[2] : "core-commerce";
-  const isAuditSetupRoute = path === `/audit-runs/${auditRunId}/settings`;
-  const isAuditUrlExplorerRoute = path === `/audit-runs/${auditRunId}/urls`;
-  const isAuditChangesRoute = path === `/audit-runs/${auditRunId}/changes`;
-  const isAuditInventoryRoute = path === `/audit-runs/${auditRunId}/inventory`;
-  const isAuditErrorsRoute = path === `/audit-runs/${auditRunId}/errors`;
-  const isAuditOverviewRoute =
-    isAuditRunDetailRoute && !isAuditSetupRoute && !isAuditUrlExplorerRoute && !isAuditChangesRoute && !isAuditInventoryRoute && !isAuditErrorsRoute;
-  const activeDriver = isTechRoute
-    ? "technical-health"
-    : isBrandRoute
-      ? "brand-authority"
-      : isWebsiteAuthorityRoute
-        ? "website-authority"
-      : path === "/dashboard"
-        ? search?.driver
-        : undefined;
-  const isRevenueParentActive = path === "/dashboard" || isTechRoute || isBrandRoute || isWebsiteAuthorityRoute;
+  const runBase = `/audit-runs/${auditRunId}`;
+  const isAuditSetupRoute = path === `${runBase}/settings`;
+  const isAuditUrlsRoute = path === `${runBase}/urls`;
+  const isAuditErrorsRoute = path === `${runBase}/errors`;
+  const isAuditOverviewRoute = path === runBase;
+
+  const activeDriver = GROWTH_DRIVERS.find(
+    (d) =>
+      driverPath === d.to ||
+      driverPath.startsWith(`${d.to}/`) ||
+      path === d.to ||
+      path.startsWith(`${d.to}/`),
+  )?.key;
+  const isRevenueRoute = path === "/dashboard" || path.startsWith("/dashboard/");
   const [driversOpen, setDriversOpen] = useState(false);
   const [auditRunsOpen, setAuditRunsOpen] = useState(false);
 
@@ -95,16 +120,15 @@ export function DashboardNav() {
     if (isAuditRunDetailRoute) {
       setDriversOpen(false);
       setAuditRunsOpen(true);
-    } else if (isAuditRunsRoute) {
-      setAuditRunsOpen(false);
     } else if (activeDriver) {
       setDriversOpen(true);
     }
-  }, [activeDriver, isAuditRunDetailRoute, isAuditRunsRoute]);
+  }, [activeDriver, isAuditRunDetailRoute]);
 
   const handleLogout = () => {
     navigate({ to: "/" });
   };
+
   return (
     <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-56 border-r border-border bg-card/40 flex-col">
       <div className="px-5 py-5 flex items-center gap-2 border-b border-border">
@@ -112,6 +136,16 @@ export function DashboardNav() {
           <span className="text-primary-foreground font-bold text-sm">O</span>
         </div>
         <span className="font-bold text-base tracking-tight">OrganicOS</span>
+      </div>
+
+      <div className="px-3 pt-3">
+        <div className="flex items-center gap-2 rounded-md border border-border bg-surface/50 px-2 py-1.5">
+          <Globe className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+          <div className="min-w-0 flex-1">
+            <p className="text-[9px] font-mono uppercase tracking-wider text-muted-foreground">Project</p>
+            <p className="truncate text-xs font-medium">{projectId}</p>
+          </div>
+        </div>
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
@@ -122,7 +156,7 @@ export function DashboardNav() {
         <div>
           <div
             className={`w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-sm transition-colors ${
-              isRevenueParentActive && !activeDriver
+              isRevenueRoute && !activeDriver
                 ? "bg-surface text-foreground border border-border"
                 : "text-foreground hover:bg-surface/60"
             }`}
@@ -157,145 +191,42 @@ export function DashboardNav() {
                     ? "bg-primary/10 text-primary border border-primary/20"
                     : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
                 }`;
-                if (d.key === "brand-authority") {
-                  return (
-                    <div key={d.key}>
-                      <Link to="/brand-authority" className={className}>
-                        <Icon className="w-3.5 h-3.5 shrink-0" />
-                        <span className="truncate">{d.label}</span>
-                      </Link>
-                      {isActive && (
-                        <>
-                          <Link
-                            to="/brand-authority/domain-authority"
-                            className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                              isDomainAuthorityRoute
-                                ? "bg-primary/10 text-primary border border-primary/20"
-                                : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
-                            }`}
-                          >
-                            <Gauge className="w-3 h-3 shrink-0" />
-                            <span className="truncate">HostPageRank</span>
-                          </Link>
-                          <Link
-                            to="/brand-authority/brand-love"
-                            className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                              isBrandLoveRoute
-                                ? "bg-primary/10 text-primary border border-primary/20"
-                                : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
-                            }`}
-                          >
-                            <Sparkles className="w-3 h-3 shrink-0" />
-                            <span className="truncate">Brand Love</span>
-                          </Link>
-                          <Link
-                            to="/brand-authority/ai-visibility"
-                            className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                              isAiVisibilityRoute
-                                ? "bg-primary/10 text-primary border border-primary/20"
-                                : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
-                            }`}
-                          >
-                            <Bot className="w-3 h-3 shrink-0" />
-                            <span className="truncate flex-1">AI Visibility</span>
-                            <span className="rounded-sm border border-primary/30 bg-primary/10 px-1 py-0 text-[8px] font-mono uppercase tracking-wider text-primary">
-                              Beta
-                            </span>
-                          </Link>
-                          <Link
-                            to="/brand-authority/domain-age"
-                            className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                              isDomainAgeRoute
-                                ? "bg-primary/10 text-primary border border-primary/20"
-                                : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
-                            }`}
-                          >
-                            <Clock className="w-3 h-3 shrink-0" />
-                            <span className="truncate">Domain Age</span>
-                          </Link>
-                          <Link
-                            to="/brand-authority/page-age"
-                            className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                              isPageAgeRoute
-                                ? "bg-primary/10 text-primary border border-primary/20"
-                                : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
-                            }`}
-                          >
-                            <FileText className="w-3 h-3 shrink-0" />
-                            <span className="truncate">Page Age</span>
-                          </Link>
-                          <Link
-                            to="/brand-authority/site-focus"
-                            className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                              isSiteFocusRoute
-                                ? "bg-primary/10 text-primary border border-primary/20"
-                                : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
-                            }`}
-                          >
-                            <Target className="w-3 h-3 shrink-0" />
-                            <span className="truncate">Site Focus</span>
-                          </Link>
-                        </>
-                      )}
-                    </div>
-                  );
-                }
-                if (d.key === "website-authority") {
-                  return (
-                    <div key={d.key}>
-                      <Link to="/website-authority" className={className}>
-                        <Icon className="w-3.5 h-3.5 shrink-0" />
-                        <span className="truncate">{d.label}</span>
-                      </Link>
-                      {isActive && (
-                        <Link
-                          to="/website-authority/internal-equity"
-                          className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                            path === "/website-authority/internal-equity"
-                              ? "bg-primary/10 text-primary border border-primary/20"
-                              : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
-                          }`}
-                        >
-                          <Link2 className="w-3 h-3 shrink-0" />
-                          <span className="truncate">Internal Equity</span>
-                        </Link>
-                      )}
-                    </div>
-                  );
-                }
-                if (d.key === "technical-health") {
-                  return (
-                    <div key={d.key}>
-                      <Link to="/technical-health" className={className}>
-                        <Icon className="w-3.5 h-3.5 shrink-0" />
-                        <span className="truncate">{d.label}</span>
-                      </Link>
-                      {isActive && (
-                        <Link
-                          to="/technical-health/cwv"
-                          className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                            path.startsWith("/technical-health/cwv")
-                              ? "bg-primary/10 text-primary border border-primary/20"
-                              : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
-                          }`}
-                        >
-                          <Gauge className="w-3 h-3 shrink-0" />
-                          <span className="truncate">Core Web Vitals</span>
-                        </Link>
-                      )}
-                    </div>
-                  );
-                }
                 return (
-                  <Link
-                    key={d.key}
-                    to="/dashboard"
-                    search={{ driver: d.key }}
-                    className={className}
-                  >
-                    <Icon className="w-3.5 h-3.5 shrink-0" />
-                    <span className="truncate">{d.label}</span>
-                  </Link>
+                  <div key={d.key}>
+                    <Link to={d.to} className={className}>
+                      <Icon className="w-3.5 h-3.5 shrink-0" />
+                      <span className="truncate flex-1">{d.label}</span>
+                      {d.soon && (
+                        <span className="rounded-sm border border-border bg-surface px-1 py-0 text-[8px] font-mono uppercase tracking-wider text-muted-foreground">
+                          Soon
+                        </span>
+                      )}
+                    </Link>
+                    {isActive &&
+                      d.children?.map((c) => {
+                        const CIcon = c.icon;
+                        const childActive = driverPath === c.to || path === c.to || path.startsWith(`${c.to}/`);
+                        return (
+                          <Link
+                            key={c.to}
+                            to={c.to}
+                            className={`ml-5 mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+                              childActive
+                                ? "bg-primary/10 text-primary border border-primary/20"
+                                : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
+                            }`}
+                          >
+                            <CIcon className="w-3 h-3 shrink-0" />
+                            <span className="truncate flex-1">{c.label}</span>
+                            {c.badge && (
+                              <span className="rounded-sm border border-primary/30 bg-primary/10 px-1 py-0 text-[8px] font-mono uppercase tracking-wider text-primary">
+                                {c.badge}
+                              </span>
+                            )}
+                          </Link>
+                        );
+                      })}
+                  </div>
                 );
               })}
             </div>
@@ -327,88 +258,30 @@ export function DashboardNav() {
         </div>
         {auditRunsOpen && isAuditRunDetailRoute && (
           <div className="ml-3 border-l border-border pl-3 pt-1">
-            <Link
-              to="/audit-runs/$runId"
-              params={{ runId: auditRunId }}
-              className={`flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                isAuditOverviewRoute
-                  ? "border border-primary/20 bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
-              }`}
-            >
-              <Gauge className="h-3 w-3 shrink-0" />
-              <span className="truncate">Run Analysis</span>
-            </Link>
-            <Link
-              to="/audit-runs/$runId/urls"
-              params={{ runId: auditRunId }}
-              className={`mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                isAuditUrlExplorerRoute
-                  ? "border border-primary/20 bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
-              }`}
-            >
-              <Search className="h-3 w-3 shrink-0" />
-              <span className="truncate">URL Explorer</span>
-            </Link>
-            <Link
-              to="/audit-runs/$runId/changes"
-              params={{ runId: auditRunId }}
-              className={`mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                isAuditChangesRoute
-                  ? "border border-primary/20 bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
-              }`}
-            >
-              <GitCompare className="h-3 w-3 shrink-0" />
-              <span className="truncate">What changed</span>
-            </Link>
-            <Link
-              to="/audit-runs/$runId/inventory"
-              params={{ runId: auditRunId }}
-              className={`mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                isAuditInventoryRoute
-                  ? "border border-primary/20 bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
-              }`}
-            >
-              <Boxes className="h-3 w-3 shrink-0" />
-              <span className="truncate">Inventory</span>
-            </Link>
-            <Link
-              to="/audit-runs/$runId/errors"
-              params={{ runId: auditRunId }}
-              className={`mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                isAuditErrorsRoute
-                  ? "border border-primary/20 bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
-              }`}
-            >
-              <AlertTriangle className="h-3 w-3 shrink-0" />
-              <span className="truncate">Errors</span>
-            </Link>
-            <Link
-              to="/audit-runs/$runId/settings"
-              params={{ runId: auditRunId }}
-              className={`mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
-                isAuditSetupRoute
-                  ? "border border-primary/20 bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
-              }`}
-            >
-              <Settings className="h-3 w-3 shrink-0" />
-              <span className="truncate">Setup</span>
-            </Link>
+            <RunLink to="/audit-runs/$runId" runId={auditRunId} active={isAuditOverviewRoute} icon={Gauge} label="Overview" />
+            <RunLink to="/audit-runs/$runId/errors" runId={auditRunId} active={isAuditErrorsRoute} icon={AlertTriangle} label="Errors" />
+            <RunLink to="/audit-runs/$runId/urls" runId={auditRunId} active={isAuditUrlsRoute} icon={Boxes} label="URLs" />
+            <RunLink to="/audit-runs/$runId/settings" runId={auditRunId} active={isAuditSetupRoute} icon={Settings} label="Setup" />
           </div>
         )}
         <NavItem
           to="/planner"
           icon={<Calculator className="w-4 h-4" />}
           label="Planner"
-          active={path === "/planner"}
+          active={path.startsWith("/planner")}
         />
-        <NavItem icon={<Search className="w-4 h-4" />} label="Keyword Demand" />
-        <NavItem icon={<Bell className="w-4 h-4" />} label="Alerts" />
+        <NavItem
+          to="/keyword-demand"
+          icon={<Search className="w-4 h-4" />}
+          label="Keyword Demand"
+          active={path === "/keyword-demand"}
+        />
+        <NavItem
+          to="/alerts"
+          icon={<Bell className="w-4 h-4" />}
+          label="Alerts"
+          active={path === "/alerts"}
+        />
         <NavItem
           to="/settings"
           icon={<Settings className="w-4 h-4" />}
@@ -485,6 +358,35 @@ export function DashboardNav() {
   );
 }
 
+function RunLink({
+  to,
+  runId,
+  active,
+  icon: Icon,
+  label,
+}: {
+  to: string;
+  runId: string;
+  active: boolean;
+  icon: typeof Gauge;
+  label: string;
+}) {
+  return (
+    <Link
+      to={to}
+      params={{ runId }}
+      className={`mt-0.5 flex items-center gap-2 rounded-md px-2 py-1 text-[11px] transition-colors ${
+        active
+          ? "border border-primary/20 bg-primary/10 text-primary"
+          : "text-muted-foreground hover:bg-surface/60 hover:text-foreground"
+      }`}
+    >
+      <Icon className="h-3 w-3 shrink-0" />
+      <span className="truncate">{label}</span>
+    </Link>
+  );
+}
+
 function NavItem({
   icon,
   label,
@@ -494,7 +396,7 @@ function NavItem({
   icon: React.ReactNode;
   label: string;
   active?: boolean;
-  to?: "/dashboard" | "/settings" | "/audit-runs" | "/planner";
+  to: string;
 }) {
   const className = `w-full flex items-center gap-2.5 px-2 py-2 rounded-md text-sm transition-colors ${
     active
@@ -502,19 +404,10 @@ function NavItem({
       : "text-muted-foreground hover:text-foreground hover:bg-surface/60"
   }`;
 
-  if (to) {
-    return (
-      <Link to={to} className={className}>
-        {icon}
-        <span className="truncate">{label}</span>
-      </Link>
-    );
-  }
-
   return (
-    <button className={className}>
+    <Link to={to} className={className}>
       {icon}
       <span className="truncate">{label}</span>
-    </button>
+    </Link>
   );
 }

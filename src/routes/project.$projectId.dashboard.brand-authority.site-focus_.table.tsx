@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import { useMemo, useState } from "react";
 import {
   AlertTriangle,
@@ -19,7 +20,7 @@ import {
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-export const Route = createFileRoute("/brand-authority_/site-focus_/table")({
+export const Route = createFileRoute("/project/$projectId/dashboard/brand-authority/site-focus_/table")({
   component: SiteFocusTablePage,
   head: () => ({
     meta: [

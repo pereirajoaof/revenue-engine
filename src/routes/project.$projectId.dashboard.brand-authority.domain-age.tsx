@@ -4,7 +4,7 @@ import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "rec
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-export const Route = createFileRoute("/brand-authority_/domain-age")({
+export const Route = createFileRoute("/project/$projectId/dashboard/brand-authority/domain-age")({
   component: DomainAgePage,
   head: () => ({
     meta: [

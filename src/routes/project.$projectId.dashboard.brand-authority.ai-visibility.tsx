@@ -1,4 +1,5 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { z } from "zod";
@@ -48,7 +49,7 @@ const searchSchema = z.object({
   sample: fallback(z.number().int().min(0), 0).default(0),
 });
 
-export const Route = createFileRoute("/brand-authority_/ai-visibility")({
+export const Route = createFileRoute("/project/$projectId/dashboard/brand-authority/ai-visibility")({
   validateSearch: zodValidator(searchSchema),
   component: AiVisibilityPage,
   head: () => ({

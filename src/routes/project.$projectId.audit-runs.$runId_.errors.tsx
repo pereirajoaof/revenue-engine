@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import {
   ArrowLeft,
   ArrowDown,
@@ -19,7 +20,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export const Route = createFileRoute("/audit-runs_/$runId_/errors")({
+export const Route = createFileRoute("/project/$projectId/audit-runs/$runId_/errors")({
   component: AuditErrorsRoute,
   head: () => ({
     meta: [
