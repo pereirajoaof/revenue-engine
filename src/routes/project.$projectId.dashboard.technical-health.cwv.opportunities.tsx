@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CwvSectionNav, OpportunitiesTable } from "./technical-health.cwv";
+import { CwvSectionNav, OpportunitiesTable } from "./project.$projectId.dashboard.technical-health.cwv";
 
 export const Route = createFileRoute("/project/$projectId/dashboard/technical-health/cwv/opportunities")({
   component: CwvOpportunitiesPage,
