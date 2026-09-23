@@ -9,26 +9,42 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WebsiteAuthorityRouteImport } from './routes/website-authority'
+import { Route as TechnicalHealthRouteImport } from './routes/technical-health'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RequestDemoRouteImport } from './routes/request-demo'
+import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as EarlyAccessRouteImport } from './routes/early-access'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CrawlerRouteImport } from './routes/crawler'
+import { Route as BrandAuthorityRouteImport } from './routes/brand-authority'
+import { Route as AuditRunsRouteImport } from './routes/audit-runs'
 import { Route as AccountSettingsRouteImport } from './routes/account-settings'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as HelpIndexRouteImport } from './routes/help.index'
 import { Route as HelpSlugRouteImport } from './routes/help.$slug'
+import { Route as ProjectProjectIdWhyRevenueMovedRouteImport } from './routes/project.$projectId.why-revenue-moved'
 import { Route as ProjectProjectIdSettingsRouteImport } from './routes/project.$projectId.settings'
+import { Route as ProjectProjectIdKeywordDemandRouteImport } from './routes/project.$projectId.keyword-demand'
+import { Route as ProjectProjectIdAlertsRouteImport } from './routes/project.$projectId.alerts'
 import { Route as ProjectProjectIdPlannerIndexRouteImport } from './routes/project.$projectId.planner.index'
 import { Route as ProjectProjectIdDashboardIndexRouteImport } from './routes/project.$projectId.dashboard.index'
 import { Route as ProjectProjectIdAuditRunsIndexRouteImport } from './routes/project.$projectId.audit-runs.index'
 import { Route as ProjectProjectIdDashboardWebsiteAuthorityRouteImport } from './routes/project.$projectId.dashboard.website-authority'
+import { Route as ProjectProjectIdDashboardUserExperienceRouteImport } from './routes/project.$projectId.dashboard.user-experience'
 import { Route as ProjectProjectIdDashboardTechnicalHealthRouteImport } from './routes/project.$projectId.dashboard.technical-health'
+import { Route as ProjectProjectIdDashboardLinksRouteImport } from './routes/project.$projectId.dashboard.links'
+import { Route as ProjectProjectIdDashboardGeoLocaleRouteImport } from './routes/project.$projectId.dashboard.geo-locale'
+import { Route as ProjectProjectIdDashboardContentQualityRouteImport } from './routes/project.$projectId.dashboard.content-quality'
+import { Route as ProjectProjectIdDashboardActionsRouteImport } from './routes/project.$projectId.dashboard.actions'
 import { Route as ProjectProjectIdDashboardWebsiteAuthorityIndexRouteImport } from './routes/project.$projectId.dashboard.website-authority.index'
 import { Route as ProjectProjectIdDashboardTechnicalHealthIndexRouteImport } from './routes/project.$projectId.dashboard.technical-health.index'
 import { Route as ProjectProjectIdDashboardBrandAuthorityIndexRouteImport } from './routes/project.$projectId.dashboard.brand-authority.index'
 import { Route as ProjectProjectIdAuditRunsRunIdIndexRouteImport } from './routes/project.$projectId.audit-runs.$runId.index'
 import { Route as ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRouteImport } from './routes/project.$projectId.dashboard.website-authority.internal-equity'
 import { Route as ProjectProjectIdDashboardTechnicalHealthCwvRouteImport } from './routes/project.$projectId.dashboard.technical-health.cwv'
+import { Route as ProjectProjectIdDashboardOpportunityPageTypeRouteImport } from './routes/project.$projectId.dashboard.opportunity.$pageType'
 import { Route as ProjectProjectIdDashboardBrandAuthoritySiteFocusRouteImport } from './routes/project.$projectId.dashboard.brand-authority.site-focus'
 import { Route as ProjectProjectIdDashboardBrandAuthorityQuerySignalsRouteImport } from './routes/project.$projectId.dashboard.brand-authority.query-signals'
 import { Route as ProjectProjectIdDashboardBrandAuthorityPageAgeRouteImport } from './routes/project.$projectId.dashboard.brand-authority.page-age'
@@ -47,9 +63,29 @@ import { Route as ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRouteImpo
 import { Route as ProjectProjectIdDashboardBrandAuthorityPageAgeOutliersRouteImport } from './routes/project.$projectId.dashboard.brand-authority.page-age_.outliers'
 import { Route as ProjectProjectIdAuditRunsRunIdIssuesIssueIdRouteImport } from './routes/project.$projectId.audit-runs.$runId_.issues.$issueId'
 
+const WebsiteAuthorityRoute = WebsiteAuthorityRouteImport.update({
+  id: '/website-authority',
+  path: '/website-authority',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TechnicalHealthRoute = TechnicalHealthRouteImport.update({
+  id: '/technical-health',
+  path: '/technical-health',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RequestDemoRoute = RequestDemoRouteImport.update({
   id: '/request-demo',
   path: '/request-demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlannerRoute = PlannerRouteImport.update({
+  id: '/planner',
+  path: '/planner',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -62,9 +98,24 @@ const EarlyAccessRoute = EarlyAccessRouteImport.update({
   path: '/early-access',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CrawlerRoute = CrawlerRouteImport.update({
   id: '/crawler',
   path: '/crawler',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandAuthorityRoute = BrandAuthorityRouteImport.update({
+  id: '/brand-authority',
+  path: '/brand-authority',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditRunsRoute = AuditRunsRouteImport.update({
+  id: '/audit-runs',
+  path: '/audit-runs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountSettingsRoute = AccountSettingsRouteImport.update({
@@ -87,12 +138,29 @@ const HelpSlugRoute = HelpSlugRouteImport.update({
   path: '/help/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectProjectIdWhyRevenueMovedRoute =
+  ProjectProjectIdWhyRevenueMovedRouteImport.update({
+    id: '/project/$projectId/why-revenue-moved',
+    path: '/project/$projectId/why-revenue-moved',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ProjectProjectIdSettingsRoute =
   ProjectProjectIdSettingsRouteImport.update({
     id: '/project/$projectId/settings',
     path: '/project/$projectId/settings',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ProjectProjectIdKeywordDemandRoute =
+  ProjectProjectIdKeywordDemandRouteImport.update({
+    id: '/project/$projectId/keyword-demand',
+    path: '/project/$projectId/keyword-demand',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdAlertsRoute = ProjectProjectIdAlertsRouteImport.update({
+  id: '/project/$projectId/alerts',
+  path: '/project/$projectId/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectProjectIdPlannerIndexRoute =
   ProjectProjectIdPlannerIndexRouteImport.update({
     id: '/project/$projectId/planner/',
@@ -117,10 +185,40 @@ const ProjectProjectIdDashboardWebsiteAuthorityRoute =
     path: '/project/$projectId/dashboard/website-authority',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ProjectProjectIdDashboardUserExperienceRoute =
+  ProjectProjectIdDashboardUserExperienceRouteImport.update({
+    id: '/project/$projectId/dashboard/user-experience',
+    path: '/project/$projectId/dashboard/user-experience',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ProjectProjectIdDashboardTechnicalHealthRoute =
   ProjectProjectIdDashboardTechnicalHealthRouteImport.update({
     id: '/project/$projectId/dashboard/technical-health',
     path: '/project/$projectId/dashboard/technical-health',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdDashboardLinksRoute =
+  ProjectProjectIdDashboardLinksRouteImport.update({
+    id: '/project/$projectId/dashboard/links',
+    path: '/project/$projectId/dashboard/links',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdDashboardGeoLocaleRoute =
+  ProjectProjectIdDashboardGeoLocaleRouteImport.update({
+    id: '/project/$projectId/dashboard/geo-locale',
+    path: '/project/$projectId/dashboard/geo-locale',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdDashboardContentQualityRoute =
+  ProjectProjectIdDashboardContentQualityRouteImport.update({
+    id: '/project/$projectId/dashboard/content-quality',
+    path: '/project/$projectId/dashboard/content-quality',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdDashboardActionsRoute =
+  ProjectProjectIdDashboardActionsRouteImport.update({
+    id: '/project/$projectId/dashboard/actions',
+    path: '/project/$projectId/dashboard/actions',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ProjectProjectIdDashboardWebsiteAuthorityIndexRoute =
@@ -158,6 +256,12 @@ const ProjectProjectIdDashboardTechnicalHealthCwvRoute =
     id: '/cwv',
     path: '/cwv',
     getParentRoute: () => ProjectProjectIdDashboardTechnicalHealthRoute,
+  } as any)
+const ProjectProjectIdDashboardOpportunityPageTypeRoute =
+  ProjectProjectIdDashboardOpportunityPageTypeRouteImport.update({
+    id: '/project/$projectId/dashboard/opportunity/$pageType',
+    path: '/project/$projectId/dashboard/opportunity/$pageType',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute =
   ProjectProjectIdDashboardBrandAuthoritySiteFocusRouteImport.update({
@@ -265,14 +369,29 @@ const ProjectProjectIdAuditRunsRunIdIssuesIssueIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account-settings': typeof AccountSettingsRoute
+  '/audit-runs': typeof AuditRunsRoute
+  '/brand-authority': typeof BrandAuthorityRoute
   '/crawler': typeof CrawlerRoute
+  '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
+  '/planner': typeof PlannerRoute
   '/request-demo': typeof RequestDemoRoute
+  '/settings': typeof SettingsRoute
+  '/technical-health': typeof TechnicalHealthRoute
+  '/website-authority': typeof WebsiteAuthorityRoute
   '/help/$slug': typeof HelpSlugRoute
   '/help/': typeof HelpIndexRoute
+  '/project/$projectId/alerts': typeof ProjectProjectIdAlertsRoute
+  '/project/$projectId/keyword-demand': typeof ProjectProjectIdKeywordDemandRoute
   '/project/$projectId/settings': typeof ProjectProjectIdSettingsRoute
+  '/project/$projectId/why-revenue-moved': typeof ProjectProjectIdWhyRevenueMovedRoute
+  '/project/$projectId/dashboard/actions': typeof ProjectProjectIdDashboardActionsRoute
+  '/project/$projectId/dashboard/content-quality': typeof ProjectProjectIdDashboardContentQualityRoute
+  '/project/$projectId/dashboard/geo-locale': typeof ProjectProjectIdDashboardGeoLocaleRoute
+  '/project/$projectId/dashboard/links': typeof ProjectProjectIdDashboardLinksRoute
   '/project/$projectId/dashboard/technical-health': typeof ProjectProjectIdDashboardTechnicalHealthRouteWithChildren
+  '/project/$projectId/dashboard/user-experience': typeof ProjectProjectIdDashboardUserExperienceRoute
   '/project/$projectId/dashboard/website-authority': typeof ProjectProjectIdDashboardWebsiteAuthorityRouteWithChildren
   '/project/$projectId/audit-runs/': typeof ProjectProjectIdAuditRunsIndexRoute
   '/project/$projectId/dashboard/': typeof ProjectProjectIdDashboardIndexRoute
@@ -289,6 +408,7 @@ export interface FileRoutesByFullPath {
   '/project/$projectId/dashboard/brand-authority/page-age': typeof ProjectProjectIdDashboardBrandAuthorityPageAgeRoute
   '/project/$projectId/dashboard/brand-authority/query-signals': typeof ProjectProjectIdDashboardBrandAuthorityQuerySignalsRoute
   '/project/$projectId/dashboard/brand-authority/site-focus': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute
+  '/project/$projectId/dashboard/opportunity/$pageType': typeof ProjectProjectIdDashboardOpportunityPageTypeRoute
   '/project/$projectId/dashboard/technical-health/cwv': typeof ProjectProjectIdDashboardTechnicalHealthCwvRouteWithChildren
   '/project/$projectId/dashboard/website-authority/internal-equity': typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute
   '/project/$projectId/audit-runs/$runId/': typeof ProjectProjectIdAuditRunsRunIdIndexRoute
@@ -304,13 +424,28 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account-settings': typeof AccountSettingsRoute
+  '/audit-runs': typeof AuditRunsRoute
+  '/brand-authority': typeof BrandAuthorityRoute
   '/crawler': typeof CrawlerRoute
+  '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
+  '/planner': typeof PlannerRoute
   '/request-demo': typeof RequestDemoRoute
+  '/settings': typeof SettingsRoute
+  '/technical-health': typeof TechnicalHealthRoute
+  '/website-authority': typeof WebsiteAuthorityRoute
   '/help/$slug': typeof HelpSlugRoute
   '/help': typeof HelpIndexRoute
+  '/project/$projectId/alerts': typeof ProjectProjectIdAlertsRoute
+  '/project/$projectId/keyword-demand': typeof ProjectProjectIdKeywordDemandRoute
   '/project/$projectId/settings': typeof ProjectProjectIdSettingsRoute
+  '/project/$projectId/why-revenue-moved': typeof ProjectProjectIdWhyRevenueMovedRoute
+  '/project/$projectId/dashboard/actions': typeof ProjectProjectIdDashboardActionsRoute
+  '/project/$projectId/dashboard/content-quality': typeof ProjectProjectIdDashboardContentQualityRoute
+  '/project/$projectId/dashboard/geo-locale': typeof ProjectProjectIdDashboardGeoLocaleRoute
+  '/project/$projectId/dashboard/links': typeof ProjectProjectIdDashboardLinksRoute
+  '/project/$projectId/dashboard/user-experience': typeof ProjectProjectIdDashboardUserExperienceRoute
   '/project/$projectId/audit-runs': typeof ProjectProjectIdAuditRunsIndexRoute
   '/project/$projectId/dashboard': typeof ProjectProjectIdDashboardIndexRoute
   '/project/$projectId/planner': typeof ProjectProjectIdPlannerIndexRoute
@@ -326,6 +461,7 @@ export interface FileRoutesByTo {
   '/project/$projectId/dashboard/brand-authority/page-age': typeof ProjectProjectIdDashboardBrandAuthorityPageAgeRoute
   '/project/$projectId/dashboard/brand-authority/query-signals': typeof ProjectProjectIdDashboardBrandAuthorityQuerySignalsRoute
   '/project/$projectId/dashboard/brand-authority/site-focus': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute
+  '/project/$projectId/dashboard/opportunity/$pageType': typeof ProjectProjectIdDashboardOpportunityPageTypeRoute
   '/project/$projectId/dashboard/technical-health/cwv': typeof ProjectProjectIdDashboardTechnicalHealthCwvRouteWithChildren
   '/project/$projectId/dashboard/website-authority/internal-equity': typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute
   '/project/$projectId/audit-runs/$runId': typeof ProjectProjectIdAuditRunsRunIdIndexRoute
@@ -342,14 +478,29 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account-settings': typeof AccountSettingsRoute
+  '/audit-runs': typeof AuditRunsRoute
+  '/brand-authority': typeof BrandAuthorityRoute
   '/crawler': typeof CrawlerRoute
+  '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
+  '/planner': typeof PlannerRoute
   '/request-demo': typeof RequestDemoRoute
+  '/settings': typeof SettingsRoute
+  '/technical-health': typeof TechnicalHealthRoute
+  '/website-authority': typeof WebsiteAuthorityRoute
   '/help/$slug': typeof HelpSlugRoute
   '/help/': typeof HelpIndexRoute
+  '/project/$projectId/alerts': typeof ProjectProjectIdAlertsRoute
+  '/project/$projectId/keyword-demand': typeof ProjectProjectIdKeywordDemandRoute
   '/project/$projectId/settings': typeof ProjectProjectIdSettingsRoute
+  '/project/$projectId/why-revenue-moved': typeof ProjectProjectIdWhyRevenueMovedRoute
+  '/project/$projectId/dashboard/actions': typeof ProjectProjectIdDashboardActionsRoute
+  '/project/$projectId/dashboard/content-quality': typeof ProjectProjectIdDashboardContentQualityRoute
+  '/project/$projectId/dashboard/geo-locale': typeof ProjectProjectIdDashboardGeoLocaleRoute
+  '/project/$projectId/dashboard/links': typeof ProjectProjectIdDashboardLinksRoute
   '/project/$projectId/dashboard/technical-health': typeof ProjectProjectIdDashboardTechnicalHealthRouteWithChildren
+  '/project/$projectId/dashboard/user-experience': typeof ProjectProjectIdDashboardUserExperienceRoute
   '/project/$projectId/dashboard/website-authority': typeof ProjectProjectIdDashboardWebsiteAuthorityRouteWithChildren
   '/project/$projectId/audit-runs/': typeof ProjectProjectIdAuditRunsIndexRoute
   '/project/$projectId/dashboard/': typeof ProjectProjectIdDashboardIndexRoute
@@ -366,6 +517,7 @@ export interface FileRoutesById {
   '/project/$projectId/dashboard/brand-authority/page-age': typeof ProjectProjectIdDashboardBrandAuthorityPageAgeRoute
   '/project/$projectId/dashboard/brand-authority/query-signals': typeof ProjectProjectIdDashboardBrandAuthorityQuerySignalsRoute
   '/project/$projectId/dashboard/brand-authority/site-focus': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute
+  '/project/$projectId/dashboard/opportunity/$pageType': typeof ProjectProjectIdDashboardOpportunityPageTypeRoute
   '/project/$projectId/dashboard/technical-health/cwv': typeof ProjectProjectIdDashboardTechnicalHealthCwvRouteWithChildren
   '/project/$projectId/dashboard/website-authority/internal-equity': typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute
   '/project/$projectId/audit-runs/$runId/': typeof ProjectProjectIdAuditRunsRunIdIndexRoute
@@ -383,14 +535,29 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/account-settings'
+    | '/audit-runs'
+    | '/brand-authority'
     | '/crawler'
+    | '/dashboard'
     | '/early-access'
     | '/onboarding'
+    | '/planner'
     | '/request-demo'
+    | '/settings'
+    | '/technical-health'
+    | '/website-authority'
     | '/help/$slug'
     | '/help/'
+    | '/project/$projectId/alerts'
+    | '/project/$projectId/keyword-demand'
     | '/project/$projectId/settings'
+    | '/project/$projectId/why-revenue-moved'
+    | '/project/$projectId/dashboard/actions'
+    | '/project/$projectId/dashboard/content-quality'
+    | '/project/$projectId/dashboard/geo-locale'
+    | '/project/$projectId/dashboard/links'
     | '/project/$projectId/dashboard/technical-health'
+    | '/project/$projectId/dashboard/user-experience'
     | '/project/$projectId/dashboard/website-authority'
     | '/project/$projectId/audit-runs/'
     | '/project/$projectId/dashboard/'
@@ -407,6 +574,7 @@ export interface FileRouteTypes {
     | '/project/$projectId/dashboard/brand-authority/page-age'
     | '/project/$projectId/dashboard/brand-authority/query-signals'
     | '/project/$projectId/dashboard/brand-authority/site-focus'
+    | '/project/$projectId/dashboard/opportunity/$pageType'
     | '/project/$projectId/dashboard/technical-health/cwv'
     | '/project/$projectId/dashboard/website-authority/internal-equity'
     | '/project/$projectId/audit-runs/$runId/'
@@ -422,13 +590,28 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/account-settings'
+    | '/audit-runs'
+    | '/brand-authority'
     | '/crawler'
+    | '/dashboard'
     | '/early-access'
     | '/onboarding'
+    | '/planner'
     | '/request-demo'
+    | '/settings'
+    | '/technical-health'
+    | '/website-authority'
     | '/help/$slug'
     | '/help'
+    | '/project/$projectId/alerts'
+    | '/project/$projectId/keyword-demand'
     | '/project/$projectId/settings'
+    | '/project/$projectId/why-revenue-moved'
+    | '/project/$projectId/dashboard/actions'
+    | '/project/$projectId/dashboard/content-quality'
+    | '/project/$projectId/dashboard/geo-locale'
+    | '/project/$projectId/dashboard/links'
+    | '/project/$projectId/dashboard/user-experience'
     | '/project/$projectId/audit-runs'
     | '/project/$projectId/dashboard'
     | '/project/$projectId/planner'
@@ -444,6 +627,7 @@ export interface FileRouteTypes {
     | '/project/$projectId/dashboard/brand-authority/page-age'
     | '/project/$projectId/dashboard/brand-authority/query-signals'
     | '/project/$projectId/dashboard/brand-authority/site-focus'
+    | '/project/$projectId/dashboard/opportunity/$pageType'
     | '/project/$projectId/dashboard/technical-health/cwv'
     | '/project/$projectId/dashboard/website-authority/internal-equity'
     | '/project/$projectId/audit-runs/$runId'
@@ -459,14 +643,29 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/account-settings'
+    | '/audit-runs'
+    | '/brand-authority'
     | '/crawler'
+    | '/dashboard'
     | '/early-access'
     | '/onboarding'
+    | '/planner'
     | '/request-demo'
+    | '/settings'
+    | '/technical-health'
+    | '/website-authority'
     | '/help/$slug'
     | '/help/'
+    | '/project/$projectId/alerts'
+    | '/project/$projectId/keyword-demand'
     | '/project/$projectId/settings'
+    | '/project/$projectId/why-revenue-moved'
+    | '/project/$projectId/dashboard/actions'
+    | '/project/$projectId/dashboard/content-quality'
+    | '/project/$projectId/dashboard/geo-locale'
+    | '/project/$projectId/dashboard/links'
     | '/project/$projectId/dashboard/technical-health'
+    | '/project/$projectId/dashboard/user-experience'
     | '/project/$projectId/dashboard/website-authority'
     | '/project/$projectId/audit-runs/'
     | '/project/$projectId/dashboard/'
@@ -483,6 +682,7 @@ export interface FileRouteTypes {
     | '/project/$projectId/dashboard/brand-authority/page-age'
     | '/project/$projectId/dashboard/brand-authority/query-signals'
     | '/project/$projectId/dashboard/brand-authority/site-focus'
+    | '/project/$projectId/dashboard/opportunity/$pageType'
     | '/project/$projectId/dashboard/technical-health/cwv'
     | '/project/$projectId/dashboard/website-authority/internal-equity'
     | '/project/$projectId/audit-runs/$runId/'
@@ -499,14 +699,29 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountSettingsRoute: typeof AccountSettingsRoute
+  AuditRunsRoute: typeof AuditRunsRoute
+  BrandAuthorityRoute: typeof BrandAuthorityRoute
   CrawlerRoute: typeof CrawlerRoute
+  DashboardRoute: typeof DashboardRoute
   EarlyAccessRoute: typeof EarlyAccessRoute
   OnboardingRoute: typeof OnboardingRoute
+  PlannerRoute: typeof PlannerRoute
   RequestDemoRoute: typeof RequestDemoRoute
+  SettingsRoute: typeof SettingsRoute
+  TechnicalHealthRoute: typeof TechnicalHealthRoute
+  WebsiteAuthorityRoute: typeof WebsiteAuthorityRoute
   HelpSlugRoute: typeof HelpSlugRoute
   HelpIndexRoute: typeof HelpIndexRoute
+  ProjectProjectIdAlertsRoute: typeof ProjectProjectIdAlertsRoute
+  ProjectProjectIdKeywordDemandRoute: typeof ProjectProjectIdKeywordDemandRoute
   ProjectProjectIdSettingsRoute: typeof ProjectProjectIdSettingsRoute
+  ProjectProjectIdWhyRevenueMovedRoute: typeof ProjectProjectIdWhyRevenueMovedRoute
+  ProjectProjectIdDashboardActionsRoute: typeof ProjectProjectIdDashboardActionsRoute
+  ProjectProjectIdDashboardContentQualityRoute: typeof ProjectProjectIdDashboardContentQualityRoute
+  ProjectProjectIdDashboardGeoLocaleRoute: typeof ProjectProjectIdDashboardGeoLocaleRoute
+  ProjectProjectIdDashboardLinksRoute: typeof ProjectProjectIdDashboardLinksRoute
   ProjectProjectIdDashboardTechnicalHealthRoute: typeof ProjectProjectIdDashboardTechnicalHealthRouteWithChildren
+  ProjectProjectIdDashboardUserExperienceRoute: typeof ProjectProjectIdDashboardUserExperienceRoute
   ProjectProjectIdDashboardWebsiteAuthorityRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityRouteWithChildren
   ProjectProjectIdAuditRunsIndexRoute: typeof ProjectProjectIdAuditRunsIndexRoute
   ProjectProjectIdDashboardIndexRoute: typeof ProjectProjectIdDashboardIndexRoute
@@ -523,6 +738,7 @@ export interface RootRouteChildren {
   ProjectProjectIdDashboardBrandAuthorityPageAgeRoute: typeof ProjectProjectIdDashboardBrandAuthorityPageAgeRoute
   ProjectProjectIdDashboardBrandAuthorityQuerySignalsRoute: typeof ProjectProjectIdDashboardBrandAuthorityQuerySignalsRoute
   ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute: typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute
+  ProjectProjectIdDashboardOpportunityPageTypeRoute: typeof ProjectProjectIdDashboardOpportunityPageTypeRoute
   ProjectProjectIdAuditRunsRunIdIndexRoute: typeof ProjectProjectIdAuditRunsRunIdIndexRoute
   ProjectProjectIdDashboardBrandAuthorityIndexRoute: typeof ProjectProjectIdDashboardBrandAuthorityIndexRoute
   ProjectProjectIdAuditRunsRunIdIssuesIssueIdRoute: typeof ProjectProjectIdAuditRunsRunIdIssuesIssueIdRoute
@@ -532,11 +748,39 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/website-authority': {
+      id: '/website-authority'
+      path: '/website-authority'
+      fullPath: '/website-authority'
+      preLoaderRoute: typeof WebsiteAuthorityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/technical-health': {
+      id: '/technical-health'
+      path: '/technical-health'
+      fullPath: '/technical-health'
+      preLoaderRoute: typeof TechnicalHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/request-demo': {
       id: '/request-demo'
       path: '/request-demo'
       fullPath: '/request-demo'
       preLoaderRoute: typeof RequestDemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/planner': {
+      id: '/planner'
+      path: '/planner'
+      fullPath: '/planner'
+      preLoaderRoute: typeof PlannerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -553,11 +797,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EarlyAccessRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/crawler': {
       id: '/crawler'
       path: '/crawler'
       fullPath: '/crawler'
       preLoaderRoute: typeof CrawlerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand-authority': {
+      id: '/brand-authority'
+      path: '/brand-authority'
+      fullPath: '/brand-authority'
+      preLoaderRoute: typeof BrandAuthorityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit-runs': {
+      id: '/audit-runs'
+      path: '/audit-runs'
+      fullPath: '/audit-runs'
+      preLoaderRoute: typeof AuditRunsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account-settings': {
@@ -588,11 +853,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HelpSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/project/$projectId/why-revenue-moved': {
+      id: '/project/$projectId/why-revenue-moved'
+      path: '/project/$projectId/why-revenue-moved'
+      fullPath: '/project/$projectId/why-revenue-moved'
+      preLoaderRoute: typeof ProjectProjectIdWhyRevenueMovedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/project/$projectId/settings': {
       id: '/project/$projectId/settings'
       path: '/project/$projectId/settings'
       fullPath: '/project/$projectId/settings'
       preLoaderRoute: typeof ProjectProjectIdSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/keyword-demand': {
+      id: '/project/$projectId/keyword-demand'
+      path: '/project/$projectId/keyword-demand'
+      fullPath: '/project/$projectId/keyword-demand'
+      preLoaderRoute: typeof ProjectProjectIdKeywordDemandRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/alerts': {
+      id: '/project/$projectId/alerts'
+      path: '/project/$projectId/alerts'
+      fullPath: '/project/$projectId/alerts'
+      preLoaderRoute: typeof ProjectProjectIdAlertsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/project/$projectId/planner/': {
@@ -623,11 +909,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/project/$projectId/dashboard/user-experience': {
+      id: '/project/$projectId/dashboard/user-experience'
+      path: '/project/$projectId/dashboard/user-experience'
+      fullPath: '/project/$projectId/dashboard/user-experience'
+      preLoaderRoute: typeof ProjectProjectIdDashboardUserExperienceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/project/$projectId/dashboard/technical-health': {
       id: '/project/$projectId/dashboard/technical-health'
       path: '/project/$projectId/dashboard/technical-health'
       fullPath: '/project/$projectId/dashboard/technical-health'
       preLoaderRoute: typeof ProjectProjectIdDashboardTechnicalHealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/dashboard/links': {
+      id: '/project/$projectId/dashboard/links'
+      path: '/project/$projectId/dashboard/links'
+      fullPath: '/project/$projectId/dashboard/links'
+      preLoaderRoute: typeof ProjectProjectIdDashboardLinksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/dashboard/geo-locale': {
+      id: '/project/$projectId/dashboard/geo-locale'
+      path: '/project/$projectId/dashboard/geo-locale'
+      fullPath: '/project/$projectId/dashboard/geo-locale'
+      preLoaderRoute: typeof ProjectProjectIdDashboardGeoLocaleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/dashboard/content-quality': {
+      id: '/project/$projectId/dashboard/content-quality'
+      path: '/project/$projectId/dashboard/content-quality'
+      fullPath: '/project/$projectId/dashboard/content-quality'
+      preLoaderRoute: typeof ProjectProjectIdDashboardContentQualityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/dashboard/actions': {
+      id: '/project/$projectId/dashboard/actions'
+      path: '/project/$projectId/dashboard/actions'
+      fullPath: '/project/$projectId/dashboard/actions'
+      preLoaderRoute: typeof ProjectProjectIdDashboardActionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/project/$projectId/dashboard/website-authority/': {
@@ -671,6 +992,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/project/$projectId/dashboard/technical-health/cwv'
       preLoaderRoute: typeof ProjectProjectIdDashboardTechnicalHealthCwvRouteImport
       parentRoute: typeof ProjectProjectIdDashboardTechnicalHealthRoute
+    }
+    '/project/$projectId/dashboard/opportunity/$pageType': {
+      id: '/project/$projectId/dashboard/opportunity/$pageType'
+      path: '/project/$projectId/dashboard/opportunity/$pageType'
+      fullPath: '/project/$projectId/dashboard/opportunity/$pageType'
+      preLoaderRoute: typeof ProjectProjectIdDashboardOpportunityPageTypeRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/project/$projectId/dashboard/brand-authority/site-focus': {
       id: '/project/$projectId/dashboard/brand-authority/site-focus'
@@ -851,15 +1179,33 @@ const ProjectProjectIdDashboardWebsiteAuthorityRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountSettingsRoute: AccountSettingsRoute,
+  AuditRunsRoute: AuditRunsRoute,
+  BrandAuthorityRoute: BrandAuthorityRoute,
   CrawlerRoute: CrawlerRoute,
+  DashboardRoute: DashboardRoute,
   EarlyAccessRoute: EarlyAccessRoute,
   OnboardingRoute: OnboardingRoute,
+  PlannerRoute: PlannerRoute,
   RequestDemoRoute: RequestDemoRoute,
+  SettingsRoute: SettingsRoute,
+  TechnicalHealthRoute: TechnicalHealthRoute,
+  WebsiteAuthorityRoute: WebsiteAuthorityRoute,
   HelpSlugRoute: HelpSlugRoute,
   HelpIndexRoute: HelpIndexRoute,
+  ProjectProjectIdAlertsRoute: ProjectProjectIdAlertsRoute,
+  ProjectProjectIdKeywordDemandRoute: ProjectProjectIdKeywordDemandRoute,
   ProjectProjectIdSettingsRoute: ProjectProjectIdSettingsRoute,
+  ProjectProjectIdWhyRevenueMovedRoute: ProjectProjectIdWhyRevenueMovedRoute,
+  ProjectProjectIdDashboardActionsRoute: ProjectProjectIdDashboardActionsRoute,
+  ProjectProjectIdDashboardContentQualityRoute:
+    ProjectProjectIdDashboardContentQualityRoute,
+  ProjectProjectIdDashboardGeoLocaleRoute:
+    ProjectProjectIdDashboardGeoLocaleRoute,
+  ProjectProjectIdDashboardLinksRoute: ProjectProjectIdDashboardLinksRoute,
   ProjectProjectIdDashboardTechnicalHealthRoute:
     ProjectProjectIdDashboardTechnicalHealthRouteWithChildren,
+  ProjectProjectIdDashboardUserExperienceRoute:
+    ProjectProjectIdDashboardUserExperienceRoute,
   ProjectProjectIdDashboardWebsiteAuthorityRoute:
     ProjectProjectIdDashboardWebsiteAuthorityRouteWithChildren,
   ProjectProjectIdAuditRunsIndexRoute: ProjectProjectIdAuditRunsIndexRoute,
@@ -889,6 +1235,8 @@ const rootRouteChildren: RootRouteChildren = {
     ProjectProjectIdDashboardBrandAuthorityQuerySignalsRoute,
   ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute:
     ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute,
+  ProjectProjectIdDashboardOpportunityPageTypeRoute:
+    ProjectProjectIdDashboardOpportunityPageTypeRoute,
   ProjectProjectIdAuditRunsRunIdIndexRoute:
     ProjectProjectIdAuditRunsRunIdIndexRoute,
   ProjectProjectIdDashboardBrandAuthorityIndexRoute:
