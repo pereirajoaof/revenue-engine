@@ -146,7 +146,7 @@ const ISSUE_CHANGES: IssueChange[] = [
 function ChangesRoute() {
   const { runId } = Route.useParams();
   const { bucket, issue_type } = Route.useSearch();
-  const navigate = useNavigate({ from: "/audit-runs/$runId/changes" });
+  const navigate = useNavigate({ from: "/project/$projectId/audit-runs/$runId_/changes" });
 
   const run = RUNS[runId] ?? { name: runId, currentCrawl: "Latest crawl", previousCrawl: "Previous crawl" };
 
