@@ -1,3 +1,3 @@
-- [ ] Rebuild Opportunity Breakdown as five evidence-led sections using the worked example and shared dashboard figures.
-- [ ] Add findings/actions overlap, linked URL filtering, sortable paginated pages, CSV export and responsive layouts.
-- [ ] Cover missing-data variants, dark/light appearance, and verify report interactions.
+- [x] Rebuild Opportunity Breakdown as five evidence-led sections using the worked example and shared dashboard figures.
+- [x] Add findings/actions overlap, linked URL filtering, sortable paginated pages, CSV export and responsive layouts.
+- [x] Cover missing-data variants, dark/light appearance, and verify report interactions.
