@@ -141,7 +141,7 @@ function AuditRunsPage() {
   const [page, setPage] = useState(1);
   const [createAuditOpen, setCreateAuditOpen] = useState(false);
   const [createAuditStep, setCreateAuditStep] = useState(0);
-  const navigate = useNavigate();
+  const navigate = useAppNavigate();
   const pageSize = 5;
 
   const filteredRuns = useMemo(() => {
