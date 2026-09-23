@@ -9,67 +9,47 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WebsiteAuthorityRouteImport } from './routes/website-authority'
-import { Route as TechnicalHealthRouteImport } from './routes/technical-health'
-import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as RequestDemoRouteImport } from './routes/request-demo'
-import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as EarlyAccessRouteImport } from './routes/early-access'
-import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CrawlerRouteImport } from './routes/crawler'
-import { Route as BrandAuthorityRouteImport } from './routes/brand-authority'
-import { Route as AuditRunsRouteImport } from './routes/audit-runs'
 import { Route as AccountSettingsRouteImport } from './routes/account-settings'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as WebsiteAuthorityIndexRouteImport } from './routes/website-authority.index'
-import { Route as TechnicalHealthIndexRouteImport } from './routes/technical-health.index'
 import { Route as HelpIndexRouteImport } from './routes/help.index'
-import { Route as WebsiteAuthorityInternalEquityRouteImport } from './routes/website-authority.internal-equity'
-import { Route as TechnicalHealthCwvRouteImport } from './routes/technical-health.cwv'
 import { Route as HelpSlugRouteImport } from './routes/help.$slug'
-import { Route as BrandAuthoritySiteFocusRouteImport } from './routes/brand-authority_.site-focus'
-import { Route as BrandAuthorityQuerySignalsRouteImport } from './routes/brand-authority_.query-signals'
-import { Route as BrandAuthorityPageAgeRouteImport } from './routes/brand-authority_.page-age'
-import { Route as BrandAuthorityDomainAuthorityRouteImport } from './routes/brand-authority_.domain-authority'
-import { Route as BrandAuthorityDomainAgeRouteImport } from './routes/brand-authority_.domain-age'
-import { Route as BrandAuthorityBrandLoveRouteImport } from './routes/brand-authority_.brand-love'
-import { Route as BrandAuthorityAiVisibilityRouteImport } from './routes/brand-authority_.ai-visibility'
-import { Route as AuditRunsRunIdRouteImport } from './routes/audit-runs_.$runId'
-import { Route as TechnicalHealthCwvOpportunitiesRouteImport } from './routes/technical-health.cwv.opportunities'
-import { Route as TechnicalHealthCwvDeepDiveRouteImport } from './routes/technical-health.cwv.deep-dive'
-import { Route as BrandAuthoritySiteFocusTableRouteImport } from './routes/brand-authority_.site-focus_.table'
-import { Route as BrandAuthorityPageAgeOutliersRouteImport } from './routes/brand-authority_.page-age.outliers'
-import { Route as AuditRunsRunIdUrlsRouteImport } from './routes/audit-runs_.$runId_.urls'
-import { Route as AuditRunsRunIdSettingsRouteImport } from './routes/audit-runs_.$runId_.settings'
-import { Route as AuditRunsRunIdInventoryRouteImport } from './routes/audit-runs_.$runId_.inventory'
-import { Route as AuditRunsRunIdErrorsRouteImport } from './routes/audit-runs_.$runId_.errors'
-import { Route as AuditRunsRunIdChangesRouteImport } from './routes/audit-runs_.$runId_.changes'
-import { Route as AuditRunsRunIdIssuesIssueIdRouteImport } from './routes/audit-runs_.$runId_.issues.$issueId'
+import { Route as ProjectProjectIdSettingsRouteImport } from './routes/project.$projectId.settings'
+import { Route as ProjectProjectIdPlannerIndexRouteImport } from './routes/project.$projectId.planner.index'
+import { Route as ProjectProjectIdDashboardIndexRouteImport } from './routes/project.$projectId.dashboard.index'
+import { Route as ProjectProjectIdAuditRunsIndexRouteImport } from './routes/project.$projectId.audit-runs.index'
+import { Route as ProjectProjectIdDashboardWebsiteAuthorityRouteImport } from './routes/project.$projectId.dashboard.website-authority'
+import { Route as ProjectProjectIdDashboardTechnicalHealthRouteImport } from './routes/project.$projectId.dashboard.technical-health'
+import { Route as ProjectProjectIdDashboardWebsiteAuthorityIndexRouteImport } from './routes/project.$projectId.dashboard.website-authority.index'
+import { Route as ProjectProjectIdDashboardTechnicalHealthIndexRouteImport } from './routes/project.$projectId.dashboard.technical-health.index'
+import { Route as ProjectProjectIdDashboardBrandAuthorityIndexRouteImport } from './routes/project.$projectId.dashboard.brand-authority.index'
+import { Route as ProjectProjectIdAuditRunsRunIdIndexRouteImport } from './routes/project.$projectId.audit-runs.$runId.index'
+import { Route as ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRouteImport } from './routes/project.$projectId.dashboard.website-authority.internal-equity'
+import { Route as ProjectProjectIdDashboardTechnicalHealthCwvRouteImport } from './routes/project.$projectId.dashboard.technical-health.cwv'
+import { Route as ProjectProjectIdDashboardBrandAuthoritySiteFocusRouteImport } from './routes/project.$projectId.dashboard.brand-authority.site-focus'
+import { Route as ProjectProjectIdDashboardBrandAuthorityQuerySignalsRouteImport } from './routes/project.$projectId.dashboard.brand-authority.query-signals'
+import { Route as ProjectProjectIdDashboardBrandAuthorityPageAgeRouteImport } from './routes/project.$projectId.dashboard.brand-authority.page-age'
+import { Route as ProjectProjectIdDashboardBrandAuthorityDomainAuthorityRouteImport } from './routes/project.$projectId.dashboard.brand-authority.domain-authority'
+import { Route as ProjectProjectIdDashboardBrandAuthorityDomainAgeRouteImport } from './routes/project.$projectId.dashboard.brand-authority.domain-age'
+import { Route as ProjectProjectIdDashboardBrandAuthorityBrandLoveRouteImport } from './routes/project.$projectId.dashboard.brand-authority.brand-love'
+import { Route as ProjectProjectIdDashboardBrandAuthorityAiVisibilityRouteImport } from './routes/project.$projectId.dashboard.brand-authority.ai-visibility'
+import { Route as ProjectProjectIdAuditRunsRunIdUrlsRouteImport } from './routes/project.$projectId.audit-runs.$runId_.urls'
+import { Route as ProjectProjectIdAuditRunsRunIdSettingsRouteImport } from './routes/project.$projectId.audit-runs.$runId_.settings'
+import { Route as ProjectProjectIdAuditRunsRunIdInventoryRouteImport } from './routes/project.$projectId.audit-runs.$runId_.inventory'
+import { Route as ProjectProjectIdAuditRunsRunIdErrorsRouteImport } from './routes/project.$projectId.audit-runs.$runId_.errors'
+import { Route as ProjectProjectIdAuditRunsRunIdChangesRouteImport } from './routes/project.$projectId.audit-runs.$runId_.changes'
+import { Route as ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRouteImport } from './routes/project.$projectId.dashboard.technical-health.cwv.opportunities'
+import { Route as ProjectProjectIdDashboardTechnicalHealthCwvDeepDiveRouteImport } from './routes/project.$projectId.dashboard.technical-health.cwv.deep-dive'
+import { Route as ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRouteImport } from './routes/project.$projectId.dashboard.brand-authority.site-focus_.table'
+import { Route as ProjectProjectIdDashboardBrandAuthorityPageAgeOutliersRouteImport } from './routes/project.$projectId.dashboard.brand-authority.page-age_.outliers'
+import { Route as ProjectProjectIdAuditRunsRunIdIssuesIssueIdRouteImport } from './routes/project.$projectId.audit-runs.$runId_.issues.$issueId'
 
-const WebsiteAuthorityRoute = WebsiteAuthorityRouteImport.update({
-  id: '/website-authority',
-  path: '/website-authority',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TechnicalHealthRoute = TechnicalHealthRouteImport.update({
-  id: '/technical-health',
-  path: '/technical-health',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const RequestDemoRoute = RequestDemoRouteImport.update({
   id: '/request-demo',
   path: '/request-demo',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PlannerRoute = PlannerRouteImport.update({
-  id: '/planner',
-  path: '/planner',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -82,24 +62,9 @@ const EarlyAccessRoute = EarlyAccessRouteImport.update({
   path: '/early-access',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CrawlerRoute = CrawlerRouteImport.update({
   id: '/crawler',
   path: '/crawler',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BrandAuthorityRoute = BrandAuthorityRouteImport.update({
-  id: '/brand-authority',
-  path: '/brand-authority',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuditRunsRoute = AuditRunsRouteImport.update({
-  id: '/audit-runs',
-  path: '/audit-runs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountSettingsRoute = AccountSettingsRouteImport.update({
@@ -112,438 +77,466 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WebsiteAuthorityIndexRoute = WebsiteAuthorityIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => WebsiteAuthorityRoute,
-} as any)
-const TechnicalHealthIndexRoute = TechnicalHealthIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => TechnicalHealthRoute,
-} as any)
 const HelpIndexRoute = HelpIndexRouteImport.update({
   id: '/help/',
   path: '/help/',
   getParentRoute: () => rootRouteImport,
-} as any)
-const WebsiteAuthorityInternalEquityRoute =
-  WebsiteAuthorityInternalEquityRouteImport.update({
-    id: '/internal-equity',
-    path: '/internal-equity',
-    getParentRoute: () => WebsiteAuthorityRoute,
-  } as any)
-const TechnicalHealthCwvRoute = TechnicalHealthCwvRouteImport.update({
-  id: '/cwv',
-  path: '/cwv',
-  getParentRoute: () => TechnicalHealthRoute,
 } as any)
 const HelpSlugRoute = HelpSlugRouteImport.update({
   id: '/help/$slug',
   path: '/help/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BrandAuthoritySiteFocusRoute = BrandAuthoritySiteFocusRouteImport.update({
-  id: '/brand-authority_/site-focus',
-  path: '/brand-authority/site-focus',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BrandAuthorityQuerySignalsRoute =
-  BrandAuthorityQuerySignalsRouteImport.update({
-    id: '/brand-authority_/query-signals',
-    path: '/brand-authority/query-signals',
+const ProjectProjectIdSettingsRoute =
+  ProjectProjectIdSettingsRouteImport.update({
+    id: '/project/$projectId/settings',
+    path: '/project/$projectId/settings',
     getParentRoute: () => rootRouteImport,
   } as any)
-const BrandAuthorityPageAgeRoute = BrandAuthorityPageAgeRouteImport.update({
-  id: '/brand-authority_/page-age',
-  path: '/brand-authority/page-age',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BrandAuthorityDomainAuthorityRoute =
-  BrandAuthorityDomainAuthorityRouteImport.update({
-    id: '/brand-authority_/domain-authority',
-    path: '/brand-authority/domain-authority',
+const ProjectProjectIdPlannerIndexRoute =
+  ProjectProjectIdPlannerIndexRouteImport.update({
+    id: '/project/$projectId/planner/',
+    path: '/project/$projectId/planner/',
     getParentRoute: () => rootRouteImport,
   } as any)
-const BrandAuthorityDomainAgeRoute = BrandAuthorityDomainAgeRouteImport.update({
-  id: '/brand-authority_/domain-age',
-  path: '/brand-authority/domain-age',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BrandAuthorityBrandLoveRoute = BrandAuthorityBrandLoveRouteImport.update({
-  id: '/brand-authority_/brand-love',
-  path: '/brand-authority/brand-love',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BrandAuthorityAiVisibilityRoute =
-  BrandAuthorityAiVisibilityRouteImport.update({
-    id: '/brand-authority_/ai-visibility',
-    path: '/brand-authority/ai-visibility',
+const ProjectProjectIdDashboardIndexRoute =
+  ProjectProjectIdDashboardIndexRouteImport.update({
+    id: '/project/$projectId/dashboard/',
+    path: '/project/$projectId/dashboard/',
     getParentRoute: () => rootRouteImport,
   } as any)
-const AuditRunsRunIdRoute = AuditRunsRunIdRouteImport.update({
-  id: '/audit-runs_/$runId',
-  path: '/audit-runs/$runId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TechnicalHealthCwvOpportunitiesRoute =
-  TechnicalHealthCwvOpportunitiesRouteImport.update({
+const ProjectProjectIdAuditRunsIndexRoute =
+  ProjectProjectIdAuditRunsIndexRouteImport.update({
+    id: '/project/$projectId/audit-runs/',
+    path: '/project/$projectId/audit-runs/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdDashboardWebsiteAuthorityRoute =
+  ProjectProjectIdDashboardWebsiteAuthorityRouteImport.update({
+    id: '/project/$projectId/dashboard/website-authority',
+    path: '/project/$projectId/dashboard/website-authority',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdDashboardTechnicalHealthRoute =
+  ProjectProjectIdDashboardTechnicalHealthRouteImport.update({
+    id: '/project/$projectId/dashboard/technical-health',
+    path: '/project/$projectId/dashboard/technical-health',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdDashboardWebsiteAuthorityIndexRoute =
+  ProjectProjectIdDashboardWebsiteAuthorityIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => ProjectProjectIdDashboardWebsiteAuthorityRoute,
+  } as any)
+const ProjectProjectIdDashboardTechnicalHealthIndexRoute =
+  ProjectProjectIdDashboardTechnicalHealthIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => ProjectProjectIdDashboardTechnicalHealthRoute,
+  } as any)
+const ProjectProjectIdDashboardBrandAuthorityIndexRoute =
+  ProjectProjectIdDashboardBrandAuthorityIndexRouteImport.update({
+    id: '/project/$projectId/dashboard/brand-authority/',
+    path: '/project/$projectId/dashboard/brand-authority/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdAuditRunsRunIdIndexRoute =
+  ProjectProjectIdAuditRunsRunIdIndexRouteImport.update({
+    id: '/project/$projectId/audit-runs/$runId/',
+    path: '/project/$projectId/audit-runs/$runId/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute =
+  ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRouteImport.update({
+    id: '/internal-equity',
+    path: '/internal-equity',
+    getParentRoute: () => ProjectProjectIdDashboardWebsiteAuthorityRoute,
+  } as any)
+const ProjectProjectIdDashboardTechnicalHealthCwvRoute =
+  ProjectProjectIdDashboardTechnicalHealthCwvRouteImport.update({
+    id: '/cwv',
+    path: '/cwv',
+    getParentRoute: () => ProjectProjectIdDashboardTechnicalHealthRoute,
+  } as any)
+const ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute =
+  ProjectProjectIdDashboardBrandAuthoritySiteFocusRouteImport.update({
+    id: '/project/$projectId/dashboard/brand-authority/site-focus',
+    path: '/project/$projectId/dashboard/brand-authority/site-focus',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdDashboardBrandAuthorityQuerySignalsRoute =
+  ProjectProjectIdDashboardBrandAuthorityQuerySignalsRouteImport.update({
+    id: '/project/$projectId/dashboard/brand-authority/query-signals',
+    path: '/project/$projectId/dashboard/brand-authority/query-signals',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdDashboardBrandAuthorityPageAgeRoute =
+  ProjectProjectIdDashboardBrandAuthorityPageAgeRouteImport.update({
+    id: '/project/$projectId/dashboard/brand-authority/page-age',
+    path: '/project/$projectId/dashboard/brand-authority/page-age',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdDashboardBrandAuthorityDomainAuthorityRoute =
+  ProjectProjectIdDashboardBrandAuthorityDomainAuthorityRouteImport.update({
+    id: '/project/$projectId/dashboard/brand-authority/domain-authority',
+    path: '/project/$projectId/dashboard/brand-authority/domain-authority',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdDashboardBrandAuthorityDomainAgeRoute =
+  ProjectProjectIdDashboardBrandAuthorityDomainAgeRouteImport.update({
+    id: '/project/$projectId/dashboard/brand-authority/domain-age',
+    path: '/project/$projectId/dashboard/brand-authority/domain-age',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdDashboardBrandAuthorityBrandLoveRoute =
+  ProjectProjectIdDashboardBrandAuthorityBrandLoveRouteImport.update({
+    id: '/project/$projectId/dashboard/brand-authority/brand-love',
+    path: '/project/$projectId/dashboard/brand-authority/brand-love',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdDashboardBrandAuthorityAiVisibilityRoute =
+  ProjectProjectIdDashboardBrandAuthorityAiVisibilityRouteImport.update({
+    id: '/project/$projectId/dashboard/brand-authority/ai-visibility',
+    path: '/project/$projectId/dashboard/brand-authority/ai-visibility',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdAuditRunsRunIdUrlsRoute =
+  ProjectProjectIdAuditRunsRunIdUrlsRouteImport.update({
+    id: '/project/$projectId/audit-runs/$runId_/urls',
+    path: '/project/$projectId/audit-runs/$runId/urls',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdAuditRunsRunIdSettingsRoute =
+  ProjectProjectIdAuditRunsRunIdSettingsRouteImport.update({
+    id: '/project/$projectId/audit-runs/$runId_/settings',
+    path: '/project/$projectId/audit-runs/$runId/settings',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdAuditRunsRunIdInventoryRoute =
+  ProjectProjectIdAuditRunsRunIdInventoryRouteImport.update({
+    id: '/project/$projectId/audit-runs/$runId_/inventory',
+    path: '/project/$projectId/audit-runs/$runId/inventory',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdAuditRunsRunIdErrorsRoute =
+  ProjectProjectIdAuditRunsRunIdErrorsRouteImport.update({
+    id: '/project/$projectId/audit-runs/$runId_/errors',
+    path: '/project/$projectId/audit-runs/$runId/errors',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdAuditRunsRunIdChangesRoute =
+  ProjectProjectIdAuditRunsRunIdChangesRouteImport.update({
+    id: '/project/$projectId/audit-runs/$runId_/changes',
+    path: '/project/$projectId/audit-runs/$runId/changes',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRoute =
+  ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRouteImport.update({
     id: '/opportunities',
     path: '/opportunities',
-    getParentRoute: () => TechnicalHealthCwvRoute,
+    getParentRoute: () => ProjectProjectIdDashboardTechnicalHealthCwvRoute,
   } as any)
-const TechnicalHealthCwvDeepDiveRoute =
-  TechnicalHealthCwvDeepDiveRouteImport.update({
+const ProjectProjectIdDashboardTechnicalHealthCwvDeepDiveRoute =
+  ProjectProjectIdDashboardTechnicalHealthCwvDeepDiveRouteImport.update({
     id: '/deep-dive',
     path: '/deep-dive',
-    getParentRoute: () => TechnicalHealthCwvRoute,
+    getParentRoute: () => ProjectProjectIdDashboardTechnicalHealthCwvRoute,
   } as any)
-const BrandAuthoritySiteFocusTableRoute =
-  BrandAuthoritySiteFocusTableRouteImport.update({
-    id: '/brand-authority_/site-focus_/table',
-    path: '/brand-authority/site-focus/table',
+const ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRoute =
+  ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRouteImport.update({
+    id: '/project/$projectId/dashboard/brand-authority/site-focus_/table',
+    path: '/project/$projectId/dashboard/brand-authority/site-focus/table',
     getParentRoute: () => rootRouteImport,
   } as any)
-const BrandAuthorityPageAgeOutliersRoute =
-  BrandAuthorityPageAgeOutliersRouteImport.update({
-    id: '/outliers',
-    path: '/outliers',
-    getParentRoute: () => BrandAuthorityPageAgeRoute,
+const ProjectProjectIdDashboardBrandAuthorityPageAgeOutliersRoute =
+  ProjectProjectIdDashboardBrandAuthorityPageAgeOutliersRouteImport.update({
+    id: '/project/$projectId/dashboard/brand-authority/page-age_/outliers',
+    path: '/project/$projectId/dashboard/brand-authority/page-age/outliers',
+    getParentRoute: () => rootRouteImport,
   } as any)
-const AuditRunsRunIdUrlsRoute = AuditRunsRunIdUrlsRouteImport.update({
-  id: '/audit-runs_/$runId_/urls',
-  path: '/audit-runs/$runId/urls',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuditRunsRunIdSettingsRoute = AuditRunsRunIdSettingsRouteImport.update({
-  id: '/audit-runs_/$runId_/settings',
-  path: '/audit-runs/$runId/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuditRunsRunIdInventoryRoute = AuditRunsRunIdInventoryRouteImport.update({
-  id: '/audit-runs_/$runId_/inventory',
-  path: '/audit-runs/$runId/inventory',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuditRunsRunIdErrorsRoute = AuditRunsRunIdErrorsRouteImport.update({
-  id: '/audit-runs_/$runId_/errors',
-  path: '/audit-runs/$runId/errors',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuditRunsRunIdChangesRoute = AuditRunsRunIdChangesRouteImport.update({
-  id: '/audit-runs_/$runId_/changes',
-  path: '/audit-runs/$runId/changes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuditRunsRunIdIssuesIssueIdRoute =
-  AuditRunsRunIdIssuesIssueIdRouteImport.update({
-    id: '/audit-runs_/$runId_/issues/$issueId',
-    path: '/audit-runs/$runId/issues/$issueId',
+const ProjectProjectIdAuditRunsRunIdIssuesIssueIdRoute =
+  ProjectProjectIdAuditRunsRunIdIssuesIssueIdRouteImport.update({
+    id: '/project/$projectId/audit-runs/$runId_/issues/$issueId',
+    path: '/project/$projectId/audit-runs/$runId/issues/$issueId',
     getParentRoute: () => rootRouteImport,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account-settings': typeof AccountSettingsRoute
-  '/audit-runs': typeof AuditRunsRoute
-  '/brand-authority': typeof BrandAuthorityRoute
   '/crawler': typeof CrawlerRoute
-  '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
-  '/planner': typeof PlannerRoute
   '/request-demo': typeof RequestDemoRoute
-  '/settings': typeof SettingsRoute
-  '/technical-health': typeof TechnicalHealthRouteWithChildren
-  '/website-authority': typeof WebsiteAuthorityRouteWithChildren
-  '/audit-runs/$runId': typeof AuditRunsRunIdRoute
-  '/brand-authority/ai-visibility': typeof BrandAuthorityAiVisibilityRoute
-  '/brand-authority/brand-love': typeof BrandAuthorityBrandLoveRoute
-  '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
-  '/brand-authority/domain-authority': typeof BrandAuthorityDomainAuthorityRoute
-  '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
-  '/brand-authority/query-signals': typeof BrandAuthorityQuerySignalsRoute
-  '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/help/$slug': typeof HelpSlugRoute
-  '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
-  '/website-authority/internal-equity': typeof WebsiteAuthorityInternalEquityRoute
   '/help/': typeof HelpIndexRoute
-  '/technical-health/': typeof TechnicalHealthIndexRoute
-  '/website-authority/': typeof WebsiteAuthorityIndexRoute
-  '/audit-runs/$runId/changes': typeof AuditRunsRunIdChangesRoute
-  '/audit-runs/$runId/errors': typeof AuditRunsRunIdErrorsRoute
-  '/audit-runs/$runId/inventory': typeof AuditRunsRunIdInventoryRoute
-  '/audit-runs/$runId/settings': typeof AuditRunsRunIdSettingsRoute
-  '/audit-runs/$runId/urls': typeof AuditRunsRunIdUrlsRoute
-  '/brand-authority/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
-  '/brand-authority/site-focus/table': typeof BrandAuthoritySiteFocusTableRoute
-  '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
-  '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
-  '/audit-runs/$runId/issues/$issueId': typeof AuditRunsRunIdIssuesIssueIdRoute
+  '/project/$projectId/settings': typeof ProjectProjectIdSettingsRoute
+  '/project/$projectId/dashboard/technical-health': typeof ProjectProjectIdDashboardTechnicalHealthRouteWithChildren
+  '/project/$projectId/dashboard/website-authority': typeof ProjectProjectIdDashboardWebsiteAuthorityRouteWithChildren
+  '/project/$projectId/audit-runs/': typeof ProjectProjectIdAuditRunsIndexRoute
+  '/project/$projectId/dashboard/': typeof ProjectProjectIdDashboardIndexRoute
+  '/project/$projectId/planner/': typeof ProjectProjectIdPlannerIndexRoute
+  '/project/$projectId/audit-runs/$runId/changes': typeof ProjectProjectIdAuditRunsRunIdChangesRoute
+  '/project/$projectId/audit-runs/$runId/errors': typeof ProjectProjectIdAuditRunsRunIdErrorsRoute
+  '/project/$projectId/audit-runs/$runId/inventory': typeof ProjectProjectIdAuditRunsRunIdInventoryRoute
+  '/project/$projectId/audit-runs/$runId/settings': typeof ProjectProjectIdAuditRunsRunIdSettingsRoute
+  '/project/$projectId/audit-runs/$runId/urls': typeof ProjectProjectIdAuditRunsRunIdUrlsRoute
+  '/project/$projectId/dashboard/brand-authority/ai-visibility': typeof ProjectProjectIdDashboardBrandAuthorityAiVisibilityRoute
+  '/project/$projectId/dashboard/brand-authority/brand-love': typeof ProjectProjectIdDashboardBrandAuthorityBrandLoveRoute
+  '/project/$projectId/dashboard/brand-authority/domain-age': typeof ProjectProjectIdDashboardBrandAuthorityDomainAgeRoute
+  '/project/$projectId/dashboard/brand-authority/domain-authority': typeof ProjectProjectIdDashboardBrandAuthorityDomainAuthorityRoute
+  '/project/$projectId/dashboard/brand-authority/page-age': typeof ProjectProjectIdDashboardBrandAuthorityPageAgeRoute
+  '/project/$projectId/dashboard/brand-authority/query-signals': typeof ProjectProjectIdDashboardBrandAuthorityQuerySignalsRoute
+  '/project/$projectId/dashboard/brand-authority/site-focus': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute
+  '/project/$projectId/dashboard/technical-health/cwv': typeof ProjectProjectIdDashboardTechnicalHealthCwvRouteWithChildren
+  '/project/$projectId/dashboard/website-authority/internal-equity': typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute
+  '/project/$projectId/audit-runs/$runId/': typeof ProjectProjectIdAuditRunsRunIdIndexRoute
+  '/project/$projectId/dashboard/brand-authority/': typeof ProjectProjectIdDashboardBrandAuthorityIndexRoute
+  '/project/$projectId/dashboard/technical-health/': typeof ProjectProjectIdDashboardTechnicalHealthIndexRoute
+  '/project/$projectId/dashboard/website-authority/': typeof ProjectProjectIdDashboardWebsiteAuthorityIndexRoute
+  '/project/$projectId/audit-runs/$runId/issues/$issueId': typeof ProjectProjectIdAuditRunsRunIdIssuesIssueIdRoute
+  '/project/$projectId/dashboard/brand-authority/page-age/outliers': typeof ProjectProjectIdDashboardBrandAuthorityPageAgeOutliersRoute
+  '/project/$projectId/dashboard/brand-authority/site-focus/table': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRoute
+  '/project/$projectId/dashboard/technical-health/cwv/deep-dive': typeof ProjectProjectIdDashboardTechnicalHealthCwvDeepDiveRoute
+  '/project/$projectId/dashboard/technical-health/cwv/opportunities': typeof ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account-settings': typeof AccountSettingsRoute
-  '/audit-runs': typeof AuditRunsRoute
-  '/brand-authority': typeof BrandAuthorityRoute
   '/crawler': typeof CrawlerRoute
-  '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
-  '/planner': typeof PlannerRoute
   '/request-demo': typeof RequestDemoRoute
-  '/settings': typeof SettingsRoute
-  '/audit-runs/$runId': typeof AuditRunsRunIdRoute
-  '/brand-authority/ai-visibility': typeof BrandAuthorityAiVisibilityRoute
-  '/brand-authority/brand-love': typeof BrandAuthorityBrandLoveRoute
-  '/brand-authority/domain-age': typeof BrandAuthorityDomainAgeRoute
-  '/brand-authority/domain-authority': typeof BrandAuthorityDomainAuthorityRoute
-  '/brand-authority/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
-  '/brand-authority/query-signals': typeof BrandAuthorityQuerySignalsRoute
-  '/brand-authority/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/help/$slug': typeof HelpSlugRoute
-  '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
-  '/website-authority/internal-equity': typeof WebsiteAuthorityInternalEquityRoute
   '/help': typeof HelpIndexRoute
-  '/technical-health': typeof TechnicalHealthIndexRoute
-  '/website-authority': typeof WebsiteAuthorityIndexRoute
-  '/audit-runs/$runId/changes': typeof AuditRunsRunIdChangesRoute
-  '/audit-runs/$runId/errors': typeof AuditRunsRunIdErrorsRoute
-  '/audit-runs/$runId/inventory': typeof AuditRunsRunIdInventoryRoute
-  '/audit-runs/$runId/settings': typeof AuditRunsRunIdSettingsRoute
-  '/audit-runs/$runId/urls': typeof AuditRunsRunIdUrlsRoute
-  '/brand-authority/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
-  '/brand-authority/site-focus/table': typeof BrandAuthoritySiteFocusTableRoute
-  '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
-  '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
-  '/audit-runs/$runId/issues/$issueId': typeof AuditRunsRunIdIssuesIssueIdRoute
+  '/project/$projectId/settings': typeof ProjectProjectIdSettingsRoute
+  '/project/$projectId/audit-runs': typeof ProjectProjectIdAuditRunsIndexRoute
+  '/project/$projectId/dashboard': typeof ProjectProjectIdDashboardIndexRoute
+  '/project/$projectId/planner': typeof ProjectProjectIdPlannerIndexRoute
+  '/project/$projectId/audit-runs/$runId/changes': typeof ProjectProjectIdAuditRunsRunIdChangesRoute
+  '/project/$projectId/audit-runs/$runId/errors': typeof ProjectProjectIdAuditRunsRunIdErrorsRoute
+  '/project/$projectId/audit-runs/$runId/inventory': typeof ProjectProjectIdAuditRunsRunIdInventoryRoute
+  '/project/$projectId/audit-runs/$runId/settings': typeof ProjectProjectIdAuditRunsRunIdSettingsRoute
+  '/project/$projectId/audit-runs/$runId/urls': typeof ProjectProjectIdAuditRunsRunIdUrlsRoute
+  '/project/$projectId/dashboard/brand-authority/ai-visibility': typeof ProjectProjectIdDashboardBrandAuthorityAiVisibilityRoute
+  '/project/$projectId/dashboard/brand-authority/brand-love': typeof ProjectProjectIdDashboardBrandAuthorityBrandLoveRoute
+  '/project/$projectId/dashboard/brand-authority/domain-age': typeof ProjectProjectIdDashboardBrandAuthorityDomainAgeRoute
+  '/project/$projectId/dashboard/brand-authority/domain-authority': typeof ProjectProjectIdDashboardBrandAuthorityDomainAuthorityRoute
+  '/project/$projectId/dashboard/brand-authority/page-age': typeof ProjectProjectIdDashboardBrandAuthorityPageAgeRoute
+  '/project/$projectId/dashboard/brand-authority/query-signals': typeof ProjectProjectIdDashboardBrandAuthorityQuerySignalsRoute
+  '/project/$projectId/dashboard/brand-authority/site-focus': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute
+  '/project/$projectId/dashboard/technical-health/cwv': typeof ProjectProjectIdDashboardTechnicalHealthCwvRouteWithChildren
+  '/project/$projectId/dashboard/website-authority/internal-equity': typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute
+  '/project/$projectId/audit-runs/$runId': typeof ProjectProjectIdAuditRunsRunIdIndexRoute
+  '/project/$projectId/dashboard/brand-authority': typeof ProjectProjectIdDashboardBrandAuthorityIndexRoute
+  '/project/$projectId/dashboard/technical-health': typeof ProjectProjectIdDashboardTechnicalHealthIndexRoute
+  '/project/$projectId/dashboard/website-authority': typeof ProjectProjectIdDashboardWebsiteAuthorityIndexRoute
+  '/project/$projectId/audit-runs/$runId/issues/$issueId': typeof ProjectProjectIdAuditRunsRunIdIssuesIssueIdRoute
+  '/project/$projectId/dashboard/brand-authority/page-age/outliers': typeof ProjectProjectIdDashboardBrandAuthorityPageAgeOutliersRoute
+  '/project/$projectId/dashboard/brand-authority/site-focus/table': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRoute
+  '/project/$projectId/dashboard/technical-health/cwv/deep-dive': typeof ProjectProjectIdDashboardTechnicalHealthCwvDeepDiveRoute
+  '/project/$projectId/dashboard/technical-health/cwv/opportunities': typeof ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account-settings': typeof AccountSettingsRoute
-  '/audit-runs': typeof AuditRunsRoute
-  '/brand-authority': typeof BrandAuthorityRoute
   '/crawler': typeof CrawlerRoute
-  '/dashboard': typeof DashboardRoute
   '/early-access': typeof EarlyAccessRoute
   '/onboarding': typeof OnboardingRoute
-  '/planner': typeof PlannerRoute
   '/request-demo': typeof RequestDemoRoute
-  '/settings': typeof SettingsRoute
-  '/technical-health': typeof TechnicalHealthRouteWithChildren
-  '/website-authority': typeof WebsiteAuthorityRouteWithChildren
-  '/audit-runs_/$runId': typeof AuditRunsRunIdRoute
-  '/brand-authority_/ai-visibility': typeof BrandAuthorityAiVisibilityRoute
-  '/brand-authority_/brand-love': typeof BrandAuthorityBrandLoveRoute
-  '/brand-authority_/domain-age': typeof BrandAuthorityDomainAgeRoute
-  '/brand-authority_/domain-authority': typeof BrandAuthorityDomainAuthorityRoute
-  '/brand-authority_/page-age': typeof BrandAuthorityPageAgeRouteWithChildren
-  '/brand-authority_/query-signals': typeof BrandAuthorityQuerySignalsRoute
-  '/brand-authority_/site-focus': typeof BrandAuthoritySiteFocusRoute
   '/help/$slug': typeof HelpSlugRoute
-  '/technical-health/cwv': typeof TechnicalHealthCwvRouteWithChildren
-  '/website-authority/internal-equity': typeof WebsiteAuthorityInternalEquityRoute
   '/help/': typeof HelpIndexRoute
-  '/technical-health/': typeof TechnicalHealthIndexRoute
-  '/website-authority/': typeof WebsiteAuthorityIndexRoute
-  '/audit-runs_/$runId_/changes': typeof AuditRunsRunIdChangesRoute
-  '/audit-runs_/$runId_/errors': typeof AuditRunsRunIdErrorsRoute
-  '/audit-runs_/$runId_/inventory': typeof AuditRunsRunIdInventoryRoute
-  '/audit-runs_/$runId_/settings': typeof AuditRunsRunIdSettingsRoute
-  '/audit-runs_/$runId_/urls': typeof AuditRunsRunIdUrlsRoute
-  '/brand-authority_/page-age/outliers': typeof BrandAuthorityPageAgeOutliersRoute
-  '/brand-authority_/site-focus_/table': typeof BrandAuthoritySiteFocusTableRoute
-  '/technical-health/cwv/deep-dive': typeof TechnicalHealthCwvDeepDiveRoute
-  '/technical-health/cwv/opportunities': typeof TechnicalHealthCwvOpportunitiesRoute
-  '/audit-runs_/$runId_/issues/$issueId': typeof AuditRunsRunIdIssuesIssueIdRoute
+  '/project/$projectId/settings': typeof ProjectProjectIdSettingsRoute
+  '/project/$projectId/dashboard/technical-health': typeof ProjectProjectIdDashboardTechnicalHealthRouteWithChildren
+  '/project/$projectId/dashboard/website-authority': typeof ProjectProjectIdDashboardWebsiteAuthorityRouteWithChildren
+  '/project/$projectId/audit-runs/': typeof ProjectProjectIdAuditRunsIndexRoute
+  '/project/$projectId/dashboard/': typeof ProjectProjectIdDashboardIndexRoute
+  '/project/$projectId/planner/': typeof ProjectProjectIdPlannerIndexRoute
+  '/project/$projectId/audit-runs/$runId_/changes': typeof ProjectProjectIdAuditRunsRunIdChangesRoute
+  '/project/$projectId/audit-runs/$runId_/errors': typeof ProjectProjectIdAuditRunsRunIdErrorsRoute
+  '/project/$projectId/audit-runs/$runId_/inventory': typeof ProjectProjectIdAuditRunsRunIdInventoryRoute
+  '/project/$projectId/audit-runs/$runId_/settings': typeof ProjectProjectIdAuditRunsRunIdSettingsRoute
+  '/project/$projectId/audit-runs/$runId_/urls': typeof ProjectProjectIdAuditRunsRunIdUrlsRoute
+  '/project/$projectId/dashboard/brand-authority/ai-visibility': typeof ProjectProjectIdDashboardBrandAuthorityAiVisibilityRoute
+  '/project/$projectId/dashboard/brand-authority/brand-love': typeof ProjectProjectIdDashboardBrandAuthorityBrandLoveRoute
+  '/project/$projectId/dashboard/brand-authority/domain-age': typeof ProjectProjectIdDashboardBrandAuthorityDomainAgeRoute
+  '/project/$projectId/dashboard/brand-authority/domain-authority': typeof ProjectProjectIdDashboardBrandAuthorityDomainAuthorityRoute
+  '/project/$projectId/dashboard/brand-authority/page-age': typeof ProjectProjectIdDashboardBrandAuthorityPageAgeRoute
+  '/project/$projectId/dashboard/brand-authority/query-signals': typeof ProjectProjectIdDashboardBrandAuthorityQuerySignalsRoute
+  '/project/$projectId/dashboard/brand-authority/site-focus': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute
+  '/project/$projectId/dashboard/technical-health/cwv': typeof ProjectProjectIdDashboardTechnicalHealthCwvRouteWithChildren
+  '/project/$projectId/dashboard/website-authority/internal-equity': typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute
+  '/project/$projectId/audit-runs/$runId/': typeof ProjectProjectIdAuditRunsRunIdIndexRoute
+  '/project/$projectId/dashboard/brand-authority/': typeof ProjectProjectIdDashboardBrandAuthorityIndexRoute
+  '/project/$projectId/dashboard/technical-health/': typeof ProjectProjectIdDashboardTechnicalHealthIndexRoute
+  '/project/$projectId/dashboard/website-authority/': typeof ProjectProjectIdDashboardWebsiteAuthorityIndexRoute
+  '/project/$projectId/audit-runs/$runId_/issues/$issueId': typeof ProjectProjectIdAuditRunsRunIdIssuesIssueIdRoute
+  '/project/$projectId/dashboard/brand-authority/page-age_/outliers': typeof ProjectProjectIdDashboardBrandAuthorityPageAgeOutliersRoute
+  '/project/$projectId/dashboard/brand-authority/site-focus_/table': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRoute
+  '/project/$projectId/dashboard/technical-health/cwv/deep-dive': typeof ProjectProjectIdDashboardTechnicalHealthCwvDeepDiveRoute
+  '/project/$projectId/dashboard/technical-health/cwv/opportunities': typeof ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/account-settings'
-    | '/audit-runs'
-    | '/brand-authority'
     | '/crawler'
-    | '/dashboard'
     | '/early-access'
     | '/onboarding'
-    | '/planner'
     | '/request-demo'
-    | '/settings'
-    | '/technical-health'
-    | '/website-authority'
-    | '/audit-runs/$runId'
-    | '/brand-authority/ai-visibility'
-    | '/brand-authority/brand-love'
-    | '/brand-authority/domain-age'
-    | '/brand-authority/domain-authority'
-    | '/brand-authority/page-age'
-    | '/brand-authority/query-signals'
-    | '/brand-authority/site-focus'
     | '/help/$slug'
-    | '/technical-health/cwv'
-    | '/website-authority/internal-equity'
     | '/help/'
-    | '/technical-health/'
-    | '/website-authority/'
-    | '/audit-runs/$runId/changes'
-    | '/audit-runs/$runId/errors'
-    | '/audit-runs/$runId/inventory'
-    | '/audit-runs/$runId/settings'
-    | '/audit-runs/$runId/urls'
-    | '/brand-authority/page-age/outliers'
-    | '/brand-authority/site-focus/table'
-    | '/technical-health/cwv/deep-dive'
-    | '/technical-health/cwv/opportunities'
-    | '/audit-runs/$runId/issues/$issueId'
+    | '/project/$projectId/settings'
+    | '/project/$projectId/dashboard/technical-health'
+    | '/project/$projectId/dashboard/website-authority'
+    | '/project/$projectId/audit-runs/'
+    | '/project/$projectId/dashboard/'
+    | '/project/$projectId/planner/'
+    | '/project/$projectId/audit-runs/$runId/changes'
+    | '/project/$projectId/audit-runs/$runId/errors'
+    | '/project/$projectId/audit-runs/$runId/inventory'
+    | '/project/$projectId/audit-runs/$runId/settings'
+    | '/project/$projectId/audit-runs/$runId/urls'
+    | '/project/$projectId/dashboard/brand-authority/ai-visibility'
+    | '/project/$projectId/dashboard/brand-authority/brand-love'
+    | '/project/$projectId/dashboard/brand-authority/domain-age'
+    | '/project/$projectId/dashboard/brand-authority/domain-authority'
+    | '/project/$projectId/dashboard/brand-authority/page-age'
+    | '/project/$projectId/dashboard/brand-authority/query-signals'
+    | '/project/$projectId/dashboard/brand-authority/site-focus'
+    | '/project/$projectId/dashboard/technical-health/cwv'
+    | '/project/$projectId/dashboard/website-authority/internal-equity'
+    | '/project/$projectId/audit-runs/$runId/'
+    | '/project/$projectId/dashboard/brand-authority/'
+    | '/project/$projectId/dashboard/technical-health/'
+    | '/project/$projectId/dashboard/website-authority/'
+    | '/project/$projectId/audit-runs/$runId/issues/$issueId'
+    | '/project/$projectId/dashboard/brand-authority/page-age/outliers'
+    | '/project/$projectId/dashboard/brand-authority/site-focus/table'
+    | '/project/$projectId/dashboard/technical-health/cwv/deep-dive'
+    | '/project/$projectId/dashboard/technical-health/cwv/opportunities'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/account-settings'
-    | '/audit-runs'
-    | '/brand-authority'
     | '/crawler'
-    | '/dashboard'
     | '/early-access'
     | '/onboarding'
-    | '/planner'
     | '/request-demo'
-    | '/settings'
-    | '/audit-runs/$runId'
-    | '/brand-authority/ai-visibility'
-    | '/brand-authority/brand-love'
-    | '/brand-authority/domain-age'
-    | '/brand-authority/domain-authority'
-    | '/brand-authority/page-age'
-    | '/brand-authority/query-signals'
-    | '/brand-authority/site-focus'
     | '/help/$slug'
-    | '/technical-health/cwv'
-    | '/website-authority/internal-equity'
     | '/help'
-    | '/technical-health'
-    | '/website-authority'
-    | '/audit-runs/$runId/changes'
-    | '/audit-runs/$runId/errors'
-    | '/audit-runs/$runId/inventory'
-    | '/audit-runs/$runId/settings'
-    | '/audit-runs/$runId/urls'
-    | '/brand-authority/page-age/outliers'
-    | '/brand-authority/site-focus/table'
-    | '/technical-health/cwv/deep-dive'
-    | '/technical-health/cwv/opportunities'
-    | '/audit-runs/$runId/issues/$issueId'
+    | '/project/$projectId/settings'
+    | '/project/$projectId/audit-runs'
+    | '/project/$projectId/dashboard'
+    | '/project/$projectId/planner'
+    | '/project/$projectId/audit-runs/$runId/changes'
+    | '/project/$projectId/audit-runs/$runId/errors'
+    | '/project/$projectId/audit-runs/$runId/inventory'
+    | '/project/$projectId/audit-runs/$runId/settings'
+    | '/project/$projectId/audit-runs/$runId/urls'
+    | '/project/$projectId/dashboard/brand-authority/ai-visibility'
+    | '/project/$projectId/dashboard/brand-authority/brand-love'
+    | '/project/$projectId/dashboard/brand-authority/domain-age'
+    | '/project/$projectId/dashboard/brand-authority/domain-authority'
+    | '/project/$projectId/dashboard/brand-authority/page-age'
+    | '/project/$projectId/dashboard/brand-authority/query-signals'
+    | '/project/$projectId/dashboard/brand-authority/site-focus'
+    | '/project/$projectId/dashboard/technical-health/cwv'
+    | '/project/$projectId/dashboard/website-authority/internal-equity'
+    | '/project/$projectId/audit-runs/$runId'
+    | '/project/$projectId/dashboard/brand-authority'
+    | '/project/$projectId/dashboard/technical-health'
+    | '/project/$projectId/dashboard/website-authority'
+    | '/project/$projectId/audit-runs/$runId/issues/$issueId'
+    | '/project/$projectId/dashboard/brand-authority/page-age/outliers'
+    | '/project/$projectId/dashboard/brand-authority/site-focus/table'
+    | '/project/$projectId/dashboard/technical-health/cwv/deep-dive'
+    | '/project/$projectId/dashboard/technical-health/cwv/opportunities'
   id:
     | '__root__'
     | '/'
     | '/account-settings'
-    | '/audit-runs'
-    | '/brand-authority'
     | '/crawler'
-    | '/dashboard'
     | '/early-access'
     | '/onboarding'
-    | '/planner'
     | '/request-demo'
-    | '/settings'
-    | '/technical-health'
-    | '/website-authority'
-    | '/audit-runs_/$runId'
-    | '/brand-authority_/ai-visibility'
-    | '/brand-authority_/brand-love'
-    | '/brand-authority_/domain-age'
-    | '/brand-authority_/domain-authority'
-    | '/brand-authority_/page-age'
-    | '/brand-authority_/query-signals'
-    | '/brand-authority_/site-focus'
     | '/help/$slug'
-    | '/technical-health/cwv'
-    | '/website-authority/internal-equity'
     | '/help/'
-    | '/technical-health/'
-    | '/website-authority/'
-    | '/audit-runs_/$runId_/changes'
-    | '/audit-runs_/$runId_/errors'
-    | '/audit-runs_/$runId_/inventory'
-    | '/audit-runs_/$runId_/settings'
-    | '/audit-runs_/$runId_/urls'
-    | '/brand-authority_/page-age/outliers'
-    | '/brand-authority_/site-focus_/table'
-    | '/technical-health/cwv/deep-dive'
-    | '/technical-health/cwv/opportunities'
-    | '/audit-runs_/$runId_/issues/$issueId'
+    | '/project/$projectId/settings'
+    | '/project/$projectId/dashboard/technical-health'
+    | '/project/$projectId/dashboard/website-authority'
+    | '/project/$projectId/audit-runs/'
+    | '/project/$projectId/dashboard/'
+    | '/project/$projectId/planner/'
+    | '/project/$projectId/audit-runs/$runId_/changes'
+    | '/project/$projectId/audit-runs/$runId_/errors'
+    | '/project/$projectId/audit-runs/$runId_/inventory'
+    | '/project/$projectId/audit-runs/$runId_/settings'
+    | '/project/$projectId/audit-runs/$runId_/urls'
+    | '/project/$projectId/dashboard/brand-authority/ai-visibility'
+    | '/project/$projectId/dashboard/brand-authority/brand-love'
+    | '/project/$projectId/dashboard/brand-authority/domain-age'
+    | '/project/$projectId/dashboard/brand-authority/domain-authority'
+    | '/project/$projectId/dashboard/brand-authority/page-age'
+    | '/project/$projectId/dashboard/brand-authority/query-signals'
+    | '/project/$projectId/dashboard/brand-authority/site-focus'
+    | '/project/$projectId/dashboard/technical-health/cwv'
+    | '/project/$projectId/dashboard/website-authority/internal-equity'
+    | '/project/$projectId/audit-runs/$runId/'
+    | '/project/$projectId/dashboard/brand-authority/'
+    | '/project/$projectId/dashboard/technical-health/'
+    | '/project/$projectId/dashboard/website-authority/'
+    | '/project/$projectId/audit-runs/$runId_/issues/$issueId'
+    | '/project/$projectId/dashboard/brand-authority/page-age_/outliers'
+    | '/project/$projectId/dashboard/brand-authority/site-focus_/table'
+    | '/project/$projectId/dashboard/technical-health/cwv/deep-dive'
+    | '/project/$projectId/dashboard/technical-health/cwv/opportunities'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountSettingsRoute: typeof AccountSettingsRoute
-  AuditRunsRoute: typeof AuditRunsRoute
-  BrandAuthorityRoute: typeof BrandAuthorityRoute
   CrawlerRoute: typeof CrawlerRoute
-  DashboardRoute: typeof DashboardRoute
   EarlyAccessRoute: typeof EarlyAccessRoute
   OnboardingRoute: typeof OnboardingRoute
-  PlannerRoute: typeof PlannerRoute
   RequestDemoRoute: typeof RequestDemoRoute
-  SettingsRoute: typeof SettingsRoute
-  TechnicalHealthRoute: typeof TechnicalHealthRouteWithChildren
-  WebsiteAuthorityRoute: typeof WebsiteAuthorityRouteWithChildren
-  AuditRunsRunIdRoute: typeof AuditRunsRunIdRoute
-  BrandAuthorityAiVisibilityRoute: typeof BrandAuthorityAiVisibilityRoute
-  BrandAuthorityBrandLoveRoute: typeof BrandAuthorityBrandLoveRoute
-  BrandAuthorityDomainAgeRoute: typeof BrandAuthorityDomainAgeRoute
-  BrandAuthorityDomainAuthorityRoute: typeof BrandAuthorityDomainAuthorityRoute
-  BrandAuthorityPageAgeRoute: typeof BrandAuthorityPageAgeRouteWithChildren
-  BrandAuthorityQuerySignalsRoute: typeof BrandAuthorityQuerySignalsRoute
-  BrandAuthoritySiteFocusRoute: typeof BrandAuthoritySiteFocusRoute
   HelpSlugRoute: typeof HelpSlugRoute
   HelpIndexRoute: typeof HelpIndexRoute
-  AuditRunsRunIdChangesRoute: typeof AuditRunsRunIdChangesRoute
-  AuditRunsRunIdErrorsRoute: typeof AuditRunsRunIdErrorsRoute
-  AuditRunsRunIdInventoryRoute: typeof AuditRunsRunIdInventoryRoute
-  AuditRunsRunIdSettingsRoute: typeof AuditRunsRunIdSettingsRoute
-  AuditRunsRunIdUrlsRoute: typeof AuditRunsRunIdUrlsRoute
-  BrandAuthoritySiteFocusTableRoute: typeof BrandAuthoritySiteFocusTableRoute
-  AuditRunsRunIdIssuesIssueIdRoute: typeof AuditRunsRunIdIssuesIssueIdRoute
+  ProjectProjectIdSettingsRoute: typeof ProjectProjectIdSettingsRoute
+  ProjectProjectIdDashboardTechnicalHealthRoute: typeof ProjectProjectIdDashboardTechnicalHealthRouteWithChildren
+  ProjectProjectIdDashboardWebsiteAuthorityRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityRouteWithChildren
+  ProjectProjectIdAuditRunsIndexRoute: typeof ProjectProjectIdAuditRunsIndexRoute
+  ProjectProjectIdDashboardIndexRoute: typeof ProjectProjectIdDashboardIndexRoute
+  ProjectProjectIdPlannerIndexRoute: typeof ProjectProjectIdPlannerIndexRoute
+  ProjectProjectIdAuditRunsRunIdChangesRoute: typeof ProjectProjectIdAuditRunsRunIdChangesRoute
+  ProjectProjectIdAuditRunsRunIdErrorsRoute: typeof ProjectProjectIdAuditRunsRunIdErrorsRoute
+  ProjectProjectIdAuditRunsRunIdInventoryRoute: typeof ProjectProjectIdAuditRunsRunIdInventoryRoute
+  ProjectProjectIdAuditRunsRunIdSettingsRoute: typeof ProjectProjectIdAuditRunsRunIdSettingsRoute
+  ProjectProjectIdAuditRunsRunIdUrlsRoute: typeof ProjectProjectIdAuditRunsRunIdUrlsRoute
+  ProjectProjectIdDashboardBrandAuthorityAiVisibilityRoute: typeof ProjectProjectIdDashboardBrandAuthorityAiVisibilityRoute
+  ProjectProjectIdDashboardBrandAuthorityBrandLoveRoute: typeof ProjectProjectIdDashboardBrandAuthorityBrandLoveRoute
+  ProjectProjectIdDashboardBrandAuthorityDomainAgeRoute: typeof ProjectProjectIdDashboardBrandAuthorityDomainAgeRoute
+  ProjectProjectIdDashboardBrandAuthorityDomainAuthorityRoute: typeof ProjectProjectIdDashboardBrandAuthorityDomainAuthorityRoute
+  ProjectProjectIdDashboardBrandAuthorityPageAgeRoute: typeof ProjectProjectIdDashboardBrandAuthorityPageAgeRoute
+  ProjectProjectIdDashboardBrandAuthorityQuerySignalsRoute: typeof ProjectProjectIdDashboardBrandAuthorityQuerySignalsRoute
+  ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute: typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute
+  ProjectProjectIdAuditRunsRunIdIndexRoute: typeof ProjectProjectIdAuditRunsRunIdIndexRoute
+  ProjectProjectIdDashboardBrandAuthorityIndexRoute: typeof ProjectProjectIdDashboardBrandAuthorityIndexRoute
+  ProjectProjectIdAuditRunsRunIdIssuesIssueIdRoute: typeof ProjectProjectIdAuditRunsRunIdIssuesIssueIdRoute
+  ProjectProjectIdDashboardBrandAuthorityPageAgeOutliersRoute: typeof ProjectProjectIdDashboardBrandAuthorityPageAgeOutliersRoute
+  ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRoute: typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/website-authority': {
-      id: '/website-authority'
-      path: '/website-authority'
-      fullPath: '/website-authority'
-      preLoaderRoute: typeof WebsiteAuthorityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/technical-health': {
-      id: '/technical-health'
-      path: '/technical-health'
-      fullPath: '/technical-health'
-      preLoaderRoute: typeof TechnicalHealthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/request-demo': {
       id: '/request-demo'
       path: '/request-demo'
       fullPath: '/request-demo'
       preLoaderRoute: typeof RequestDemoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/planner': {
-      id: '/planner'
-      path: '/planner'
-      fullPath: '/planner'
-      preLoaderRoute: typeof PlannerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -560,32 +553,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EarlyAccessRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/crawler': {
       id: '/crawler'
       path: '/crawler'
       fullPath: '/crawler'
       preLoaderRoute: typeof CrawlerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/brand-authority': {
-      id: '/brand-authority'
-      path: '/brand-authority'
-      fullPath: '/brand-authority'
-      preLoaderRoute: typeof BrandAuthorityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/audit-runs': {
-      id: '/audit-runs'
-      path: '/audit-runs'
-      fullPath: '/audit-runs'
-      preLoaderRoute: typeof AuditRunsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account-settings': {
@@ -602,40 +574,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/website-authority/': {
-      id: '/website-authority/'
-      path: '/'
-      fullPath: '/website-authority/'
-      preLoaderRoute: typeof WebsiteAuthorityIndexRouteImport
-      parentRoute: typeof WebsiteAuthorityRoute
-    }
-    '/technical-health/': {
-      id: '/technical-health/'
-      path: '/'
-      fullPath: '/technical-health/'
-      preLoaderRoute: typeof TechnicalHealthIndexRouteImport
-      parentRoute: typeof TechnicalHealthRoute
-    }
     '/help/': {
       id: '/help/'
       path: '/help'
       fullPath: '/help/'
       preLoaderRoute: typeof HelpIndexRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/website-authority/internal-equity': {
-      id: '/website-authority/internal-equity'
-      path: '/internal-equity'
-      fullPath: '/website-authority/internal-equity'
-      preLoaderRoute: typeof WebsiteAuthorityInternalEquityRouteImport
-      parentRoute: typeof WebsiteAuthorityRoute
-    }
-    '/technical-health/cwv': {
-      id: '/technical-health/cwv'
-      path: '/cwv'
-      fullPath: '/technical-health/cwv'
-      preLoaderRoute: typeof TechnicalHealthCwvRouteImport
-      parentRoute: typeof TechnicalHealthRoute
     }
     '/help/$slug': {
       id: '/help/$slug'
@@ -644,219 +588,317 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HelpSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/brand-authority_/site-focus': {
-      id: '/brand-authority_/site-focus'
-      path: '/brand-authority/site-focus'
-      fullPath: '/brand-authority/site-focus'
-      preLoaderRoute: typeof BrandAuthoritySiteFocusRouteImport
+    '/project/$projectId/settings': {
+      id: '/project/$projectId/settings'
+      path: '/project/$projectId/settings'
+      fullPath: '/project/$projectId/settings'
+      preLoaderRoute: typeof ProjectProjectIdSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/brand-authority_/query-signals': {
-      id: '/brand-authority_/query-signals'
-      path: '/brand-authority/query-signals'
-      fullPath: '/brand-authority/query-signals'
-      preLoaderRoute: typeof BrandAuthorityQuerySignalsRouteImport
+    '/project/$projectId/planner/': {
+      id: '/project/$projectId/planner/'
+      path: '/project/$projectId/planner'
+      fullPath: '/project/$projectId/planner/'
+      preLoaderRoute: typeof ProjectProjectIdPlannerIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/brand-authority_/page-age': {
-      id: '/brand-authority_/page-age'
-      path: '/brand-authority/page-age'
-      fullPath: '/brand-authority/page-age'
-      preLoaderRoute: typeof BrandAuthorityPageAgeRouteImport
+    '/project/$projectId/dashboard/': {
+      id: '/project/$projectId/dashboard/'
+      path: '/project/$projectId/dashboard'
+      fullPath: '/project/$projectId/dashboard/'
+      preLoaderRoute: typeof ProjectProjectIdDashboardIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/brand-authority_/domain-authority': {
-      id: '/brand-authority_/domain-authority'
-      path: '/brand-authority/domain-authority'
-      fullPath: '/brand-authority/domain-authority'
-      preLoaderRoute: typeof BrandAuthorityDomainAuthorityRouteImport
+    '/project/$projectId/audit-runs/': {
+      id: '/project/$projectId/audit-runs/'
+      path: '/project/$projectId/audit-runs'
+      fullPath: '/project/$projectId/audit-runs/'
+      preLoaderRoute: typeof ProjectProjectIdAuditRunsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/brand-authority_/domain-age': {
-      id: '/brand-authority_/domain-age'
-      path: '/brand-authority/domain-age'
-      fullPath: '/brand-authority/domain-age'
-      preLoaderRoute: typeof BrandAuthorityDomainAgeRouteImport
+    '/project/$projectId/dashboard/website-authority': {
+      id: '/project/$projectId/dashboard/website-authority'
+      path: '/project/$projectId/dashboard/website-authority'
+      fullPath: '/project/$projectId/dashboard/website-authority'
+      preLoaderRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/brand-authority_/brand-love': {
-      id: '/brand-authority_/brand-love'
-      path: '/brand-authority/brand-love'
-      fullPath: '/brand-authority/brand-love'
-      preLoaderRoute: typeof BrandAuthorityBrandLoveRouteImport
+    '/project/$projectId/dashboard/technical-health': {
+      id: '/project/$projectId/dashboard/technical-health'
+      path: '/project/$projectId/dashboard/technical-health'
+      fullPath: '/project/$projectId/dashboard/technical-health'
+      preLoaderRoute: typeof ProjectProjectIdDashboardTechnicalHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/brand-authority_/ai-visibility': {
-      id: '/brand-authority_/ai-visibility'
-      path: '/brand-authority/ai-visibility'
-      fullPath: '/brand-authority/ai-visibility'
-      preLoaderRoute: typeof BrandAuthorityAiVisibilityRouteImport
+    '/project/$projectId/dashboard/website-authority/': {
+      id: '/project/$projectId/dashboard/website-authority/'
+      path: '/'
+      fullPath: '/project/$projectId/dashboard/website-authority/'
+      preLoaderRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityIndexRouteImport
+      parentRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityRoute
+    }
+    '/project/$projectId/dashboard/technical-health/': {
+      id: '/project/$projectId/dashboard/technical-health/'
+      path: '/'
+      fullPath: '/project/$projectId/dashboard/technical-health/'
+      preLoaderRoute: typeof ProjectProjectIdDashboardTechnicalHealthIndexRouteImport
+      parentRoute: typeof ProjectProjectIdDashboardTechnicalHealthRoute
+    }
+    '/project/$projectId/dashboard/brand-authority/': {
+      id: '/project/$projectId/dashboard/brand-authority/'
+      path: '/project/$projectId/dashboard/brand-authority'
+      fullPath: '/project/$projectId/dashboard/brand-authority/'
+      preLoaderRoute: typeof ProjectProjectIdDashboardBrandAuthorityIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/audit-runs_/$runId': {
-      id: '/audit-runs_/$runId'
-      path: '/audit-runs/$runId'
-      fullPath: '/audit-runs/$runId'
-      preLoaderRoute: typeof AuditRunsRunIdRouteImport
+    '/project/$projectId/audit-runs/$runId/': {
+      id: '/project/$projectId/audit-runs/$runId/'
+      path: '/project/$projectId/audit-runs/$runId'
+      fullPath: '/project/$projectId/audit-runs/$runId/'
+      preLoaderRoute: typeof ProjectProjectIdAuditRunsRunIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/technical-health/cwv/opportunities': {
-      id: '/technical-health/cwv/opportunities'
+    '/project/$projectId/dashboard/website-authority/internal-equity': {
+      id: '/project/$projectId/dashboard/website-authority/internal-equity'
+      path: '/internal-equity'
+      fullPath: '/project/$projectId/dashboard/website-authority/internal-equity'
+      preLoaderRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRouteImport
+      parentRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityRoute
+    }
+    '/project/$projectId/dashboard/technical-health/cwv': {
+      id: '/project/$projectId/dashboard/technical-health/cwv'
+      path: '/cwv'
+      fullPath: '/project/$projectId/dashboard/technical-health/cwv'
+      preLoaderRoute: typeof ProjectProjectIdDashboardTechnicalHealthCwvRouteImport
+      parentRoute: typeof ProjectProjectIdDashboardTechnicalHealthRoute
+    }
+    '/project/$projectId/dashboard/brand-authority/site-focus': {
+      id: '/project/$projectId/dashboard/brand-authority/site-focus'
+      path: '/project/$projectId/dashboard/brand-authority/site-focus'
+      fullPath: '/project/$projectId/dashboard/brand-authority/site-focus'
+      preLoaderRoute: typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/dashboard/brand-authority/query-signals': {
+      id: '/project/$projectId/dashboard/brand-authority/query-signals'
+      path: '/project/$projectId/dashboard/brand-authority/query-signals'
+      fullPath: '/project/$projectId/dashboard/brand-authority/query-signals'
+      preLoaderRoute: typeof ProjectProjectIdDashboardBrandAuthorityQuerySignalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/dashboard/brand-authority/page-age': {
+      id: '/project/$projectId/dashboard/brand-authority/page-age'
+      path: '/project/$projectId/dashboard/brand-authority/page-age'
+      fullPath: '/project/$projectId/dashboard/brand-authority/page-age'
+      preLoaderRoute: typeof ProjectProjectIdDashboardBrandAuthorityPageAgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/dashboard/brand-authority/domain-authority': {
+      id: '/project/$projectId/dashboard/brand-authority/domain-authority'
+      path: '/project/$projectId/dashboard/brand-authority/domain-authority'
+      fullPath: '/project/$projectId/dashboard/brand-authority/domain-authority'
+      preLoaderRoute: typeof ProjectProjectIdDashboardBrandAuthorityDomainAuthorityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/dashboard/brand-authority/domain-age': {
+      id: '/project/$projectId/dashboard/brand-authority/domain-age'
+      path: '/project/$projectId/dashboard/brand-authority/domain-age'
+      fullPath: '/project/$projectId/dashboard/brand-authority/domain-age'
+      preLoaderRoute: typeof ProjectProjectIdDashboardBrandAuthorityDomainAgeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/dashboard/brand-authority/brand-love': {
+      id: '/project/$projectId/dashboard/brand-authority/brand-love'
+      path: '/project/$projectId/dashboard/brand-authority/brand-love'
+      fullPath: '/project/$projectId/dashboard/brand-authority/brand-love'
+      preLoaderRoute: typeof ProjectProjectIdDashboardBrandAuthorityBrandLoveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/dashboard/brand-authority/ai-visibility': {
+      id: '/project/$projectId/dashboard/brand-authority/ai-visibility'
+      path: '/project/$projectId/dashboard/brand-authority/ai-visibility'
+      fullPath: '/project/$projectId/dashboard/brand-authority/ai-visibility'
+      preLoaderRoute: typeof ProjectProjectIdDashboardBrandAuthorityAiVisibilityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/audit-runs/$runId_/urls': {
+      id: '/project/$projectId/audit-runs/$runId_/urls'
+      path: '/project/$projectId/audit-runs/$runId/urls'
+      fullPath: '/project/$projectId/audit-runs/$runId/urls'
+      preLoaderRoute: typeof ProjectProjectIdAuditRunsRunIdUrlsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/audit-runs/$runId_/settings': {
+      id: '/project/$projectId/audit-runs/$runId_/settings'
+      path: '/project/$projectId/audit-runs/$runId/settings'
+      fullPath: '/project/$projectId/audit-runs/$runId/settings'
+      preLoaderRoute: typeof ProjectProjectIdAuditRunsRunIdSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/audit-runs/$runId_/inventory': {
+      id: '/project/$projectId/audit-runs/$runId_/inventory'
+      path: '/project/$projectId/audit-runs/$runId/inventory'
+      fullPath: '/project/$projectId/audit-runs/$runId/inventory'
+      preLoaderRoute: typeof ProjectProjectIdAuditRunsRunIdInventoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/audit-runs/$runId_/errors': {
+      id: '/project/$projectId/audit-runs/$runId_/errors'
+      path: '/project/$projectId/audit-runs/$runId/errors'
+      fullPath: '/project/$projectId/audit-runs/$runId/errors'
+      preLoaderRoute: typeof ProjectProjectIdAuditRunsRunIdErrorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/audit-runs/$runId_/changes': {
+      id: '/project/$projectId/audit-runs/$runId_/changes'
+      path: '/project/$projectId/audit-runs/$runId/changes'
+      fullPath: '/project/$projectId/audit-runs/$runId/changes'
+      preLoaderRoute: typeof ProjectProjectIdAuditRunsRunIdChangesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project/$projectId/dashboard/technical-health/cwv/opportunities': {
+      id: '/project/$projectId/dashboard/technical-health/cwv/opportunities'
       path: '/opportunities'
-      fullPath: '/technical-health/cwv/opportunities'
-      preLoaderRoute: typeof TechnicalHealthCwvOpportunitiesRouteImport
-      parentRoute: typeof TechnicalHealthCwvRoute
+      fullPath: '/project/$projectId/dashboard/technical-health/cwv/opportunities'
+      preLoaderRoute: typeof ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRouteImport
+      parentRoute: typeof ProjectProjectIdDashboardTechnicalHealthCwvRoute
     }
-    '/technical-health/cwv/deep-dive': {
-      id: '/technical-health/cwv/deep-dive'
+    '/project/$projectId/dashboard/technical-health/cwv/deep-dive': {
+      id: '/project/$projectId/dashboard/technical-health/cwv/deep-dive'
       path: '/deep-dive'
-      fullPath: '/technical-health/cwv/deep-dive'
-      preLoaderRoute: typeof TechnicalHealthCwvDeepDiveRouteImport
-      parentRoute: typeof TechnicalHealthCwvRoute
+      fullPath: '/project/$projectId/dashboard/technical-health/cwv/deep-dive'
+      preLoaderRoute: typeof ProjectProjectIdDashboardTechnicalHealthCwvDeepDiveRouteImport
+      parentRoute: typeof ProjectProjectIdDashboardTechnicalHealthCwvRoute
     }
-    '/brand-authority_/site-focus_/table': {
-      id: '/brand-authority_/site-focus_/table'
-      path: '/brand-authority/site-focus/table'
-      fullPath: '/brand-authority/site-focus/table'
-      preLoaderRoute: typeof BrandAuthoritySiteFocusTableRouteImport
+    '/project/$projectId/dashboard/brand-authority/site-focus_/table': {
+      id: '/project/$projectId/dashboard/brand-authority/site-focus_/table'
+      path: '/project/$projectId/dashboard/brand-authority/site-focus/table'
+      fullPath: '/project/$projectId/dashboard/brand-authority/site-focus/table'
+      preLoaderRoute: typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/brand-authority_/page-age/outliers': {
-      id: '/brand-authority_/page-age/outliers'
-      path: '/outliers'
-      fullPath: '/brand-authority/page-age/outliers'
-      preLoaderRoute: typeof BrandAuthorityPageAgeOutliersRouteImport
-      parentRoute: typeof BrandAuthorityPageAgeRoute
-    }
-    '/audit-runs_/$runId_/urls': {
-      id: '/audit-runs_/$runId_/urls'
-      path: '/audit-runs/$runId/urls'
-      fullPath: '/audit-runs/$runId/urls'
-      preLoaderRoute: typeof AuditRunsRunIdUrlsRouteImport
+    '/project/$projectId/dashboard/brand-authority/page-age_/outliers': {
+      id: '/project/$projectId/dashboard/brand-authority/page-age_/outliers'
+      path: '/project/$projectId/dashboard/brand-authority/page-age/outliers'
+      fullPath: '/project/$projectId/dashboard/brand-authority/page-age/outliers'
+      preLoaderRoute: typeof ProjectProjectIdDashboardBrandAuthorityPageAgeOutliersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/audit-runs_/$runId_/settings': {
-      id: '/audit-runs_/$runId_/settings'
-      path: '/audit-runs/$runId/settings'
-      fullPath: '/audit-runs/$runId/settings'
-      preLoaderRoute: typeof AuditRunsRunIdSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/audit-runs_/$runId_/inventory': {
-      id: '/audit-runs_/$runId_/inventory'
-      path: '/audit-runs/$runId/inventory'
-      fullPath: '/audit-runs/$runId/inventory'
-      preLoaderRoute: typeof AuditRunsRunIdInventoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/audit-runs_/$runId_/errors': {
-      id: '/audit-runs_/$runId_/errors'
-      path: '/audit-runs/$runId/errors'
-      fullPath: '/audit-runs/$runId/errors'
-      preLoaderRoute: typeof AuditRunsRunIdErrorsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/audit-runs_/$runId_/changes': {
-      id: '/audit-runs_/$runId_/changes'
-      path: '/audit-runs/$runId/changes'
-      fullPath: '/audit-runs/$runId/changes'
-      preLoaderRoute: typeof AuditRunsRunIdChangesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/audit-runs_/$runId_/issues/$issueId': {
-      id: '/audit-runs_/$runId_/issues/$issueId'
-      path: '/audit-runs/$runId/issues/$issueId'
-      fullPath: '/audit-runs/$runId/issues/$issueId'
-      preLoaderRoute: typeof AuditRunsRunIdIssuesIssueIdRouteImport
+    '/project/$projectId/audit-runs/$runId_/issues/$issueId': {
+      id: '/project/$projectId/audit-runs/$runId_/issues/$issueId'
+      path: '/project/$projectId/audit-runs/$runId/issues/$issueId'
+      fullPath: '/project/$projectId/audit-runs/$runId/issues/$issueId'
+      preLoaderRoute: typeof ProjectProjectIdAuditRunsRunIdIssuesIssueIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface TechnicalHealthCwvRouteChildren {
-  TechnicalHealthCwvDeepDiveRoute: typeof TechnicalHealthCwvDeepDiveRoute
-  TechnicalHealthCwvOpportunitiesRoute: typeof TechnicalHealthCwvOpportunitiesRoute
+interface ProjectProjectIdDashboardTechnicalHealthCwvRouteChildren {
+  ProjectProjectIdDashboardTechnicalHealthCwvDeepDiveRoute: typeof ProjectProjectIdDashboardTechnicalHealthCwvDeepDiveRoute
+  ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRoute: typeof ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRoute
 }
 
-const TechnicalHealthCwvRouteChildren: TechnicalHealthCwvRouteChildren = {
-  TechnicalHealthCwvDeepDiveRoute: TechnicalHealthCwvDeepDiveRoute,
-  TechnicalHealthCwvOpportunitiesRoute: TechnicalHealthCwvOpportunitiesRoute,
+const ProjectProjectIdDashboardTechnicalHealthCwvRouteChildren: ProjectProjectIdDashboardTechnicalHealthCwvRouteChildren =
+  {
+    ProjectProjectIdDashboardTechnicalHealthCwvDeepDiveRoute:
+      ProjectProjectIdDashboardTechnicalHealthCwvDeepDiveRoute,
+    ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRoute:
+      ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRoute,
+  }
+
+const ProjectProjectIdDashboardTechnicalHealthCwvRouteWithChildren =
+  ProjectProjectIdDashboardTechnicalHealthCwvRoute._addFileChildren(
+    ProjectProjectIdDashboardTechnicalHealthCwvRouteChildren,
+  )
+
+interface ProjectProjectIdDashboardTechnicalHealthRouteChildren {
+  ProjectProjectIdDashboardTechnicalHealthCwvRoute: typeof ProjectProjectIdDashboardTechnicalHealthCwvRouteWithChildren
+  ProjectProjectIdDashboardTechnicalHealthIndexRoute: typeof ProjectProjectIdDashboardTechnicalHealthIndexRoute
 }
 
-const TechnicalHealthCwvRouteWithChildren =
-  TechnicalHealthCwvRoute._addFileChildren(TechnicalHealthCwvRouteChildren)
+const ProjectProjectIdDashboardTechnicalHealthRouteChildren: ProjectProjectIdDashboardTechnicalHealthRouteChildren =
+  {
+    ProjectProjectIdDashboardTechnicalHealthCwvRoute:
+      ProjectProjectIdDashboardTechnicalHealthCwvRouteWithChildren,
+    ProjectProjectIdDashboardTechnicalHealthIndexRoute:
+      ProjectProjectIdDashboardTechnicalHealthIndexRoute,
+  }
 
-interface TechnicalHealthRouteChildren {
-  TechnicalHealthCwvRoute: typeof TechnicalHealthCwvRouteWithChildren
-  TechnicalHealthIndexRoute: typeof TechnicalHealthIndexRoute
+const ProjectProjectIdDashboardTechnicalHealthRouteWithChildren =
+  ProjectProjectIdDashboardTechnicalHealthRoute._addFileChildren(
+    ProjectProjectIdDashboardTechnicalHealthRouteChildren,
+  )
+
+interface ProjectProjectIdDashboardWebsiteAuthorityRouteChildren {
+  ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute
+  ProjectProjectIdDashboardWebsiteAuthorityIndexRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityIndexRoute
 }
 
-const TechnicalHealthRouteChildren: TechnicalHealthRouteChildren = {
-  TechnicalHealthCwvRoute: TechnicalHealthCwvRouteWithChildren,
-  TechnicalHealthIndexRoute: TechnicalHealthIndexRoute,
-}
+const ProjectProjectIdDashboardWebsiteAuthorityRouteChildren: ProjectProjectIdDashboardWebsiteAuthorityRouteChildren =
+  {
+    ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute:
+      ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute,
+    ProjectProjectIdDashboardWebsiteAuthorityIndexRoute:
+      ProjectProjectIdDashboardWebsiteAuthorityIndexRoute,
+  }
 
-const TechnicalHealthRouteWithChildren = TechnicalHealthRoute._addFileChildren(
-  TechnicalHealthRouteChildren,
-)
-
-interface WebsiteAuthorityRouteChildren {
-  WebsiteAuthorityInternalEquityRoute: typeof WebsiteAuthorityInternalEquityRoute
-  WebsiteAuthorityIndexRoute: typeof WebsiteAuthorityIndexRoute
-}
-
-const WebsiteAuthorityRouteChildren: WebsiteAuthorityRouteChildren = {
-  WebsiteAuthorityInternalEquityRoute: WebsiteAuthorityInternalEquityRoute,
-  WebsiteAuthorityIndexRoute: WebsiteAuthorityIndexRoute,
-}
-
-const WebsiteAuthorityRouteWithChildren =
-  WebsiteAuthorityRoute._addFileChildren(WebsiteAuthorityRouteChildren)
-
-interface BrandAuthorityPageAgeRouteChildren {
-  BrandAuthorityPageAgeOutliersRoute: typeof BrandAuthorityPageAgeOutliersRoute
-}
-
-const BrandAuthorityPageAgeRouteChildren: BrandAuthorityPageAgeRouteChildren = {
-  BrandAuthorityPageAgeOutliersRoute: BrandAuthorityPageAgeOutliersRoute,
-}
-
-const BrandAuthorityPageAgeRouteWithChildren =
-  BrandAuthorityPageAgeRoute._addFileChildren(
-    BrandAuthorityPageAgeRouteChildren,
+const ProjectProjectIdDashboardWebsiteAuthorityRouteWithChildren =
+  ProjectProjectIdDashboardWebsiteAuthorityRoute._addFileChildren(
+    ProjectProjectIdDashboardWebsiteAuthorityRouteChildren,
   )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountSettingsRoute: AccountSettingsRoute,
-  AuditRunsRoute: AuditRunsRoute,
-  BrandAuthorityRoute: BrandAuthorityRoute,
   CrawlerRoute: CrawlerRoute,
-  DashboardRoute: DashboardRoute,
   EarlyAccessRoute: EarlyAccessRoute,
   OnboardingRoute: OnboardingRoute,
-  PlannerRoute: PlannerRoute,
   RequestDemoRoute: RequestDemoRoute,
-  SettingsRoute: SettingsRoute,
-  TechnicalHealthRoute: TechnicalHealthRouteWithChildren,
-  WebsiteAuthorityRoute: WebsiteAuthorityRouteWithChildren,
-  AuditRunsRunIdRoute: AuditRunsRunIdRoute,
-  BrandAuthorityAiVisibilityRoute: BrandAuthorityAiVisibilityRoute,
-  BrandAuthorityBrandLoveRoute: BrandAuthorityBrandLoveRoute,
-  BrandAuthorityDomainAgeRoute: BrandAuthorityDomainAgeRoute,
-  BrandAuthorityDomainAuthorityRoute: BrandAuthorityDomainAuthorityRoute,
-  BrandAuthorityPageAgeRoute: BrandAuthorityPageAgeRouteWithChildren,
-  BrandAuthorityQuerySignalsRoute: BrandAuthorityQuerySignalsRoute,
-  BrandAuthoritySiteFocusRoute: BrandAuthoritySiteFocusRoute,
   HelpSlugRoute: HelpSlugRoute,
   HelpIndexRoute: HelpIndexRoute,
-  AuditRunsRunIdChangesRoute: AuditRunsRunIdChangesRoute,
-  AuditRunsRunIdErrorsRoute: AuditRunsRunIdErrorsRoute,
-  AuditRunsRunIdInventoryRoute: AuditRunsRunIdInventoryRoute,
-  AuditRunsRunIdSettingsRoute: AuditRunsRunIdSettingsRoute,
-  AuditRunsRunIdUrlsRoute: AuditRunsRunIdUrlsRoute,
-  BrandAuthoritySiteFocusTableRoute: BrandAuthoritySiteFocusTableRoute,
-  AuditRunsRunIdIssuesIssueIdRoute: AuditRunsRunIdIssuesIssueIdRoute,
+  ProjectProjectIdSettingsRoute: ProjectProjectIdSettingsRoute,
+  ProjectProjectIdDashboardTechnicalHealthRoute:
+    ProjectProjectIdDashboardTechnicalHealthRouteWithChildren,
+  ProjectProjectIdDashboardWebsiteAuthorityRoute:
+    ProjectProjectIdDashboardWebsiteAuthorityRouteWithChildren,
+  ProjectProjectIdAuditRunsIndexRoute: ProjectProjectIdAuditRunsIndexRoute,
+  ProjectProjectIdDashboardIndexRoute: ProjectProjectIdDashboardIndexRoute,
+  ProjectProjectIdPlannerIndexRoute: ProjectProjectIdPlannerIndexRoute,
+  ProjectProjectIdAuditRunsRunIdChangesRoute:
+    ProjectProjectIdAuditRunsRunIdChangesRoute,
+  ProjectProjectIdAuditRunsRunIdErrorsRoute:
+    ProjectProjectIdAuditRunsRunIdErrorsRoute,
+  ProjectProjectIdAuditRunsRunIdInventoryRoute:
+    ProjectProjectIdAuditRunsRunIdInventoryRoute,
+  ProjectProjectIdAuditRunsRunIdSettingsRoute:
+    ProjectProjectIdAuditRunsRunIdSettingsRoute,
+  ProjectProjectIdAuditRunsRunIdUrlsRoute:
+    ProjectProjectIdAuditRunsRunIdUrlsRoute,
+  ProjectProjectIdDashboardBrandAuthorityAiVisibilityRoute:
+    ProjectProjectIdDashboardBrandAuthorityAiVisibilityRoute,
+  ProjectProjectIdDashboardBrandAuthorityBrandLoveRoute:
+    ProjectProjectIdDashboardBrandAuthorityBrandLoveRoute,
+  ProjectProjectIdDashboardBrandAuthorityDomainAgeRoute:
+    ProjectProjectIdDashboardBrandAuthorityDomainAgeRoute,
+  ProjectProjectIdDashboardBrandAuthorityDomainAuthorityRoute:
+    ProjectProjectIdDashboardBrandAuthorityDomainAuthorityRoute,
+  ProjectProjectIdDashboardBrandAuthorityPageAgeRoute:
+    ProjectProjectIdDashboardBrandAuthorityPageAgeRoute,
+  ProjectProjectIdDashboardBrandAuthorityQuerySignalsRoute:
+    ProjectProjectIdDashboardBrandAuthorityQuerySignalsRoute,
+  ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute:
+    ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute,
+  ProjectProjectIdAuditRunsRunIdIndexRoute:
+    ProjectProjectIdAuditRunsRunIdIndexRoute,
+  ProjectProjectIdDashboardBrandAuthorityIndexRoute:
+    ProjectProjectIdDashboardBrandAuthorityIndexRoute,
+  ProjectProjectIdAuditRunsRunIdIssuesIssueIdRoute:
+    ProjectProjectIdAuditRunsRunIdIssuesIssueIdRoute,
+  ProjectProjectIdDashboardBrandAuthorityPageAgeOutliersRoute:
+    ProjectProjectIdDashboardBrandAuthorityPageAgeOutliersRoute,
+  ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRoute:
+    ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
