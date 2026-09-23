@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Area,
   ComposedChart,
@@ -25,9 +26,9 @@ export function OpportunityGapChart({ opportunity }: { opportunity: PageTypeOppo
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
           <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Trend</p>
-          <h2 className="text-base font-semibold mt-0.5">Actual vs potential — last 12 weeks</h2>
+          <h2 className="text-base font-semibold mt-0.5">Weekly actual vs modelled ceiling — last 12 weeks</h2>
           <p className="mt-1 text-xs text-muted-foreground">
-            Weekly figures. Everything else on this page is annual.
+            Illustrative weekly series. Revenue figures outside this chart are annual.
           </p>
           <div className="mt-2 flex items-center gap-4 font-mono text-[11px] text-muted-foreground">
             <span className="inline-flex items-center gap-2">
