@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import {
   ArrowRight,
   Check,
@@ -35,7 +36,7 @@ import {
   type Verdict,
 } from "@/lib/pricing-calculator";
 
-export const Route = createFileRoute("/planner")({
+export const Route = createFileRoute("/project/$projectId/planner/")({
   component: PricingCalculatorPage,
   head: () => ({
     meta: [

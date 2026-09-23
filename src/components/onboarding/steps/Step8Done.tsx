@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Link } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { StepShell } from "../StepShell";
 

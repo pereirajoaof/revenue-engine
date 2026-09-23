@@ -1,11 +1,12 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import { useMemo, useState } from "react";
 import { ArrowUpRight, Calendar, ChevronDown, CircleDot, LineChart as LineChartIcon, Table2, TriangleAlert } from "lucide-react";
 import { Area, AreaChart, Bar, BarChart, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-export const Route = createFileRoute("/brand-authority_/page-age")({
+export const Route = createFileRoute("/project/$projectId/dashboard/brand-authority/page-age")({
   component: PageAgePage,
   head: () => ({
     meta: [

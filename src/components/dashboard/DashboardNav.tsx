@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "@tanstack/react-router";
+import { useNavigate, useLocation } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import {
   LayoutDashboard,
   Search,

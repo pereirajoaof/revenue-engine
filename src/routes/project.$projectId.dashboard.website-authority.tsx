@@ -2,13 +2,13 @@ import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-export const Route = createFileRoute("/website-authority")({
+export const Route = createFileRoute("/project/$projectId/dashboard/website-authority")({
   component: WebsiteAuthorityLayout,
 });
 
 function WebsiteAuthorityLayout() {
   const location = useLocation();
-  const title = location.pathname === "/website-authority/internal-equity" ? "Internal Equity" : "Website Authority";
+  const title = location.pathname.endsWith("/website-authority/internal-equity") ? "Internal Equity" : "Website Authority";
 
   return (
     <div className="min-h-screen bg-background text-foreground">

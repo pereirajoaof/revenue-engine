@@ -1,4 +1,5 @@
-import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import { useEffect, useMemo, useState } from "react";
 import { Activity, ArrowDownRight, ArrowUpDown, ArrowUpRight, Download, Gauge, Loader2, RefreshCw, Smartphone, Target, TrendingUp, Wifi } from "lucide-react";
 import {
@@ -17,7 +18,7 @@ import {
 } from "recharts";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
-export const Route = createFileRoute("/technical-health/cwv")({
+export const Route = createFileRoute("/project/$projectId/dashboard/technical-health/cwv")({
   component: CwvDashboardPage,
   head: () => ({
     meta: [

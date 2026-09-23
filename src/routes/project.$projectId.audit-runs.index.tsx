@@ -1,4 +1,5 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import { format } from "date-fns";
 import { useMemo, useState, type ReactNode } from "react";
 import {
@@ -72,7 +73,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export const Route = createFileRoute("/audit-runs")({
+export const Route = createFileRoute("/project/$projectId/audit-runs/")({
   component: AuditRunsPage,
   head: () => ({
     meta: [

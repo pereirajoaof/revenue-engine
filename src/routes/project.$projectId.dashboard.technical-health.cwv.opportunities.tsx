@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CwvSectionNav, OpportunitiesTable } from "./technical-health.cwv";
 
-export const Route = createFileRoute("/technical-health/cwv/opportunities")({
+export const Route = createFileRoute("/project/$projectId/dashboard/technical-health/cwv/opportunities")({
   component: CwvOpportunitiesPage,
   head: () => ({
     meta: [

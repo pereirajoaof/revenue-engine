@@ -5,7 +5,7 @@ import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-export const Route = createFileRoute("/brand-authority_/domain-authority")({
+export const Route = createFileRoute("/project/$projectId/dashboard/brand-authority/domain-authority")({
   component: DomainAuthorityPage,
   head: () => ({
     meta: [

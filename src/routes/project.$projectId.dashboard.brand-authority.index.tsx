@@ -1,11 +1,12 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import { useMemo, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, Calendar, ChevronDown, CircleDot, ShieldCheck, Sparkles, TrendingUp } from "lucide-react";
 import { Line, LineChart, ReferenceDot, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-export const Route = createFileRoute("/brand-authority")({
+export const Route = createFileRoute("/project/$projectId/dashboard/brand-authority/")({
   component: BrandAuthorityPage,
   head: () => ({
     meta: [

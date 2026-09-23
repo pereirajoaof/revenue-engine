@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import { useMemo, useState } from "react";
 import {
   ArrowLeft,
@@ -27,7 +28,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export const Route = createFileRoute("/audit-runs_/$runId_/urls")({
+export const Route = createFileRoute("/project/$projectId/audit-runs/$runId_/urls")({
   component: UrlExplorerRoute,
   head: () => ({
     meta: [

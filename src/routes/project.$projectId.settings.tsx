@@ -5,7 +5,7 @@ import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { SettingsHeaderBar } from "@/components/settings/SettingsHeaderBar";
 import { SettingsPage } from "@/components/settings/SettingsPage";
 
-export const Route = createFileRoute("/settings")({
+export const Route = createFileRoute("/project/$projectId/settings")({
   component: SettingsRoute,
   head: () => ({
     meta: [

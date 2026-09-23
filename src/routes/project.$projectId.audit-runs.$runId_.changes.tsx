@@ -1,5 +1,6 @@
 import { useMemo } from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { ArrowLeft, ArrowRight, ExternalLink, GitCompare } from "lucide-react";
@@ -15,7 +16,7 @@ const searchSchema = z.object({
   issue_type: fallback(z.string(), "all").default("all"),
 });
 
-export const Route = createFileRoute("/audit-runs_/$runId_/changes")({
+export const Route = createFileRoute("/project/$projectId/audit-runs/$runId_/changes")({
   validateSearch: zodValidator(searchSchema),
   component: ChangesRoute,
   head: () => ({

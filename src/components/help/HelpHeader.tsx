@@ -1,4 +1,5 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { useLocation } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LifeBuoy, Search, Menu, X, ChevronDown } from "lucide-react";
 import { useState } from "react";

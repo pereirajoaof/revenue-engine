@@ -5,7 +5,7 @@ import { CartesianGrid, ReferenceLine, ResponsiveContainer, Scatter, ScatterChar
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
-export const Route = createFileRoute("/website-authority/internal-equity")({
+export const Route = createFileRoute("/project/$projectId/dashboard/website-authority/internal-equity")({
   component: InternalEquityPage,
   head: () => ({
     meta: [

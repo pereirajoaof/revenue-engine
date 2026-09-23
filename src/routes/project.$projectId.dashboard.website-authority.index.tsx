@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import {
   Activity,
   ArrowRight,
@@ -38,7 +39,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export const Route = createFileRoute("/website-authority/")({
+export const Route = createFileRoute("/project/$projectId/dashboard/website-authority/")({
   component: WebsiteAuthorityPage,
   head: () => ({
     meta: [

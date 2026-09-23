@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -40,7 +41,7 @@ import {
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-export const Route = createFileRoute("/brand-authority_/brand-love")({
+export const Route = createFileRoute("/project/$projectId/dashboard/brand-authority/brand-love")({
   component: BrandLovePage,
   head: () => ({
     meta: [

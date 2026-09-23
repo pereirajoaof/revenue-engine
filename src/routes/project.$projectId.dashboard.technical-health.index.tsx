@@ -5,7 +5,7 @@ import { IssueCard } from "@/components/technical/IssueCard";
 import { ISSUES } from "@/components/technical/issuesData";
 import { AlertTriangle, Sparkles } from "lucide-react";
 
-export const Route = createFileRoute("/technical-health/")({
+export const Route = createFileRoute("/project/$projectId/dashboard/technical-health/")({
   component: TechnicalHealthPage,
   head: () => ({
     meta: [

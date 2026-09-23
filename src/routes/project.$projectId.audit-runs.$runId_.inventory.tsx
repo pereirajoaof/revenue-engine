@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import {
   Area,
   AreaChart,
@@ -37,7 +38,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/audit-runs_/$runId_/inventory")({
+export const Route = createFileRoute("/project/$projectId/audit-runs/$runId_/inventory")({
   component: InventoryPage,
   head: () => ({
     meta: [

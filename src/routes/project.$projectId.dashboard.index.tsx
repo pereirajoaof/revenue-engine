@@ -8,7 +8,7 @@ import { ImpactEffortMatrix } from "@/components/dashboard/ImpactEffortMatrix";
 import { TopOpportunities } from "@/components/dashboard/TopOpportunities";
 import { RevenueByPageType } from "@/components/dashboard/RevenueByPageType";
 
-export const Route = createFileRoute("/dashboard")({
+export const Route = createFileRoute("/project/$projectId/dashboard/")({
   component: DashboardPage,
   head: () => ({
     meta: [

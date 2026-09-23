@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CwvSectionNav, DeepDive } from "./technical-health.cwv";
 
-export const Route = createFileRoute("/technical-health/cwv/deep-dive")({
+export const Route = createFileRoute("/project/$projectId/dashboard/technical-health/cwv/deep-dive")({
   component: CwvDeepDivePage,
   head: () => ({
     meta: [

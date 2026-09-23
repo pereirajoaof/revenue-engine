@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-export const Route = createFileRoute("/brand-authority_/page-age/outliers")({
+export const Route = createFileRoute("/project/$projectId/dashboard/brand-authority/page-age_/outliers")({
   component: PageAgeOutliersPage,
   head: () => ({
     meta: [

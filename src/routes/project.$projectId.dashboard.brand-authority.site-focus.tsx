@@ -18,7 +18,7 @@ import {
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-export const Route = createFileRoute("/brand-authority_/site-focus")({
+export const Route = createFileRoute("/project/$projectId/dashboard/brand-authority/site-focus")({
   component: SiteFocusPage,
   head: () => ({
     meta: [

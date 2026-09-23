@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { AppLink as Link } from "@/lib/app-link";
 import { ArrowLeft, Filter, FileText, Search } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { DashboardNav } from "@/components/dashboard/DashboardNav";
@@ -10,7 +11,7 @@ import { MAIN_HEALTH_ISSUES, MAIN_HEALTH_ISSUE_URLS } from "@/components/audit-r
 
 type AffectedUrl = (typeof MAIN_HEALTH_ISSUE_URLS)[number];
 
-export const Route = createFileRoute("/audit-runs_/$runId_/issues/$issueId")({
+export const Route = createFileRoute("/project/$projectId/audit-runs/$runId_/issues/$issueId")({
   component: AuditRunIssueRoute,
   head: () => ({
     meta: [
