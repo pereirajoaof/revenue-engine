@@ -67,19 +67,7 @@ const GROWTH_DRIVERS: {
       { to: "/brand-authority/ai-visibility", label: "AI Visibility", icon: Bot, badge: "Preview" },
     ],
   },
-  {
-    key: "user-experience",
-    label: "User Experience",
-    icon: MousePointer2,
-    to: "/dashboard/user-experience",
-    children: [
-      { to: "/dashboard/user-experience", label: "Overview", icon: Gauge },
-      { to: "/dashboard/user-experience/landing-pages", label: "Landing pages", icon: FileText },
-      { to: "/dashboard/user-experience/page-types/product-category", label: "Page types", icon: Boxes },
-      { to: "/dashboard/user-experience/changes", label: "Changes", icon: Clock },
-      { to: "/dashboard/user-experience/method", label: "Data & method", icon: Target },
-    ],
-  },
+  { key: "user-experience", label: "User Experience", icon: MousePointer2, to: "/dashboard/user-experience", soon: true },
   {
     key: "website-authority",
     label: "Website Authority",
@@ -217,7 +205,7 @@ export function DashboardNav() {
                     {isActive &&
                       d.children?.map((c) => {
                         const CIcon = c.icon;
-                        const childActive = driverPath === c.to || path === c.to || (c.to !== d.to && (path.startsWith(`${c.to}/`) || (c.label === "Page types" && path.includes("/page-types/"))));
+                        const childActive = driverPath === c.to || path === c.to || path.startsWith(`${c.to}/`);
                         return (
                           <Link
                             key={c.to}
