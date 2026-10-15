@@ -39,6 +39,7 @@ import { Route as ProjectProjectIdDashboardGeoLocaleRouteImport } from './routes
 import { Route as ProjectProjectIdDashboardContentQualityRouteImport } from './routes/project.$projectId.dashboard.content-quality'
 import { Route as ProjectProjectIdDashboardActionsRouteImport } from './routes/project.$projectId.dashboard.actions'
 import { Route as ProjectProjectIdDashboardWebsiteAuthorityIndexRouteImport } from './routes/project.$projectId.dashboard.website-authority.index'
+import { Route as ProjectProjectIdDashboardUserExperienceIndexRouteImport } from './routes/project.$projectId.dashboard.user-experience.index'
 import { Route as ProjectProjectIdDashboardTechnicalHealthIndexRouteImport } from './routes/project.$projectId.dashboard.technical-health.index'
 import { Route as ProjectProjectIdDashboardBrandAuthorityIndexRouteImport } from './routes/project.$projectId.dashboard.brand-authority.index'
 import { Route as ProjectProjectIdAuditRunsRunIdIndexRouteImport } from './routes/project.$projectId.audit-runs.$runId.index'
@@ -227,6 +228,12 @@ const ProjectProjectIdDashboardWebsiteAuthorityIndexRoute =
     path: '/',
     getParentRoute: () => ProjectProjectIdDashboardWebsiteAuthorityRoute,
   } as any)
+const ProjectProjectIdDashboardUserExperienceIndexRoute =
+  ProjectProjectIdDashboardUserExperienceIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => ProjectProjectIdDashboardUserExperienceRoute,
+  } as any)
 const ProjectProjectIdDashboardTechnicalHealthIndexRoute =
   ProjectProjectIdDashboardTechnicalHealthIndexRouteImport.update({
     id: '/',
@@ -391,7 +398,7 @@ export interface FileRoutesByFullPath {
   '/project/$projectId/dashboard/geo-locale': typeof ProjectProjectIdDashboardGeoLocaleRoute
   '/project/$projectId/dashboard/links': typeof ProjectProjectIdDashboardLinksRoute
   '/project/$projectId/dashboard/technical-health': typeof ProjectProjectIdDashboardTechnicalHealthRouteWithChildren
-  '/project/$projectId/dashboard/user-experience': typeof ProjectProjectIdDashboardUserExperienceRoute
+  '/project/$projectId/dashboard/user-experience': typeof ProjectProjectIdDashboardUserExperienceRouteWithChildren
   '/project/$projectId/dashboard/website-authority': typeof ProjectProjectIdDashboardWebsiteAuthorityRouteWithChildren
   '/project/$projectId/audit-runs/': typeof ProjectProjectIdAuditRunsIndexRoute
   '/project/$projectId/dashboard/': typeof ProjectProjectIdDashboardIndexRoute
@@ -414,6 +421,7 @@ export interface FileRoutesByFullPath {
   '/project/$projectId/audit-runs/$runId/': typeof ProjectProjectIdAuditRunsRunIdIndexRoute
   '/project/$projectId/dashboard/brand-authority/': typeof ProjectProjectIdDashboardBrandAuthorityIndexRoute
   '/project/$projectId/dashboard/technical-health/': typeof ProjectProjectIdDashboardTechnicalHealthIndexRoute
+  '/project/$projectId/dashboard/user-experience/': typeof ProjectProjectIdDashboardUserExperienceIndexRoute
   '/project/$projectId/dashboard/website-authority/': typeof ProjectProjectIdDashboardWebsiteAuthorityIndexRoute
   '/project/$projectId/audit-runs/$runId/issues/$issueId': typeof ProjectProjectIdAuditRunsRunIdIssuesIssueIdRoute
   '/project/$projectId/dashboard/brand-authority/page-age/outliers': typeof ProjectProjectIdDashboardBrandAuthorityPageAgeOutliersRoute
@@ -445,7 +453,6 @@ export interface FileRoutesByTo {
   '/project/$projectId/dashboard/content-quality': typeof ProjectProjectIdDashboardContentQualityRoute
   '/project/$projectId/dashboard/geo-locale': typeof ProjectProjectIdDashboardGeoLocaleRoute
   '/project/$projectId/dashboard/links': typeof ProjectProjectIdDashboardLinksRoute
-  '/project/$projectId/dashboard/user-experience': typeof ProjectProjectIdDashboardUserExperienceRoute
   '/project/$projectId/audit-runs': typeof ProjectProjectIdAuditRunsIndexRoute
   '/project/$projectId/dashboard': typeof ProjectProjectIdDashboardIndexRoute
   '/project/$projectId/planner': typeof ProjectProjectIdPlannerIndexRoute
@@ -467,6 +474,7 @@ export interface FileRoutesByTo {
   '/project/$projectId/audit-runs/$runId': typeof ProjectProjectIdAuditRunsRunIdIndexRoute
   '/project/$projectId/dashboard/brand-authority': typeof ProjectProjectIdDashboardBrandAuthorityIndexRoute
   '/project/$projectId/dashboard/technical-health': typeof ProjectProjectIdDashboardTechnicalHealthIndexRoute
+  '/project/$projectId/dashboard/user-experience': typeof ProjectProjectIdDashboardUserExperienceIndexRoute
   '/project/$projectId/dashboard/website-authority': typeof ProjectProjectIdDashboardWebsiteAuthorityIndexRoute
   '/project/$projectId/audit-runs/$runId/issues/$issueId': typeof ProjectProjectIdAuditRunsRunIdIssuesIssueIdRoute
   '/project/$projectId/dashboard/brand-authority/page-age/outliers': typeof ProjectProjectIdDashboardBrandAuthorityPageAgeOutliersRoute
@@ -500,7 +508,7 @@ export interface FileRoutesById {
   '/project/$projectId/dashboard/geo-locale': typeof ProjectProjectIdDashboardGeoLocaleRoute
   '/project/$projectId/dashboard/links': typeof ProjectProjectIdDashboardLinksRoute
   '/project/$projectId/dashboard/technical-health': typeof ProjectProjectIdDashboardTechnicalHealthRouteWithChildren
-  '/project/$projectId/dashboard/user-experience': typeof ProjectProjectIdDashboardUserExperienceRoute
+  '/project/$projectId/dashboard/user-experience': typeof ProjectProjectIdDashboardUserExperienceRouteWithChildren
   '/project/$projectId/dashboard/website-authority': typeof ProjectProjectIdDashboardWebsiteAuthorityRouteWithChildren
   '/project/$projectId/audit-runs/': typeof ProjectProjectIdAuditRunsIndexRoute
   '/project/$projectId/dashboard/': typeof ProjectProjectIdDashboardIndexRoute
@@ -523,6 +531,7 @@ export interface FileRoutesById {
   '/project/$projectId/audit-runs/$runId/': typeof ProjectProjectIdAuditRunsRunIdIndexRoute
   '/project/$projectId/dashboard/brand-authority/': typeof ProjectProjectIdDashboardBrandAuthorityIndexRoute
   '/project/$projectId/dashboard/technical-health/': typeof ProjectProjectIdDashboardTechnicalHealthIndexRoute
+  '/project/$projectId/dashboard/user-experience/': typeof ProjectProjectIdDashboardUserExperienceIndexRoute
   '/project/$projectId/dashboard/website-authority/': typeof ProjectProjectIdDashboardWebsiteAuthorityIndexRoute
   '/project/$projectId/audit-runs/$runId_/issues/$issueId': typeof ProjectProjectIdAuditRunsRunIdIssuesIssueIdRoute
   '/project/$projectId/dashboard/brand-authority/page-age_/outliers': typeof ProjectProjectIdDashboardBrandAuthorityPageAgeOutliersRoute
@@ -580,6 +589,7 @@ export interface FileRouteTypes {
     | '/project/$projectId/audit-runs/$runId/'
     | '/project/$projectId/dashboard/brand-authority/'
     | '/project/$projectId/dashboard/technical-health/'
+    | '/project/$projectId/dashboard/user-experience/'
     | '/project/$projectId/dashboard/website-authority/'
     | '/project/$projectId/audit-runs/$runId/issues/$issueId'
     | '/project/$projectId/dashboard/brand-authority/page-age/outliers'
@@ -611,7 +621,6 @@ export interface FileRouteTypes {
     | '/project/$projectId/dashboard/content-quality'
     | '/project/$projectId/dashboard/geo-locale'
     | '/project/$projectId/dashboard/links'
-    | '/project/$projectId/dashboard/user-experience'
     | '/project/$projectId/audit-runs'
     | '/project/$projectId/dashboard'
     | '/project/$projectId/planner'
@@ -633,6 +642,7 @@ export interface FileRouteTypes {
     | '/project/$projectId/audit-runs/$runId'
     | '/project/$projectId/dashboard/brand-authority'
     | '/project/$projectId/dashboard/technical-health'
+    | '/project/$projectId/dashboard/user-experience'
     | '/project/$projectId/dashboard/website-authority'
     | '/project/$projectId/audit-runs/$runId/issues/$issueId'
     | '/project/$projectId/dashboard/brand-authority/page-age/outliers'
@@ -688,6 +698,7 @@ export interface FileRouteTypes {
     | '/project/$projectId/audit-runs/$runId/'
     | '/project/$projectId/dashboard/brand-authority/'
     | '/project/$projectId/dashboard/technical-health/'
+    | '/project/$projectId/dashboard/user-experience/'
     | '/project/$projectId/dashboard/website-authority/'
     | '/project/$projectId/audit-runs/$runId_/issues/$issueId'
     | '/project/$projectId/dashboard/brand-authority/page-age_/outliers'
@@ -721,7 +732,7 @@ export interface RootRouteChildren {
   ProjectProjectIdDashboardGeoLocaleRoute: typeof ProjectProjectIdDashboardGeoLocaleRoute
   ProjectProjectIdDashboardLinksRoute: typeof ProjectProjectIdDashboardLinksRoute
   ProjectProjectIdDashboardTechnicalHealthRoute: typeof ProjectProjectIdDashboardTechnicalHealthRouteWithChildren
-  ProjectProjectIdDashboardUserExperienceRoute: typeof ProjectProjectIdDashboardUserExperienceRoute
+  ProjectProjectIdDashboardUserExperienceRoute: typeof ProjectProjectIdDashboardUserExperienceRouteWithChildren
   ProjectProjectIdDashboardWebsiteAuthorityRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityRouteWithChildren
   ProjectProjectIdAuditRunsIndexRoute: typeof ProjectProjectIdAuditRunsIndexRoute
   ProjectProjectIdDashboardIndexRoute: typeof ProjectProjectIdDashboardIndexRoute
@@ -958,6 +969,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityIndexRouteImport
       parentRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityRoute
     }
+    '/project/$projectId/dashboard/user-experience/': {
+      id: '/project/$projectId/dashboard/user-experience/'
+      path: '/'
+      fullPath: '/project/$projectId/dashboard/user-experience/'
+      preLoaderRoute: typeof ProjectProjectIdDashboardUserExperienceIndexRouteImport
+      parentRoute: typeof ProjectProjectIdDashboardUserExperienceRoute
+    }
     '/project/$projectId/dashboard/technical-health/': {
       id: '/project/$projectId/dashboard/technical-health/'
       path: '/'
@@ -1158,6 +1176,21 @@ const ProjectProjectIdDashboardTechnicalHealthRouteWithChildren =
     ProjectProjectIdDashboardTechnicalHealthRouteChildren,
   )
 
+interface ProjectProjectIdDashboardUserExperienceRouteChildren {
+  ProjectProjectIdDashboardUserExperienceIndexRoute: typeof ProjectProjectIdDashboardUserExperienceIndexRoute
+}
+
+const ProjectProjectIdDashboardUserExperienceRouteChildren: ProjectProjectIdDashboardUserExperienceRouteChildren =
+  {
+    ProjectProjectIdDashboardUserExperienceIndexRoute:
+      ProjectProjectIdDashboardUserExperienceIndexRoute,
+  }
+
+const ProjectProjectIdDashboardUserExperienceRouteWithChildren =
+  ProjectProjectIdDashboardUserExperienceRoute._addFileChildren(
+    ProjectProjectIdDashboardUserExperienceRouteChildren,
+  )
+
 interface ProjectProjectIdDashboardWebsiteAuthorityRouteChildren {
   ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute
   ProjectProjectIdDashboardWebsiteAuthorityIndexRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityIndexRoute
@@ -1205,7 +1238,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProjectProjectIdDashboardTechnicalHealthRoute:
     ProjectProjectIdDashboardTechnicalHealthRouteWithChildren,
   ProjectProjectIdDashboardUserExperienceRoute:
-    ProjectProjectIdDashboardUserExperienceRoute,
+    ProjectProjectIdDashboardUserExperienceRouteWithChildren,
   ProjectProjectIdDashboardWebsiteAuthorityRoute:
     ProjectProjectIdDashboardWebsiteAuthorityRouteWithChildren,
   ProjectProjectIdAuditRunsIndexRoute: ProjectProjectIdAuditRunsIndexRoute,
