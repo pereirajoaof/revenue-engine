@@ -209,7 +209,7 @@ export function Trajectory({ data, pins }: { data: { week: string; score: number
               );
             }}
           />
-          <Line type="monotone" dataKey="score" stroke="var(--primary)" strokeWidth={2} dot={false} activeDot={{ r: 3 }} />
+          <Line type="monotone" dataKey="score" stroke="var(--primary)" strokeWidth={2} dot={false} activeDot={{ r: 3 }} isAnimationActive={false} />
         </LineChart>
       </ResponsiveContainer>
       {pins.length > 0 && (
