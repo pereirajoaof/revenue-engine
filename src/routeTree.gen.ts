@@ -44,6 +44,9 @@ import { Route as ProjectProjectIdDashboardTechnicalHealthIndexRouteImport } fro
 import { Route as ProjectProjectIdDashboardBrandAuthorityIndexRouteImport } from './routes/project.$projectId.dashboard.brand-authority.index'
 import { Route as ProjectProjectIdAuditRunsRunIdIndexRouteImport } from './routes/project.$projectId.audit-runs.$runId.index'
 import { Route as ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRouteImport } from './routes/project.$projectId.dashboard.website-authority.internal-equity'
+import { Route as ProjectProjectIdDashboardUserExperienceSearchAppealRouteImport } from './routes/project.$projectId.dashboard.user-experience.search-appeal'
+import { Route as ProjectProjectIdDashboardUserExperiencePageExperienceRouteImport } from './routes/project.$projectId.dashboard.user-experience.page-experience'
+import { Route as ProjectProjectIdDashboardUserExperienceEngagementRouteImport } from './routes/project.$projectId.dashboard.user-experience.engagement'
 import { Route as ProjectProjectIdDashboardTechnicalHealthCwvRouteImport } from './routes/project.$projectId.dashboard.technical-health.cwv'
 import { Route as ProjectProjectIdDashboardOpportunityPageTypeRouteImport } from './routes/project.$projectId.dashboard.opportunity.$pageType'
 import { Route as ProjectProjectIdDashboardBrandAuthoritySiteFocusRouteImport } from './routes/project.$projectId.dashboard.brand-authority.site-focus'
@@ -58,6 +61,8 @@ import { Route as ProjectProjectIdAuditRunsRunIdSettingsRouteImport } from './ro
 import { Route as ProjectProjectIdAuditRunsRunIdInventoryRouteImport } from './routes/project.$projectId.audit-runs.$runId_.inventory'
 import { Route as ProjectProjectIdAuditRunsRunIdErrorsRouteImport } from './routes/project.$projectId.audit-runs.$runId_.errors'
 import { Route as ProjectProjectIdAuditRunsRunIdChangesRouteImport } from './routes/project.$projectId.audit-runs.$runId_.changes'
+import { Route as ProjectProjectIdDashboardUserExperienceConversionEfficiencyIndexRouteImport } from './routes/project.$projectId.dashboard.user-experience.conversion-efficiency.index'
+import { Route as ProjectProjectIdDashboardUserExperienceConversionEfficiencyPageTypeRouteImport } from './routes/project.$projectId.dashboard.user-experience.conversion-efficiency.$pageType'
 import { Route as ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRouteImport } from './routes/project.$projectId.dashboard.technical-health.cwv.opportunities'
 import { Route as ProjectProjectIdDashboardTechnicalHealthCwvDeepDiveRouteImport } from './routes/project.$projectId.dashboard.technical-health.cwv.deep-dive'
 import { Route as ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRouteImport } from './routes/project.$projectId.dashboard.brand-authority.site-focus_.table'
@@ -258,6 +263,24 @@ const ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute =
     path: '/internal-equity',
     getParentRoute: () => ProjectProjectIdDashboardWebsiteAuthorityRoute,
   } as any)
+const ProjectProjectIdDashboardUserExperienceSearchAppealRoute =
+  ProjectProjectIdDashboardUserExperienceSearchAppealRouteImport.update({
+    id: '/search-appeal',
+    path: '/search-appeal',
+    getParentRoute: () => ProjectProjectIdDashboardUserExperienceRoute,
+  } as any)
+const ProjectProjectIdDashboardUserExperiencePageExperienceRoute =
+  ProjectProjectIdDashboardUserExperiencePageExperienceRouteImport.update({
+    id: '/page-experience',
+    path: '/page-experience',
+    getParentRoute: () => ProjectProjectIdDashboardUserExperienceRoute,
+  } as any)
+const ProjectProjectIdDashboardUserExperienceEngagementRoute =
+  ProjectProjectIdDashboardUserExperienceEngagementRouteImport.update({
+    id: '/engagement',
+    path: '/engagement',
+    getParentRoute: () => ProjectProjectIdDashboardUserExperienceRoute,
+  } as any)
 const ProjectProjectIdDashboardTechnicalHealthCwvRoute =
   ProjectProjectIdDashboardTechnicalHealthCwvRouteImport.update({
     id: '/cwv',
@@ -342,6 +365,22 @@ const ProjectProjectIdAuditRunsRunIdChangesRoute =
     path: '/project/$projectId/audit-runs/$runId/changes',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ProjectProjectIdDashboardUserExperienceConversionEfficiencyIndexRoute =
+  ProjectProjectIdDashboardUserExperienceConversionEfficiencyIndexRouteImport.update(
+    {
+      id: '/conversion-efficiency/',
+      path: '/conversion-efficiency/',
+      getParentRoute: () => ProjectProjectIdDashboardUserExperienceRoute,
+    } as any,
+  )
+const ProjectProjectIdDashboardUserExperienceConversionEfficiencyPageTypeRoute =
+  ProjectProjectIdDashboardUserExperienceConversionEfficiencyPageTypeRouteImport.update(
+    {
+      id: '/conversion-efficiency/$pageType',
+      path: '/conversion-efficiency/$pageType',
+      getParentRoute: () => ProjectProjectIdDashboardUserExperienceRoute,
+    } as any,
+  )
 const ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRoute =
   ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRouteImport.update({
     id: '/opportunities',
@@ -417,6 +456,9 @@ export interface FileRoutesByFullPath {
   '/project/$projectId/dashboard/brand-authority/site-focus': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute
   '/project/$projectId/dashboard/opportunity/$pageType': typeof ProjectProjectIdDashboardOpportunityPageTypeRoute
   '/project/$projectId/dashboard/technical-health/cwv': typeof ProjectProjectIdDashboardTechnicalHealthCwvRouteWithChildren
+  '/project/$projectId/dashboard/user-experience/engagement': typeof ProjectProjectIdDashboardUserExperienceEngagementRoute
+  '/project/$projectId/dashboard/user-experience/page-experience': typeof ProjectProjectIdDashboardUserExperiencePageExperienceRoute
+  '/project/$projectId/dashboard/user-experience/search-appeal': typeof ProjectProjectIdDashboardUserExperienceSearchAppealRoute
   '/project/$projectId/dashboard/website-authority/internal-equity': typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute
   '/project/$projectId/audit-runs/$runId/': typeof ProjectProjectIdAuditRunsRunIdIndexRoute
   '/project/$projectId/dashboard/brand-authority/': typeof ProjectProjectIdDashboardBrandAuthorityIndexRoute
@@ -428,6 +470,8 @@ export interface FileRoutesByFullPath {
   '/project/$projectId/dashboard/brand-authority/site-focus/table': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRoute
   '/project/$projectId/dashboard/technical-health/cwv/deep-dive': typeof ProjectProjectIdDashboardTechnicalHealthCwvDeepDiveRoute
   '/project/$projectId/dashboard/technical-health/cwv/opportunities': typeof ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRoute
+  '/project/$projectId/dashboard/user-experience/conversion-efficiency/$pageType': typeof ProjectProjectIdDashboardUserExperienceConversionEfficiencyPageTypeRoute
+  '/project/$projectId/dashboard/user-experience/conversion-efficiency/': typeof ProjectProjectIdDashboardUserExperienceConversionEfficiencyIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -470,6 +514,9 @@ export interface FileRoutesByTo {
   '/project/$projectId/dashboard/brand-authority/site-focus': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute
   '/project/$projectId/dashboard/opportunity/$pageType': typeof ProjectProjectIdDashboardOpportunityPageTypeRoute
   '/project/$projectId/dashboard/technical-health/cwv': typeof ProjectProjectIdDashboardTechnicalHealthCwvRouteWithChildren
+  '/project/$projectId/dashboard/user-experience/engagement': typeof ProjectProjectIdDashboardUserExperienceEngagementRoute
+  '/project/$projectId/dashboard/user-experience/page-experience': typeof ProjectProjectIdDashboardUserExperiencePageExperienceRoute
+  '/project/$projectId/dashboard/user-experience/search-appeal': typeof ProjectProjectIdDashboardUserExperienceSearchAppealRoute
   '/project/$projectId/dashboard/website-authority/internal-equity': typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute
   '/project/$projectId/audit-runs/$runId': typeof ProjectProjectIdAuditRunsRunIdIndexRoute
   '/project/$projectId/dashboard/brand-authority': typeof ProjectProjectIdDashboardBrandAuthorityIndexRoute
@@ -481,6 +528,8 @@ export interface FileRoutesByTo {
   '/project/$projectId/dashboard/brand-authority/site-focus/table': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRoute
   '/project/$projectId/dashboard/technical-health/cwv/deep-dive': typeof ProjectProjectIdDashboardTechnicalHealthCwvDeepDiveRoute
   '/project/$projectId/dashboard/technical-health/cwv/opportunities': typeof ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRoute
+  '/project/$projectId/dashboard/user-experience/conversion-efficiency/$pageType': typeof ProjectProjectIdDashboardUserExperienceConversionEfficiencyPageTypeRoute
+  '/project/$projectId/dashboard/user-experience/conversion-efficiency': typeof ProjectProjectIdDashboardUserExperienceConversionEfficiencyIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -527,6 +576,9 @@ export interface FileRoutesById {
   '/project/$projectId/dashboard/brand-authority/site-focus': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute
   '/project/$projectId/dashboard/opportunity/$pageType': typeof ProjectProjectIdDashboardOpportunityPageTypeRoute
   '/project/$projectId/dashboard/technical-health/cwv': typeof ProjectProjectIdDashboardTechnicalHealthCwvRouteWithChildren
+  '/project/$projectId/dashboard/user-experience/engagement': typeof ProjectProjectIdDashboardUserExperienceEngagementRoute
+  '/project/$projectId/dashboard/user-experience/page-experience': typeof ProjectProjectIdDashboardUserExperiencePageExperienceRoute
+  '/project/$projectId/dashboard/user-experience/search-appeal': typeof ProjectProjectIdDashboardUserExperienceSearchAppealRoute
   '/project/$projectId/dashboard/website-authority/internal-equity': typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute
   '/project/$projectId/audit-runs/$runId/': typeof ProjectProjectIdAuditRunsRunIdIndexRoute
   '/project/$projectId/dashboard/brand-authority/': typeof ProjectProjectIdDashboardBrandAuthorityIndexRoute
@@ -538,6 +590,8 @@ export interface FileRoutesById {
   '/project/$projectId/dashboard/brand-authority/site-focus_/table': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusTableRoute
   '/project/$projectId/dashboard/technical-health/cwv/deep-dive': typeof ProjectProjectIdDashboardTechnicalHealthCwvDeepDiveRoute
   '/project/$projectId/dashboard/technical-health/cwv/opportunities': typeof ProjectProjectIdDashboardTechnicalHealthCwvOpportunitiesRoute
+  '/project/$projectId/dashboard/user-experience/conversion-efficiency/$pageType': typeof ProjectProjectIdDashboardUserExperienceConversionEfficiencyPageTypeRoute
+  '/project/$projectId/dashboard/user-experience/conversion-efficiency/': typeof ProjectProjectIdDashboardUserExperienceConversionEfficiencyIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -585,6 +639,9 @@ export interface FileRouteTypes {
     | '/project/$projectId/dashboard/brand-authority/site-focus'
     | '/project/$projectId/dashboard/opportunity/$pageType'
     | '/project/$projectId/dashboard/technical-health/cwv'
+    | '/project/$projectId/dashboard/user-experience/engagement'
+    | '/project/$projectId/dashboard/user-experience/page-experience'
+    | '/project/$projectId/dashboard/user-experience/search-appeal'
     | '/project/$projectId/dashboard/website-authority/internal-equity'
     | '/project/$projectId/audit-runs/$runId/'
     | '/project/$projectId/dashboard/brand-authority/'
@@ -596,6 +653,8 @@ export interface FileRouteTypes {
     | '/project/$projectId/dashboard/brand-authority/site-focus/table'
     | '/project/$projectId/dashboard/technical-health/cwv/deep-dive'
     | '/project/$projectId/dashboard/technical-health/cwv/opportunities'
+    | '/project/$projectId/dashboard/user-experience/conversion-efficiency/$pageType'
+    | '/project/$projectId/dashboard/user-experience/conversion-efficiency/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -638,6 +697,9 @@ export interface FileRouteTypes {
     | '/project/$projectId/dashboard/brand-authority/site-focus'
     | '/project/$projectId/dashboard/opportunity/$pageType'
     | '/project/$projectId/dashboard/technical-health/cwv'
+    | '/project/$projectId/dashboard/user-experience/engagement'
+    | '/project/$projectId/dashboard/user-experience/page-experience'
+    | '/project/$projectId/dashboard/user-experience/search-appeal'
     | '/project/$projectId/dashboard/website-authority/internal-equity'
     | '/project/$projectId/audit-runs/$runId'
     | '/project/$projectId/dashboard/brand-authority'
@@ -649,6 +711,8 @@ export interface FileRouteTypes {
     | '/project/$projectId/dashboard/brand-authority/site-focus/table'
     | '/project/$projectId/dashboard/technical-health/cwv/deep-dive'
     | '/project/$projectId/dashboard/technical-health/cwv/opportunities'
+    | '/project/$projectId/dashboard/user-experience/conversion-efficiency/$pageType'
+    | '/project/$projectId/dashboard/user-experience/conversion-efficiency'
   id:
     | '__root__'
     | '/'
@@ -694,6 +758,9 @@ export interface FileRouteTypes {
     | '/project/$projectId/dashboard/brand-authority/site-focus'
     | '/project/$projectId/dashboard/opportunity/$pageType'
     | '/project/$projectId/dashboard/technical-health/cwv'
+    | '/project/$projectId/dashboard/user-experience/engagement'
+    | '/project/$projectId/dashboard/user-experience/page-experience'
+    | '/project/$projectId/dashboard/user-experience/search-appeal'
     | '/project/$projectId/dashboard/website-authority/internal-equity'
     | '/project/$projectId/audit-runs/$runId/'
     | '/project/$projectId/dashboard/brand-authority/'
@@ -705,6 +772,8 @@ export interface FileRouteTypes {
     | '/project/$projectId/dashboard/brand-authority/site-focus_/table'
     | '/project/$projectId/dashboard/technical-health/cwv/deep-dive'
     | '/project/$projectId/dashboard/technical-health/cwv/opportunities'
+    | '/project/$projectId/dashboard/user-experience/conversion-efficiency/$pageType'
+    | '/project/$projectId/dashboard/user-experience/conversion-efficiency/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1004,6 +1073,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRouteImport
       parentRoute: typeof ProjectProjectIdDashboardWebsiteAuthorityRoute
     }
+    '/project/$projectId/dashboard/user-experience/search-appeal': {
+      id: '/project/$projectId/dashboard/user-experience/search-appeal'
+      path: '/search-appeal'
+      fullPath: '/project/$projectId/dashboard/user-experience/search-appeal'
+      preLoaderRoute: typeof ProjectProjectIdDashboardUserExperienceSearchAppealRouteImport
+      parentRoute: typeof ProjectProjectIdDashboardUserExperienceRoute
+    }
+    '/project/$projectId/dashboard/user-experience/page-experience': {
+      id: '/project/$projectId/dashboard/user-experience/page-experience'
+      path: '/page-experience'
+      fullPath: '/project/$projectId/dashboard/user-experience/page-experience'
+      preLoaderRoute: typeof ProjectProjectIdDashboardUserExperiencePageExperienceRouteImport
+      parentRoute: typeof ProjectProjectIdDashboardUserExperienceRoute
+    }
+    '/project/$projectId/dashboard/user-experience/engagement': {
+      id: '/project/$projectId/dashboard/user-experience/engagement'
+      path: '/engagement'
+      fullPath: '/project/$projectId/dashboard/user-experience/engagement'
+      preLoaderRoute: typeof ProjectProjectIdDashboardUserExperienceEngagementRouteImport
+      parentRoute: typeof ProjectProjectIdDashboardUserExperienceRoute
+    }
     '/project/$projectId/dashboard/technical-health/cwv': {
       id: '/project/$projectId/dashboard/technical-health/cwv'
       path: '/cwv'
@@ -1102,6 +1192,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectProjectIdAuditRunsRunIdChangesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/project/$projectId/dashboard/user-experience/conversion-efficiency/': {
+      id: '/project/$projectId/dashboard/user-experience/conversion-efficiency/'
+      path: '/conversion-efficiency'
+      fullPath: '/project/$projectId/dashboard/user-experience/conversion-efficiency/'
+      preLoaderRoute: typeof ProjectProjectIdDashboardUserExperienceConversionEfficiencyIndexRouteImport
+      parentRoute: typeof ProjectProjectIdDashboardUserExperienceRoute
+    }
+    '/project/$projectId/dashboard/user-experience/conversion-efficiency/$pageType': {
+      id: '/project/$projectId/dashboard/user-experience/conversion-efficiency/$pageType'
+      path: '/conversion-efficiency/$pageType'
+      fullPath: '/project/$projectId/dashboard/user-experience/conversion-efficiency/$pageType'
+      preLoaderRoute: typeof ProjectProjectIdDashboardUserExperienceConversionEfficiencyPageTypeRouteImport
+      parentRoute: typeof ProjectProjectIdDashboardUserExperienceRoute
+    }
     '/project/$projectId/dashboard/technical-health/cwv/opportunities': {
       id: '/project/$projectId/dashboard/technical-health/cwv/opportunities'
       path: '/opportunities'
@@ -1177,13 +1281,28 @@ const ProjectProjectIdDashboardTechnicalHealthRouteWithChildren =
   )
 
 interface ProjectProjectIdDashboardUserExperienceRouteChildren {
+  ProjectProjectIdDashboardUserExperienceEngagementRoute: typeof ProjectProjectIdDashboardUserExperienceEngagementRoute
+  ProjectProjectIdDashboardUserExperiencePageExperienceRoute: typeof ProjectProjectIdDashboardUserExperiencePageExperienceRoute
+  ProjectProjectIdDashboardUserExperienceSearchAppealRoute: typeof ProjectProjectIdDashboardUserExperienceSearchAppealRoute
   ProjectProjectIdDashboardUserExperienceIndexRoute: typeof ProjectProjectIdDashboardUserExperienceIndexRoute
+  ProjectProjectIdDashboardUserExperienceConversionEfficiencyPageTypeRoute: typeof ProjectProjectIdDashboardUserExperienceConversionEfficiencyPageTypeRoute
+  ProjectProjectIdDashboardUserExperienceConversionEfficiencyIndexRoute: typeof ProjectProjectIdDashboardUserExperienceConversionEfficiencyIndexRoute
 }
 
 const ProjectProjectIdDashboardUserExperienceRouteChildren: ProjectProjectIdDashboardUserExperienceRouteChildren =
   {
+    ProjectProjectIdDashboardUserExperienceEngagementRoute:
+      ProjectProjectIdDashboardUserExperienceEngagementRoute,
+    ProjectProjectIdDashboardUserExperiencePageExperienceRoute:
+      ProjectProjectIdDashboardUserExperiencePageExperienceRoute,
+    ProjectProjectIdDashboardUserExperienceSearchAppealRoute:
+      ProjectProjectIdDashboardUserExperienceSearchAppealRoute,
     ProjectProjectIdDashboardUserExperienceIndexRoute:
       ProjectProjectIdDashboardUserExperienceIndexRoute,
+    ProjectProjectIdDashboardUserExperienceConversionEfficiencyPageTypeRoute:
+      ProjectProjectIdDashboardUserExperienceConversionEfficiencyPageTypeRoute,
+    ProjectProjectIdDashboardUserExperienceConversionEfficiencyIndexRoute:
+      ProjectProjectIdDashboardUserExperienceConversionEfficiencyIndexRoute,
   }
 
 const ProjectProjectIdDashboardUserExperienceRouteWithChildren =
