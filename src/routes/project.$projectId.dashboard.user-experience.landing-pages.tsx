@@ -3,10 +3,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { LANDING_ROWS, PAGE_TYPES, type LandingRow, type UxStatus } from "@/lib/ux-data";
-import { Card, IllustrativeNote, SectionTitle, SelectControl, UxTopBar, useUx } from "@/components/ux/UxKit";
+import { Card, IllustrativeNote, SectionTitle, SelectControl, UxTopBar, useUx , UxControls } from "@/components/ux/UxKit";
 import { FindingDrawer, LandingTable } from "@/components/ux/LandingTable";
 import { BuildingState, StaleBanner, StateNotices } from "@/components/ux/StateBlocks";
-import { UxControls } from "./project.$projectId.dashboard.user-experience.index";
 
 export const Route = createFileRoute("/project/$projectId/dashboard/user-experience/landing-pages")({
   component: LandingPages,

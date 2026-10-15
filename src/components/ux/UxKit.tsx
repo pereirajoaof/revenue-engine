@@ -290,3 +290,15 @@ export function IllustrativeNote() {
     </p>
   );
 }
+
+export function UxControls() {
+  const [w, setW] = useState("Last 4 complete weeks");
+  const [d, setD] = useState("All");
+  return (
+    <>
+      <SelectControl label="Window" value={w} onChange={setW} options={["Last 4 complete weeks", "Last 13 complete weeks"]} />
+      <SelectControl label="Device" value={d} onChange={setD} options={["All", "Mobile", "Desktop"]} />
+    </>
+  );
+}
+

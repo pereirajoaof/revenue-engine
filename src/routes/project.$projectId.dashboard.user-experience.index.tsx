@@ -11,10 +11,10 @@ import {
   Label,
   OPPORTUNITY_ASSUMPTION,
   SectionTitle,
-  SelectControl,
   Signed,
   SourceChip,
   UxTopBar,
+  UxControls,
   useUx,
 } from "@/components/ux/UxKit";
 import { FindingDrawer, LandingTable } from "@/components/ux/LandingTable";
@@ -33,17 +33,6 @@ export const Route = createFileRoute("/project/$projectId/dashboard/user-experie
     ],
   }),
 });
-
-export function UxControls() {
-  const [w, setW] = useState("Last 4 complete weeks");
-  const [d, setD] = useState("All");
-  return (
-    <>
-      <SelectControl label="Window" value={w} onChange={setW} options={["Last 4 complete weeks", "Last 13 complete weeks"]} />
-      <SelectControl label="Device" value={d} onChange={setD} options={["All", "Mobile", "Desktop"]} />
-    </>
-  );
-}
 
 function Stat({ label, value, chip, sub, info }: { label: string; value: string; chip?: React.ReactNode; sub: string; info?: React.ReactNode }) {
   return (

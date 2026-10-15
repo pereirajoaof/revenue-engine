@@ -2,9 +2,8 @@ import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip as RTooltip, XAxis, YAxis } from "recharts";
 import { DEVICE_SPLIT, LANDING_ROWS, PAGE_TYPES, TREND_13W, type LandingRow } from "@/lib/ux-data";
-import { Card, IllustrativeNote, Label, SectionTitle, UxTopBar } from "@/components/ux/UxKit";
+import { Card, IllustrativeNote, Label, SectionTitle, UxTopBar , UxControls } from "@/components/ux/UxKit";
 import { FindingDrawer, LandingTable } from "@/components/ux/LandingTable";
-import { UxControls } from "./project.$projectId.dashboard.user-experience.index";
 
 export const Route = createFileRoute("/project/$projectId/dashboard/user-experience/page-types/$type")({
   component: PageTypeDetail,
