@@ -46,7 +46,10 @@ import { Route as ProjectProjectIdAuditRunsRunIdIndexRouteImport } from './route
 import { Route as ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRouteImport } from './routes/project.$projectId.dashboard.website-authority.internal-equity'
 import { Route as ProjectProjectIdDashboardUserExperienceSearchAppealRouteImport } from './routes/project.$projectId.dashboard.user-experience.search-appeal'
 import { Route as ProjectProjectIdDashboardUserExperiencePageExperienceRouteImport } from './routes/project.$projectId.dashboard.user-experience.page-experience'
+import { Route as ProjectProjectIdDashboardUserExperienceMethodRouteImport } from './routes/project.$projectId.dashboard.user-experience.method'
+import { Route as ProjectProjectIdDashboardUserExperienceLandingPagesRouteImport } from './routes/project.$projectId.dashboard.user-experience.landing-pages'
 import { Route as ProjectProjectIdDashboardUserExperienceEngagementRouteImport } from './routes/project.$projectId.dashboard.user-experience.engagement'
+import { Route as ProjectProjectIdDashboardUserExperienceChangesRouteImport } from './routes/project.$projectId.dashboard.user-experience.changes'
 import { Route as ProjectProjectIdDashboardTechnicalHealthCwvRouteImport } from './routes/project.$projectId.dashboard.technical-health.cwv'
 import { Route as ProjectProjectIdDashboardOpportunityPageTypeRouteImport } from './routes/project.$projectId.dashboard.opportunity.$pageType'
 import { Route as ProjectProjectIdDashboardBrandAuthoritySiteFocusRouteImport } from './routes/project.$projectId.dashboard.brand-authority.site-focus'
@@ -275,10 +278,28 @@ const ProjectProjectIdDashboardUserExperiencePageExperienceRoute =
     path: '/page-experience',
     getParentRoute: () => ProjectProjectIdDashboardUserExperienceRoute,
   } as any)
+const ProjectProjectIdDashboardUserExperienceMethodRoute =
+  ProjectProjectIdDashboardUserExperienceMethodRouteImport.update({
+    id: '/method',
+    path: '/method',
+    getParentRoute: () => ProjectProjectIdDashboardUserExperienceRoute,
+  } as any)
+const ProjectProjectIdDashboardUserExperienceLandingPagesRoute =
+  ProjectProjectIdDashboardUserExperienceLandingPagesRouteImport.update({
+    id: '/landing-pages',
+    path: '/landing-pages',
+    getParentRoute: () => ProjectProjectIdDashboardUserExperienceRoute,
+  } as any)
 const ProjectProjectIdDashboardUserExperienceEngagementRoute =
   ProjectProjectIdDashboardUserExperienceEngagementRouteImport.update({
     id: '/engagement',
     path: '/engagement',
+    getParentRoute: () => ProjectProjectIdDashboardUserExperienceRoute,
+  } as any)
+const ProjectProjectIdDashboardUserExperienceChangesRoute =
+  ProjectProjectIdDashboardUserExperienceChangesRouteImport.update({
+    id: '/changes',
+    path: '/changes',
     getParentRoute: () => ProjectProjectIdDashboardUserExperienceRoute,
   } as any)
 const ProjectProjectIdDashboardTechnicalHealthCwvRoute =
@@ -456,7 +477,10 @@ export interface FileRoutesByFullPath {
   '/project/$projectId/dashboard/brand-authority/site-focus': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute
   '/project/$projectId/dashboard/opportunity/$pageType': typeof ProjectProjectIdDashboardOpportunityPageTypeRoute
   '/project/$projectId/dashboard/technical-health/cwv': typeof ProjectProjectIdDashboardTechnicalHealthCwvRouteWithChildren
+  '/project/$projectId/dashboard/user-experience/changes': typeof ProjectProjectIdDashboardUserExperienceChangesRoute
   '/project/$projectId/dashboard/user-experience/engagement': typeof ProjectProjectIdDashboardUserExperienceEngagementRoute
+  '/project/$projectId/dashboard/user-experience/landing-pages': typeof ProjectProjectIdDashboardUserExperienceLandingPagesRoute
+  '/project/$projectId/dashboard/user-experience/method': typeof ProjectProjectIdDashboardUserExperienceMethodRoute
   '/project/$projectId/dashboard/user-experience/page-experience': typeof ProjectProjectIdDashboardUserExperiencePageExperienceRoute
   '/project/$projectId/dashboard/user-experience/search-appeal': typeof ProjectProjectIdDashboardUserExperienceSearchAppealRoute
   '/project/$projectId/dashboard/website-authority/internal-equity': typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute
@@ -514,7 +538,10 @@ export interface FileRoutesByTo {
   '/project/$projectId/dashboard/brand-authority/site-focus': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute
   '/project/$projectId/dashboard/opportunity/$pageType': typeof ProjectProjectIdDashboardOpportunityPageTypeRoute
   '/project/$projectId/dashboard/technical-health/cwv': typeof ProjectProjectIdDashboardTechnicalHealthCwvRouteWithChildren
+  '/project/$projectId/dashboard/user-experience/changes': typeof ProjectProjectIdDashboardUserExperienceChangesRoute
   '/project/$projectId/dashboard/user-experience/engagement': typeof ProjectProjectIdDashboardUserExperienceEngagementRoute
+  '/project/$projectId/dashboard/user-experience/landing-pages': typeof ProjectProjectIdDashboardUserExperienceLandingPagesRoute
+  '/project/$projectId/dashboard/user-experience/method': typeof ProjectProjectIdDashboardUserExperienceMethodRoute
   '/project/$projectId/dashboard/user-experience/page-experience': typeof ProjectProjectIdDashboardUserExperiencePageExperienceRoute
   '/project/$projectId/dashboard/user-experience/search-appeal': typeof ProjectProjectIdDashboardUserExperienceSearchAppealRoute
   '/project/$projectId/dashboard/website-authority/internal-equity': typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute
@@ -576,7 +603,10 @@ export interface FileRoutesById {
   '/project/$projectId/dashboard/brand-authority/site-focus': typeof ProjectProjectIdDashboardBrandAuthoritySiteFocusRoute
   '/project/$projectId/dashboard/opportunity/$pageType': typeof ProjectProjectIdDashboardOpportunityPageTypeRoute
   '/project/$projectId/dashboard/technical-health/cwv': typeof ProjectProjectIdDashboardTechnicalHealthCwvRouteWithChildren
+  '/project/$projectId/dashboard/user-experience/changes': typeof ProjectProjectIdDashboardUserExperienceChangesRoute
   '/project/$projectId/dashboard/user-experience/engagement': typeof ProjectProjectIdDashboardUserExperienceEngagementRoute
+  '/project/$projectId/dashboard/user-experience/landing-pages': typeof ProjectProjectIdDashboardUserExperienceLandingPagesRoute
+  '/project/$projectId/dashboard/user-experience/method': typeof ProjectProjectIdDashboardUserExperienceMethodRoute
   '/project/$projectId/dashboard/user-experience/page-experience': typeof ProjectProjectIdDashboardUserExperiencePageExperienceRoute
   '/project/$projectId/dashboard/user-experience/search-appeal': typeof ProjectProjectIdDashboardUserExperienceSearchAppealRoute
   '/project/$projectId/dashboard/website-authority/internal-equity': typeof ProjectProjectIdDashboardWebsiteAuthorityInternalEquityRoute
@@ -639,7 +669,10 @@ export interface FileRouteTypes {
     | '/project/$projectId/dashboard/brand-authority/site-focus'
     | '/project/$projectId/dashboard/opportunity/$pageType'
     | '/project/$projectId/dashboard/technical-health/cwv'
+    | '/project/$projectId/dashboard/user-experience/changes'
     | '/project/$projectId/dashboard/user-experience/engagement'
+    | '/project/$projectId/dashboard/user-experience/landing-pages'
+    | '/project/$projectId/dashboard/user-experience/method'
     | '/project/$projectId/dashboard/user-experience/page-experience'
     | '/project/$projectId/dashboard/user-experience/search-appeal'
     | '/project/$projectId/dashboard/website-authority/internal-equity'
@@ -697,7 +730,10 @@ export interface FileRouteTypes {
     | '/project/$projectId/dashboard/brand-authority/site-focus'
     | '/project/$projectId/dashboard/opportunity/$pageType'
     | '/project/$projectId/dashboard/technical-health/cwv'
+    | '/project/$projectId/dashboard/user-experience/changes'
     | '/project/$projectId/dashboard/user-experience/engagement'
+    | '/project/$projectId/dashboard/user-experience/landing-pages'
+    | '/project/$projectId/dashboard/user-experience/method'
     | '/project/$projectId/dashboard/user-experience/page-experience'
     | '/project/$projectId/dashboard/user-experience/search-appeal'
     | '/project/$projectId/dashboard/website-authority/internal-equity'
@@ -758,7 +794,10 @@ export interface FileRouteTypes {
     | '/project/$projectId/dashboard/brand-authority/site-focus'
     | '/project/$projectId/dashboard/opportunity/$pageType'
     | '/project/$projectId/dashboard/technical-health/cwv'
+    | '/project/$projectId/dashboard/user-experience/changes'
     | '/project/$projectId/dashboard/user-experience/engagement'
+    | '/project/$projectId/dashboard/user-experience/landing-pages'
+    | '/project/$projectId/dashboard/user-experience/method'
     | '/project/$projectId/dashboard/user-experience/page-experience'
     | '/project/$projectId/dashboard/user-experience/search-appeal'
     | '/project/$projectId/dashboard/website-authority/internal-equity'
@@ -1087,11 +1126,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectProjectIdDashboardUserExperiencePageExperienceRouteImport
       parentRoute: typeof ProjectProjectIdDashboardUserExperienceRoute
     }
+    '/project/$projectId/dashboard/user-experience/method': {
+      id: '/project/$projectId/dashboard/user-experience/method'
+      path: '/method'
+      fullPath: '/project/$projectId/dashboard/user-experience/method'
+      preLoaderRoute: typeof ProjectProjectIdDashboardUserExperienceMethodRouteImport
+      parentRoute: typeof ProjectProjectIdDashboardUserExperienceRoute
+    }
+    '/project/$projectId/dashboard/user-experience/landing-pages': {
+      id: '/project/$projectId/dashboard/user-experience/landing-pages'
+      path: '/landing-pages'
+      fullPath: '/project/$projectId/dashboard/user-experience/landing-pages'
+      preLoaderRoute: typeof ProjectProjectIdDashboardUserExperienceLandingPagesRouteImport
+      parentRoute: typeof ProjectProjectIdDashboardUserExperienceRoute
+    }
     '/project/$projectId/dashboard/user-experience/engagement': {
       id: '/project/$projectId/dashboard/user-experience/engagement'
       path: '/engagement'
       fullPath: '/project/$projectId/dashboard/user-experience/engagement'
       preLoaderRoute: typeof ProjectProjectIdDashboardUserExperienceEngagementRouteImport
+      parentRoute: typeof ProjectProjectIdDashboardUserExperienceRoute
+    }
+    '/project/$projectId/dashboard/user-experience/changes': {
+      id: '/project/$projectId/dashboard/user-experience/changes'
+      path: '/changes'
+      fullPath: '/project/$projectId/dashboard/user-experience/changes'
+      preLoaderRoute: typeof ProjectProjectIdDashboardUserExperienceChangesRouteImport
       parentRoute: typeof ProjectProjectIdDashboardUserExperienceRoute
     }
     '/project/$projectId/dashboard/technical-health/cwv': {
@@ -1281,7 +1341,10 @@ const ProjectProjectIdDashboardTechnicalHealthRouteWithChildren =
   )
 
 interface ProjectProjectIdDashboardUserExperienceRouteChildren {
+  ProjectProjectIdDashboardUserExperienceChangesRoute: typeof ProjectProjectIdDashboardUserExperienceChangesRoute
   ProjectProjectIdDashboardUserExperienceEngagementRoute: typeof ProjectProjectIdDashboardUserExperienceEngagementRoute
+  ProjectProjectIdDashboardUserExperienceLandingPagesRoute: typeof ProjectProjectIdDashboardUserExperienceLandingPagesRoute
+  ProjectProjectIdDashboardUserExperienceMethodRoute: typeof ProjectProjectIdDashboardUserExperienceMethodRoute
   ProjectProjectIdDashboardUserExperiencePageExperienceRoute: typeof ProjectProjectIdDashboardUserExperiencePageExperienceRoute
   ProjectProjectIdDashboardUserExperienceSearchAppealRoute: typeof ProjectProjectIdDashboardUserExperienceSearchAppealRoute
   ProjectProjectIdDashboardUserExperienceIndexRoute: typeof ProjectProjectIdDashboardUserExperienceIndexRoute
@@ -1291,8 +1354,14 @@ interface ProjectProjectIdDashboardUserExperienceRouteChildren {
 
 const ProjectProjectIdDashboardUserExperienceRouteChildren: ProjectProjectIdDashboardUserExperienceRouteChildren =
   {
+    ProjectProjectIdDashboardUserExperienceChangesRoute:
+      ProjectProjectIdDashboardUserExperienceChangesRoute,
     ProjectProjectIdDashboardUserExperienceEngagementRoute:
       ProjectProjectIdDashboardUserExperienceEngagementRoute,
+    ProjectProjectIdDashboardUserExperienceLandingPagesRoute:
+      ProjectProjectIdDashboardUserExperienceLandingPagesRoute,
+    ProjectProjectIdDashboardUserExperienceMethodRoute:
+      ProjectProjectIdDashboardUserExperienceMethodRoute,
     ProjectProjectIdDashboardUserExperiencePageExperienceRoute:
       ProjectProjectIdDashboardUserExperiencePageExperienceRoute,
     ProjectProjectIdDashboardUserExperienceSearchAppealRoute:

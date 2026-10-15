@@ -85,7 +85,7 @@ function Hub() {
           confidence={hub.confidence}
           momentum={hub.momentum}
           coverage={hub.score === null ? `Incomplete — ${hub.active} of 4 signals` : `${hub.active} of 4 signals`}
-          series={trajectory(hub.score! - 8, hub.score ?? 72)}
+          series={trajectory((hub.score ?? 72) - 8, hub.score ?? 72)}
           pins={PINS}
           banner={banner}
           incomplete={

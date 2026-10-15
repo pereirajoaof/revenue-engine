@@ -43,7 +43,7 @@ const PROFILES = [
   { initials: "MR", name: "Marco Rossi", domain: "northwind.io" },
 ];
 
-type SubLink = { to: string; label: string; icon: typeof Gauge; badge?: string };
+type SubLink = { to: string; label: string; icon: typeof Gauge; badge?: string; exact?: boolean };
 
 const GROWTH_DRIVERS: {
   key: string;
@@ -51,6 +51,7 @@ const GROWTH_DRIVERS: {
   icon: typeof Sparkles;
   to: string;
   soon?: boolean;
+  score?: string;
   children?: SubLink[];
 }[] = [
   {
@@ -67,7 +68,23 @@ const GROWTH_DRIVERS: {
       { to: "/brand-authority/ai-visibility", label: "AI Visibility", icon: Bot, badge: "Preview" },
     ],
   },
-  { key: "user-experience", label: "User Experience", icon: MousePointer2, to: "/dashboard/user-experience", soon: true },
+  {
+    key: "user-experience",
+    label: "User Experience",
+    icon: MousePointer2,
+    to: "/dashboard/user-experience",
+    score: "72",
+    children: [
+      { to: "/dashboard/user-experience", label: "Overview", icon: Gauge, exact: true },
+      { to: "/dashboard/user-experience/conversion-efficiency", label: "Conversion Efficiency", icon: Target },
+      { to: "/dashboard/user-experience/engagement", label: "Engagement", icon: Activity },
+      { to: "/dashboard/user-experience/page-experience", label: "Page Experience", icon: Gauge },
+      { to: "/dashboard/user-experience/search-appeal", label: "Search Appeal", icon: Search },
+      { to: "/dashboard/user-experience/landing-pages", label: "Landing pages", icon: FileText },
+      { to: "/dashboard/user-experience/changes", label: "Changes", icon: Clock },
+      { to: "/dashboard/user-experience/method", label: "Data & method", icon: Boxes },
+    ],
+  },
   {
     key: "website-authority",
     label: "Website Authority",
@@ -196,6 +213,11 @@ export function DashboardNav() {
                     <Link to={d.to} className={className}>
                       <Icon className="w-3.5 h-3.5 shrink-0" />
                       <span className="truncate flex-1">{d.label}</span>
+                      {d.score && (
+                        <span className="rounded-sm border border-chart-2/40 bg-chart-2/10 px-1 font-mono text-[9px] text-chart-2">
+                          {d.score}
+                        </span>
+                      )}
                       {d.soon && (
                         <span className="rounded-sm border border-border bg-surface px-1 py-0 text-[8px] font-mono uppercase tracking-wider text-muted-foreground">
                           Soon
@@ -205,7 +227,7 @@ export function DashboardNav() {
                     {isActive &&
                       d.children?.map((c) => {
                         const CIcon = c.icon;
-                        const childActive = driverPath === c.to || path === c.to || path.startsWith(`${c.to}/`);
+                        const childActive = c.exact ? path === c.to : driverPath === c.to || path === c.to || path.startsWith(`${c.to}/`);
                         return (
                           <Link
                             key={c.to}
