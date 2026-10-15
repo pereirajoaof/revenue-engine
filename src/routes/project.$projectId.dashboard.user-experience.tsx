@@ -1,20 +1,24 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ComingSoon } from "@/components/dashboard/ComingSoon";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { DashboardNav } from "@/components/dashboard/DashboardNav";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { MockStateSwitcher, UxStateProvider } from "@/components/ux/UxKit";
 
 export const Route = createFileRoute("/project/$projectId/dashboard/user-experience")({
-  component: Page,
-  head: () => ({
-    meta: [
-      { title: "User Experience — OrganicOS" },
-      { name: "description", content: "Engagement, interaction and on-page behaviour signals scored against revenue impact." },
-      { property: "og:title", content: "User Experience — OrganicOS" },
-      { property: "og:description", content: "Engagement, interaction and on-page behaviour signals scored against revenue impact." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  component: UxLayout,
 });
 
-function Page() {
-  return <ComingSoon eyebrow="Growth driver" title="User Experience" description="Engagement, interaction and on-page behaviour signals scored against revenue impact." />;
+function UxLayout() {
+  return (
+    <UxStateProvider>
+      <TooltipProvider delayDuration={150}>
+        <div className="min-h-screen bg-background text-foreground">
+          <DashboardNav />
+          <div className="lg:pl-56">
+            <Outlet />
+          </div>
+          <MockStateSwitcher />
+        </div>
+      </TooltipProvider>
+    </UxStateProvider>
+  );
 }
