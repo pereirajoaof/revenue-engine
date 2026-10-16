@@ -112,6 +112,7 @@ export function Sparkline({ data, k }: { data: Record<string, unknown>[]; k: str
     <div className="h-10 w-28" aria-hidden>
       <ResponsiveContainer>
         <LineChart data={data}>
+          <YAxis hide domain={["dataMin - 1", "dataMax + 1"]} />
           <Line dataKey={k} stroke="var(--primary)" strokeWidth={1.5} dot={false} connectNulls={false} isAnimationActive={false} />
         </LineChart>
       </ResponsiveContainer>
