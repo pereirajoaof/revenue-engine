@@ -90,7 +90,11 @@ const GROWTH_DRIVERS: {
     label: "Website Authority",
     icon: Globe,
     to: "/website-authority",
-    children: [{ to: "/website-authority/internal-equity", label: "Internal Equity", icon: Link2 }],
+    children: [
+      { to: "/website-authority/links", label: "External links", icon: Link2 },
+      { to: "/website-authority/distribution", label: "Internal distribution", icon: Activity },
+      { to: "/website-authority/pages", label: "Pages", icon: FileText },
+    ],
   },
   { key: "content-quality", label: "Content Quality", icon: FileText, to: "/dashboard/content-quality", soon: true },
   {
