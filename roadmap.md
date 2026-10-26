@@ -1,3 +1,5 @@
 - [x] Rebuild Opportunity Breakdown as five evidence-led sections using the worked example and shared dashboard figures.
 - [x] Add findings/actions overlap, linked URL filtering, sortable paginated pages, CSV export and responsive layouts.
 - [x] Cover missing-data variants, dark/light appearance, and verify report interactions.
+- [x] Apply shared typography, spacing, shadows and layout tokens across public and workspace pages without changing restored corners.
+- [x] Verify representative pages at desktop and mobile widths and in both themes.
