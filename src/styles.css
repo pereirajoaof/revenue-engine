@@ -55,7 +55,7 @@
 :root {
   --radius: 0.625rem;
   --font-mono-stack: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
-  --font-display-stack: "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display-stack: "Figtree", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
   /* Light-first design */
   --background: oklch(0.99 0.003 260);
