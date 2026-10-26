@@ -28,7 +28,7 @@ export function Hero() {
           </motion.div>
 
           <motion.h1
-            className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.98]"
+            className="text-display lg:text-display-xl font-bold"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.05 }}
@@ -115,9 +115,9 @@ function DashboardMockup() {
         <div className="ml-auto text-[10px] font-mono text-muted-foreground">live</div>
       </div>
 
-      <div className="grid grid-cols-5 gap-4 p-5">
+      <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 p-6">
         {/* Radial scatter */}
-        <div className="col-span-3 rounded-xl border border-border bg-background/60 p-4">
+        <div className="min-w-0 sm:col-span-3 rounded-xl border border-border bg-background/60 p-4">
           <div className="flex items-center justify-between mb-3">
             <div>
               <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
@@ -198,7 +198,7 @@ function DashboardMockup() {
         </div>
 
         {/* KPI Block */}
-        <div className="col-span-2 flex flex-col gap-4">
+        <div className="min-w-0 sm:col-span-2 flex flex-col gap-4">
           <div className="rounded-xl border border-chart-5/40 bg-chart-5/5 p-4 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-chart-5/10 to-transparent pointer-events-none" />
             <div className="relative">
