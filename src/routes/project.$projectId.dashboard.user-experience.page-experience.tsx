@@ -75,7 +75,7 @@ function PageExperience() {
               ]}
             />
           </Section>
-          <section className="rounded-[4px] border border-border bg-card">
+          <section className="rounded-[0.625rem] border border-border bg-card">
             <button type="button" onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between px-5 py-3.5 text-left" aria-expanded={open}>
               <div>
                 <h2 className="text-sm font-semibold">Not measured on its own URL · {NOT_MEASURED.length}</h2>

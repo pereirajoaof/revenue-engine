@@ -51,7 +51,7 @@ export function RevenueByPageType() {
               contentStyle={{
                 background: "var(--popover)",
                 border: "1px solid var(--border)",
-                borderRadius: 4,
+                borderRadius: 8,
                 fontSize: 12,
                 fontFamily: "var(--font-mono)",
               }}

@@ -92,7 +92,7 @@ function PagesPage() {
           <span className="ml-auto font-mono text-[11px] text-muted-foreground">{rows.length} of {PAGES.length} pages shown</span>
         </div>
 
-        <div className="overflow-x-auto rounded-[4px] border border-border bg-card">
+        <div className="overflow-x-auto rounded-[10px] border border-border bg-card">
           <table className="w-full min-w-[1100px] text-sm">
             <thead className="bg-muted/50">
               <tr>

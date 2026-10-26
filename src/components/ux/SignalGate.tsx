@@ -28,7 +28,7 @@ export function SignalGate({ signal, children, keepWhenSmall }: { signal: Signal
   if (!msg) return <>{children}</>;
   return (
     <>
-      <section className="rounded-[4px] border border-dashed border-border bg-card p-8 text-center">
+      <section className="rounded-[0.625rem] border border-dashed border-border bg-card p-8 text-center">
         <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Score unavailable · not zero</p>
         <p className="mx-auto mt-2 max-w-md text-base">{msg.text}</p>
         {msg.action && <div className="mt-4 flex justify-center">{msg.action}</div>}

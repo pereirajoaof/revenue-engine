@@ -35,7 +35,7 @@ function PageTypeDetail() {
       />
       <Page>
         {!pt.flags && (
-          <div className="rounded-[4px] border border-dashed border-border bg-card p-4 text-sm">
+          <div className="rounded-[0.625rem] border border-dashed border-border bg-card p-4 text-sm">
             Pages in this type behave alike. We don't flag individual pages here; watch the type's trend instead.
           </div>
         )}

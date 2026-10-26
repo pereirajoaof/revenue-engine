@@ -50,7 +50,7 @@ function Changes() {
           {changes.map((c) => {
             const isOpen = open === c.id;
             return (
-              <article key={c.id} className="rounded-[4px] border border-border bg-card">
+              <article key={c.id} className="rounded-[0.625rem] border border-border bg-card">
                 <button type="button" onClick={() => setOpen(isOpen ? null : c.id)} className="flex w-full items-start justify-between gap-3 p-4 text-left" aria-expanded={isOpen}>
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">

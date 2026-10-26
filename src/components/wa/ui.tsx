@@ -32,7 +32,7 @@ export function PageHeader({
 
 export function Panel({ title, sub, children, className = "", right }: { title?: string; sub?: string; children: ReactNode; className?: string; right?: ReactNode }) {
   return (
-    <section className={`min-w-0 rounded-[4px] border border-border bg-card p-5 ${className}`}>
+    <section className={`min-w-0 rounded-[10px] border border-border bg-card p-5 ${className}`}>
       {(title || right) && (
         <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
           <div>
@@ -167,7 +167,7 @@ export function HeroCard({ v = { kind: "normal" } }: { v?: HeroVariant }) {
   const incomplete = v.kind === "incomplete";
   const score = v.kind === "zero" ? 0 : SCORE;
   return (
-    <section className="rounded-[4px] border border-border bg-card">
+    <section className="rounded-[10px] border border-border bg-card">
       {v.kind === "normal" && v.banner && (
         <div className="flex items-center gap-2 border-b border-chart-4/30 bg-chart-4/10 px-5 py-2 text-xs text-chart-4">
           <AlertTriangle className="h-3.5 w-3.5" /> {v.banner}
@@ -227,7 +227,7 @@ export type IntVariant = "normal" | { incomplete: string; sample?: boolean } | {
 export function ComponentCards({ ext = "normal", int = "normal" }: { ext?: ExtVariant; int?: IntVariant }) {
   return (
     <div className="grid gap-4 md:grid-cols-2">
-      <section className="min-w-0 rounded-[4px] border border-border bg-card p-5">
+      <section className="min-w-0 rounded-[10px] border border-border bg-card p-5">
         <p className={label}>External links</p>
         {ext === "stale" ? (
           <>
@@ -260,7 +260,7 @@ export function ComponentCards({ ext = "normal", int = "normal" }: { ext?: ExtVa
         </Link>
       </section>
 
-      <section className="min-w-0 rounded-[4px] border border-border bg-card p-5">
+      <section className="min-w-0 rounded-[10px] border border-border bg-card p-5">
         <p className={label}>{typeof int === "object" && "blocked" in int ? "Incomplete: crawler access blocked" : "Internal distribution"}</p>
         {typeof int === "object" && "blocked" in int ? (
           <>

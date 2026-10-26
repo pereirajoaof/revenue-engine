@@ -13,7 +13,7 @@ const tick = { fontSize: 10, fill: "var(--muted-foreground)" };
 
 function Kpi({ k, v, extra }: { k: string; v: React.ReactNode; extra?: React.ReactNode }) {
   return (
-    <div className="rounded-[4px] border border-border bg-card p-4">
+    <div className="rounded-[10px] border border-border bg-card p-4">
       <p className={label}>{k}</p>
       <div className="mt-1.5 text-2xl font-bold">{v}</div>
       {extra && <div className="mt-1">{extra}</div>}
