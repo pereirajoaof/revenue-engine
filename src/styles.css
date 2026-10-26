@@ -227,7 +227,7 @@
 }
 
 /* Shared presentation bridge for existing pages, without changing their markup. */
-@layer components {
+/* Unlayered by design: these shared rules supersede legacy local utilities. */
   main:where([class*="space-y-"], [class*="max-w-"]) {
     width: 100%;
     max-width: var(--page-max-width);
@@ -239,14 +239,21 @@
     margin-block-end: var(--section-gap);
   }
 
-  :where(section[class~="bg-card"], div[class~="bg-card"]):where([class*="rounded"]):where([class~="p-4"], [class~="p-5"], [class~="p-6"], [class~="p-8"]) {
+  :where(section[class~="bg-card"], div[class~="bg-card"]):where([class*="rounded"]):where([class~="p-4"], [class~="p-5"], [class~="p-6"], [class~="p-7"], [class~="p-8"]) {
     padding: var(--card-padding);
+  }
+
+  :where(section[class~="bg-card"][class*="rounded"]) > :where([class~="p-5"], [class~="p-6"]) {
+    padding: var(--card-padding);
+  }
+
+  :where(section[class~="py-24"], section[class~="py-32"]) {
+    padding-block: var(--section-gap);
   }
 
   :where(main, section) > :where([class~="grid"][class~="gap-3"], [class~="grid"][class~="gap-5"]) {
     gap: var(--element-gap);
   }
-}
 
 /* Compact data text retains its role; display text uses the shared scale. */
 :where([class~="text-[8px]"], [class~="text-[9px]"], [class~="text-[10px]"], [class~="text-[10.5px]"], [class~="text-[11px]"]) {
