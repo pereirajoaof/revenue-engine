@@ -75,7 +75,7 @@ function FindingCard({ f, rank }: { f: Finding; rank: number }) {
     ["What to investigate", f.investigate],
   ];
   return (
-    <li className="rounded-[10px] border border-border bg-card p-5">
+    <li className="rounded-[4px] border border-border bg-card p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <h3 className="flex gap-3 text-sm font-semibold">
           <span className="font-mono text-muted-foreground">{String(rank).padStart(2, "0")}</span>

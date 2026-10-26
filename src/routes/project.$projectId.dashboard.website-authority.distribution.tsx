@@ -20,7 +20,7 @@ const FLOW_STYLE: Record<string, string> = {
 function Kpi({ k, v, sub, tone }: { k: string; v: string; sub?: string; tone?: "red" | "amber" | "grey" }) {
   const c = tone === "red" ? "text-destructive" : tone === "amber" ? "text-chart-4" : tone === "grey" ? "text-muted-foreground" : "";
   return (
-    <div className="rounded-[10px] border border-border bg-card p-4">
+    <div className="rounded-[4px] border border-border bg-card p-4">
       <p className={label}>{k}</p>
       <p className={`mt-1.5 text-2xl font-bold ${c}`}>{v}</p>
       {sub && <p className="text-[11px] text-muted-foreground">{sub}</p>}
