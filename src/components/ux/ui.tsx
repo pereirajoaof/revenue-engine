@@ -249,7 +249,7 @@ export function ScoreHero({
   banner?: ReactNode;
 }) {
   return (
-    <section className="rounded-[0.625rem] border border-border bg-card">
+    <section className="rounded-[4px] border border-border bg-card">
       {banner}
       <div className="grid gap-6 p-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)]">
         <div>
@@ -294,7 +294,7 @@ export function ScoreHero({
 export type Kpi = { label: string; value: string; caption: string; chip?: ReactNode; info?: ReactNode };
 export function KpiStrip({ items }: { items: Kpi[] }) {
   return (
-    <section className="grid grid-cols-2 gap-px overflow-hidden rounded-[0.625rem] border border-border bg-border md:grid-cols-3 xl:grid-cols-5">
+    <section className="grid grid-cols-2 gap-px overflow-hidden rounded-[4px] border border-border bg-border md:grid-cols-3 xl:grid-cols-5">
       {items.map((k) => (
         <div key={k.label} className="bg-card p-4">
           <div className="flex items-center gap-1.5">
@@ -325,7 +325,7 @@ export function Section({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-[0.625rem] border border-border bg-card">
+    <section className="rounded-[4px] border border-border bg-card">
       <div className="flex flex-col gap-2 border-b border-border px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-sm font-semibold">{title}</h2>

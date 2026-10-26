@@ -94,7 +94,7 @@ export function IssueCard({ issue }: { issue: Issue }) {
               contentStyle={{
                 background: "var(--popover)",
                 border: "1px solid var(--border)",
-                borderRadius: 6,
+                borderRadius: 4,
                 fontSize: 11,
                 fontFamily: "var(--font-mono)",
               }}

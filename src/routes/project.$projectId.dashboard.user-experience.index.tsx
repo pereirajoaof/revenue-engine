@@ -121,7 +121,7 @@ function Hub() {
               const st = signalStatus(state, s.key);
               const msg = statusMessage(st);
               return (
-                <article key={s.key} className="flex flex-col rounded-[0.625rem] border border-border bg-card p-4">
+                <article key={s.key} className="flex flex-col rounded-[4px] border border-border bg-card p-4">
                   <div className="flex items-start justify-between gap-2">
                     <h3 className="text-sm font-semibold">{s.name}</h3>
                     <span className="font-mono text-[10px] text-muted-foreground">weight {Math.round(s.weight * 100)}%</span>
@@ -157,7 +157,7 @@ function Hub() {
           </div>
 
           {hub.score !== null && (
-            <div className="mt-3 rounded-[0.625rem] border border-border bg-card p-4">
+            <div className="mt-3 rounded-[4px] border border-border bg-card p-4">
               <div className="mb-2 flex items-baseline justify-between">
                 <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Contribution to score</p>
                 <p className="font-mono text-[11px] text-muted-foreground">
@@ -190,7 +190,7 @@ function Hub() {
               { title: "Changes", body: "3 changes logged · 1 result ready", to: `${UX_ROOT}/changes` },
               { title: "Data & method", body: "Matched sessions 71% · matched search clicks 83% · real-user speed data 16 days old", to: `${UX_ROOT}/method` },
             ].map((d) => (
-              <article key={d.title} className="rounded-[0.625rem] border border-border/70 bg-transparent p-4">
+              <article key={d.title} className="rounded-[4px] border border-border/70 bg-transparent p-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-medium">{d.title}</h3>
                   <Pill>Unscored</Pill>

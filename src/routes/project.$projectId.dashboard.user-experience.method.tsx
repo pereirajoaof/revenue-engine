@@ -40,7 +40,7 @@ function Method() {
             <li>· Weights are provisional.</li>
           </ul>
         </Section>
-        <div className="rounded-[0.625rem] border border-chart-4/30 bg-chart-4/10 p-4 text-sm">
+        <div className="rounded-[4px] border border-chart-4/30 bg-chart-4/10 p-4 text-sm">
           <p className="mb-1 font-mono text-[10px] uppercase tracking-wider text-chart-4">Known limitation</p>
           Conversion Efficiency and Engagement compare pages within this site. A site whose pages are all equally weak can still score well on them — check Momentum and the trend vs last year.
         </div>
@@ -61,7 +61,7 @@ function Method() {
             ]}
           />
         </Section>
-        <section className="grid gap-px overflow-hidden rounded-[0.625rem] border border-border bg-border sm:grid-cols-2 xl:grid-cols-4">
+        <section className="grid gap-px overflow-hidden rounded-[4px] border border-border bg-border sm:grid-cols-2 xl:grid-cols-4">
           {[
             { l: "Matched URL share", v: "88%", c: "landing URLs found in the crawl" },
             { l: "Matched GA4 session share", v: "71%", c: "sessions on matched URLs" },
