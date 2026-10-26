@@ -489,7 +489,7 @@ function RecTrendCard() {
               tickFormatter={(v) => `${v}%`}
             />
             <ChartTooltip
-              contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 4, fontSize: 12 }}
+              contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8, fontSize: 12 }}
               formatter={(v: number) => `${v}%`}
             />
             <Line
@@ -589,7 +589,7 @@ function WeeklyAiSessionsCard({ ga4Connected }: { ga4Connected: boolean }) {
             <XAxis dataKey="w" tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickLine={false} axisLine={false} />
             <YAxis tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} tickLine={false} axisLine={false} />
             <ChartTooltip
-              contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 4, fontSize: 12 }}
+              contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8, fontSize: 12 }}
             />
             <Line type="monotone" dataKey="v" stroke="var(--primary)" strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
           </LineChart>

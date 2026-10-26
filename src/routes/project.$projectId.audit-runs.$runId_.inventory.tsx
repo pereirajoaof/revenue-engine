@@ -178,7 +178,7 @@ const fmtCompact = (n: number) =>
 const tooltipStyle = {
   background: "var(--popover)",
   border: "1px solid var(--border)",
-  borderRadius: 4,
+  borderRadius: 8,
   fontSize: 12,
   padding: "8px 10px",
   boxShadow: "0 8px 24px -8px rgb(0 0 0 / 0.25)",

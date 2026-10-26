@@ -46,7 +46,7 @@ function States() {
           <HeroCard v={{ kind: "normal", momentum: "Not comparable", pin: "Configuration changed (priority pages edited)" }} />
         </Block>
         <Block n={8} title="Empty (no data yet)">
-          <div className="rounded-[4px] border border-dashed border-border bg-card p-10 text-center">
+          <div className="rounded-[10px] border border-dashed border-border bg-card p-10 text-center">
             <p className="text-lg font-semibold">No reading yet</p>
             <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
               Website Authority needs a completed site crawl and a weekly link read. Your first reading appears after the next weekly refresh.
