@@ -11,7 +11,7 @@ export function CtaSection() {
         transition={{ duration: 0.6 }}
       >
         <div className="rounded-2xl border border-border bg-card p-12 sm:p-16 relative overflow-hidden">
-          <div className="absolute inset-0 bg-glow opacity-30 blur-[80px] pointer-events-none" />
+          <div className="absolute inset-0 bg-glow-warm opacity-30 blur-[80px] pointer-events-none" />
           <div className="relative">
             <p className="text-sm font-mono text-primary uppercase tracking-wider mb-6">In one sentence</p>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight">

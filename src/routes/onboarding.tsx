@@ -71,7 +71,7 @@ function OnboardingPage() {
 
       <main className="flex-1 relative overflow-hidden">
         {/* Subtle ambient glow */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-glow blur-[160px] pointer-events-none opacity-60" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-glow-warm blur-[160px] pointer-events-none opacity-60" />
 
         <div className="relative h-screen overflow-y-auto">
           <AnimatePresence mode="wait">

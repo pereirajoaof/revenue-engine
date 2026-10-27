@@ -198,7 +198,7 @@ function RequestDemoPage() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="relative"
           >
-            <div className="absolute inset-0 bg-glow opacity-40 blur-[80px] pointer-events-none" />
+            <div className="absolute inset-0 bg-glow-warm opacity-40 blur-[80px] pointer-events-none" />
             <div className="relative rounded-2xl border border-border bg-card p-7 sm:p-9 shadow-[0_20px_60px_-30px_var(--glow)]">
               {submitted ? (
                 <Confirmation firstName={form.firstName} />
