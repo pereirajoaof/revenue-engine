@@ -18,7 +18,7 @@ function NotFoundComponent() {
         className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full opacity-60 blur-3xl"
         style={{
           background:
-            "radial-gradient(circle, var(--glow) 0%, transparent 70%)",
+            "radial-gradient(circle, var(--glow-warm) 0%, transparent 70%)",
         }}
       />
       {/* Subtle grid — the "OS" side */}

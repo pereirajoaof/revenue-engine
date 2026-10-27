@@ -405,7 +405,7 @@ function SectionHeading({
 function Hero() {
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-8 shadow-sm">
-      <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[var(--glow)] blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[var(--glow-warm)] blur-3xl" />
       <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)]">
         <div className="flex flex-col justify-between gap-6">
           <div>
